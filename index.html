@@ -2,6 +2,7 @@
 <html lang="vi">
 <head>
 <meta charset="utf-8">
+<link rel="icon" type="image/svg+xml" href="logo.svg">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <style>:root{padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}body{margin:0}img{max-width:100%}[hidden]{display:none!important}</style>
 <title>Talenta · Nén Bạc</title>
@@ -17,6 +18,8 @@
   --accent:#1E5878; --accent-soft:#DFEAF1; --on-accent:#FFFFFF; --silver:#9AA6B2;
   --up:#0A8456; --down:#C8382C; --ref:#AD7F0C; --up-bg:#E1F3EA; --down-bg:#FBE8E6; --warn-bg:#FBF2DC;
   --shadow:0 1px 2px rgba(23,33,43,.06),0 4px 14px rgba(23,33,43,.05);
+  --brand:#143A52; --gold:#B8860B; --ceil:#8E3CC8; --floor:#118DB8; --warn:#C27C0A; --info:#2A78D6; --info-bg:#E4EEFB;
+  --c1:#2a78d6; --c2:#eb6834; --c3:#1baf7a; --c4:#eda100; --c5:#e87ba4; --c6:#6250d6;
   --font-display:'Lexend','Be Vietnam Pro',system-ui,sans-serif;
   --font-body:'Be Vietnam Pro',system-ui,-apple-system,'Segoe UI',Roboto,sans-serif;
   --r:12px;
@@ -25,12 +28,16 @@
   --bg:#0E1318; --surface:#151C23; --surface-2:#1B242D; --ink:#E2E8EE; --muted:#93A1AF; --line:#27323D;
   --accent:#78B9DB; --accent-soft:#1A3241; --on-accent:#0E1318; --silver:#7D8A97;
   --up:#33C186; --down:#F06C5E; --ref:#E3B33E; --up-bg:#12301F; --down-bg:#3A1D1A; --warn-bg:#2E2712;
-  --shadow:0 1px 2px rgba(0,0,0,.3); color-scheme:dark;}}
+  --shadow:0 1px 2px rgba(0,0,0,.3); color-scheme:dark;
+  --brand:#1B4A68; --gold:#E2B44A; --ceil:#C383F2; --floor:#43C3EA; --warn:#E8A93A; --info:#5AA0EC; --info-bg:#16283D;
+  --c1:#3987e5; --c2:#d95926; --c3:#199e70; --c4:#c98500; --c5:#d55181; --c6:#9085e9;}}
 :root[data-theme="dark"]{
   --bg:#0E1318; --surface:#151C23; --surface-2:#1B242D; --ink:#E2E8EE; --muted:#93A1AF; --line:#27323D;
   --accent:#78B9DB; --accent-soft:#1A3241; --on-accent:#0E1318; --silver:#7D8A97;
   --up:#33C186; --down:#F06C5E; --ref:#E3B33E; --up-bg:#12301F; --down-bg:#3A1D1A; --warn-bg:#2E2712;
-  --shadow:0 1px 2px rgba(0,0,0,.3); color-scheme:dark;}
+  --shadow:0 1px 2px rgba(0,0,0,.3); color-scheme:dark;
+  --brand:#1B4A68; --gold:#E2B44A; --ceil:#C383F2; --floor:#43C3EA; --warn:#E8A93A; --info:#5AA0EC; --info-bg:#16283D;
+  --c1:#3987e5; --c2:#d95926; --c3:#199e70; --c4:#c98500; --c5:#d55181; --c6:#9085e9;}
 
 *{box-sizing:border-box}
 body{background:var(--bg);color:var(--ink);font-family:var(--font-body);font-size:14px;line-height:1.5;-webkit-font-smoothing:antialiased}
@@ -48,7 +55,7 @@ button,input,select,textarea{font:inherit;color:inherit}
 .top{position:sticky;top:env(safe-area-inset-top,0px);z-index:20;background:var(--surface);border-bottom:1px solid var(--line)}
 .top-row{display:flex;align-items:center;gap:12px;padding-block:10px;flex-wrap:wrap}
 .brand{display:flex;align-items:center;gap:10px;text-decoration:none;color:var(--ink);margin-right:auto}
-.brand svg{flex:none}
+.brand svg{flex:none;border-radius:9px}
 .brand b{font-family:var(--font-display);font-size:18px;font-weight:600;letter-spacing:.01em}
 .brand span{display:block;font-size:11px;color:var(--muted);letter-spacing:.04em}
 .demo-pill{font-size:11px;font-weight:600;letter-spacing:.05em;text-transform:uppercase;color:var(--ref);background:var(--warn-bg);padding:3px 8px;border-radius:99px}
@@ -106,14 +113,62 @@ tbody tr:hover{background:var(--surface-2)}
 .chip.acc{background:var(--accent-soft);color:var(--accent);border-color:transparent}
 .chips{display:flex;flex-wrap:wrap;gap:6px}
 .alerts{display:flex;flex-direction:column;gap:8px}
-.alert{display:flex;gap:12px;align-items:flex-start;padding:10px 12px;border-radius:10px;background:var(--surface-2);border:1px solid var(--line)}
-.alert .dot{width:8px;height:8px;border-radius:50%;margin-top:7px;flex:none;background:var(--silver)}
-.alert.crit{background:var(--down-bg);border-color:transparent}.alert.crit .dot{background:var(--down)}
-.alert.warn{background:var(--warn-bg);border-color:transparent}.alert.warn .dot{background:var(--ref)}
-.alert.info .dot{background:var(--accent)}
+.alert{display:flex;gap:10px;align-items:flex-start;padding:10px 12px;border-radius:10px;background:var(--surface-2);border:1px solid var(--line);text-decoration:none;color:var(--ink);border-left:4px solid var(--silver)}
+a.alert:hover{border-color:var(--silver)}
+.alert .ic{width:22px;height:22px;flex:none;margin-top:1px}
+.alert.crit{background:var(--down-bg);border-color:transparent;border-left-color:var(--down)}
+.alert.warn{background:var(--warn-bg);border-color:transparent;border-left-color:var(--warn)}
+.alert.info{background:var(--info-bg);border-color:transparent;border-left-color:var(--info)}
+.alert.good{background:var(--up-bg);border-color:transparent;border-left-color:var(--up)}
 .alert .body{flex:1;min-width:0}
-.alert .t{font-weight:600}
-.alert .d{color:var(--muted);font-size:13px}
+.alert .t{font-weight:600;line-height:1.35}
+.alert .d{color:var(--muted);font-size:12.5px;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;margin-top:2px}
+.sev{display:inline-flex;align-items:center;gap:5px;font-size:12px;color:var(--muted)}
+.sev i{width:8px;height:8px;border-radius:50%;display:inline-block}
+/* VN price colors */
+.vn-up{color:var(--up)}.vn-down{color:var(--down)}.vn-ref{color:var(--ref)}.vn-ceil{color:var(--ceil)}.vn-floor{color:var(--floor)}
+.pill{display:inline-flex;align-items:center;gap:4px;font-size:12px;font-weight:600;padding:2px 8px;border-radius:6px;font-variant-numeric:tabular-nums;white-space:nowrap}
+.pill.vn-up{background:var(--up-bg)}.pill.vn-down{background:var(--down-bg)}.pill.vn-ref{background:var(--warn-bg)}
+.pill.vn-ceil{background:color-mix(in srgb,var(--ceil) 16%,var(--surface))}.pill.vn-floor{background:color-mix(in srgb,var(--floor) 16%,var(--surface))}
+.legend-vn{display:flex;flex-wrap:wrap;gap:12px;font-size:12px;color:var(--muted);align-items:center}
+.legend-vn span{display:inline-flex;align-items:center;gap:5px}
+.legend-vn i{width:10px;height:10px;border-radius:3px;display:inline-block}
+/* Hero */
+.hero{display:grid;grid-template-columns:minmax(0,1.35fr) minmax(0,1fr);gap:24px;margin-bottom:16px;padding:20px 22px;background:linear-gradient(135deg,color-mix(in srgb,var(--brand) 7%,var(--surface)),var(--surface) 60%)}
+@media (max-width:860px){.hero{grid-template-columns:1fr}}
+.hero .lbl{font-size:12px;color:var(--muted);letter-spacing:.06em;text-transform:uppercase;font-weight:600}
+.hero-num{font-family:var(--font-display);font-size:40px;font-weight:600;line-height:1.1;margin-top:4px;font-variant-numeric:tabular-nums;letter-spacing:-.02em}
+.hero-sub{margin-top:4px;font-size:13px;color:var(--muted)}
+.kpis{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px;margin-top:18px}
+@media (max-width:560px){.kpis{grid-template-columns:1fr}}
+.kpi{background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:12px 14px;min-width:0}
+.kpi .k{font-size:12px;color:var(--muted)}
+.kpi .v{font-family:var(--font-display);font-size:20px;font-weight:600;font-variant-numeric:tabular-nums}
+.kpi .s{font-size:12px;color:var(--muted)}
+.vs{display:flex;flex-direction:column;gap:5px;margin-top:6px}
+.vs div{display:grid;grid-template-columns:62px 1fr 48px;gap:6px;align-items:center;font-size:11.5px;font-variant-numeric:tabular-nums}
+.vs b{display:block;height:8px;border-radius:0 4px 4px 0;min-width:2px}
+.ring{display:flex;align-items:center;gap:10px}
+.donut-wrap{display:flex;align-items:center;gap:18px;flex-wrap:wrap;justify-content:center}
+.donut-wrap svg{flex:none}
+.dleg{display:flex;flex-direction:column;gap:6px;min-width:150px;flex:1}
+.dleg div{display:grid;grid-template-columns:12px 1fr auto;gap:8px;align-items:center;font-size:13px}
+.dleg i{width:12px;height:12px;border-radius:3px}
+.dleg .p{font-variant-numeric:tabular-nums;color:var(--muted)}
+/* Treemap */
+.tm{display:flex;flex-direction:column;gap:3px;height:240px}
+.tm-row{display:flex;gap:3px;min-height:0}
+.tm-tile{min-width:0;border-radius:8px;padding:8px 10px;text-decoration:none;display:flex;flex-direction:column;justify-content:space-between;overflow:hidden;transition:filter .15s}
+.tm-tile:hover{filter:brightness(1.06)}
+.tm-tile b{font-size:15px;letter-spacing:.03em}
+.tm-tile span{font-size:12px;font-variant-numeric:tabular-nums;white-space:nowrap}
+.scale{display:flex;align-items:center;gap:8px;font-size:11px;color:var(--muted);margin-top:8px}
+.scale b{flex:1;height:8px;border-radius:4px;background:linear-gradient(90deg,var(--down),color-mix(in srgb,var(--down) 25%,var(--surface)),var(--surface-2),color-mix(in srgb,var(--up) 25%,var(--surface)),var(--up))}
+/* mood */
+.mood{--m:var(--silver)}
+.mood-b{--m:var(--c3)}.mood-t{--m:var(--c1)}.mood-l{--m:var(--c4)}.mood-s{--m:var(--c6)}.mood-h{--m:var(--c2)}
+.chip.mood{background:color-mix(in srgb,var(--m) 15%,var(--surface));color:color-mix(in srgb,var(--m) 75%,var(--ink));border-color:transparent}
+.entry.mood{border-left:4px solid var(--m)}
 
 /* Bars */
 .bars{display:flex;flex-direction:column;gap:9px}
@@ -143,6 +198,8 @@ tbody tr:hover{background:var(--surface-2)}
 .tk-name h1{font-size:30px;letter-spacing:.02em}
 .price-big{font-family:var(--font-display);font-size:28px;font-weight:600;font-variant-numeric:tabular-nums}
 .range{position:relative;height:6px;background:var(--surface-2);border:1px solid var(--line);border-radius:99px;margin:8px 0 4px;min-width:180px}
+.zone{position:relative;height:8px;border-radius:99px;margin:6px 0 2px;min-width:150px;background:linear-gradient(90deg,var(--down) 0 10%,color-mix(in srgb,var(--down) 18%,var(--surface-2)) 10%,var(--surface-2) 50%,color-mix(in srgb,var(--up) 18%,var(--surface-2)) 90%,var(--up) 90%)}
+.zone i{position:absolute;top:-4px;width:4px;height:16px;border-radius:2px;background:var(--ink);transform:translateX(-50%);box-shadow:0 0 0 2px var(--surface)}
 .range i{position:absolute;top:-4px;width:12px;height:12px;border-radius:50%;background:var(--accent);transform:translateX(-50%);border:2px solid var(--surface)}
 .kv{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:10px}
 .kv div{background:var(--surface-2);border-radius:10px;padding:10px 12px}
@@ -169,7 +226,7 @@ tbody tr:hover{background:var(--surface-2)}
 
 /* Ticker list */
 .tk-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:12px}
-.tk-card{display:block;text-decoration:none;color:var(--ink);background:var(--surface);border:1px solid var(--line);border-radius:var(--r);padding:14px}
+.tk-card{display:block;text-decoration:none;color:var(--ink);background:var(--surface);border:1px solid var(--line);border-radius:var(--r);padding:14px;border-top:4px solid var(--t,var(--line))}
 .tk-card:hover{border-color:var(--silver)}
 .tk-card .row{display:flex;justify-content:space-between;align-items:baseline;gap:8px}
 
@@ -208,7 +265,7 @@ footer .row{display:flex;gap:10px;flex-wrap:wrap;align-items:center;justify-cont
   <div class="wrap">
     <div class="top-row">
       <a class="brand" href="#tong-quan" aria-label="Talenta, về trang tổng quan">
-        <svg width="34" height="26" viewBox="0 0 34 26" aria-hidden="true"><path d="M6 9 L28 9 L33 22 L1 22 Z" fill="var(--silver)"/><path d="M8 4 L26 4 L28 9 L6 9 Z" fill="var(--accent)"/></svg>
+        <svg width="40" height="40" viewBox="0 0 64 64" aria-hidden="true"><defs><linearGradient id="lgbg" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#1B4A68"/><stop offset="1" stop-color="#0E2638"/></linearGradient><linearGradient id="lgag" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#F4F7FA"/><stop offset=".55" stop-color="#B9C4CF"/><stop offset="1" stop-color="#7E8C9A"/></linearGradient><linearGradient id="lgtop" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#FFFFFF"/><stop offset="1" stop-color="#C9D2DB"/></linearGradient><linearGradient id="lgau" x1="0" y1="1" x2="1" y2="0"><stop offset="0" stop-color="#C8921A"/><stop offset="1" stop-color="#F3CC5C"/></linearGradient></defs><rect width="64" height="64" rx="15" fill="url(#lgbg)"/><path d="M7 31 C9 28 13 29 15 32 L49 32 C51 29 55 28 57 31 L51 46 C44 51 20 51 13 46 Z" fill="url(#lgag)"/><path d="M15 32 C20 26 44 26 49 32 Z" fill="url(#lgtop)"/><path d="M18 24 L27 17 L33 21 L45 10" fill="none" stroke="url(#lgau)" stroke-width="3.6" stroke-linecap="round" stroke-linejoin="round"/><path d="M39.5 9.2 L46.6 8.4 L45.8 15.5 Z" fill="#F3CC5C"/></svg>
         <div><b>Talenta</b><span>NÉN BẠC · SỔ NÉN BẠC CỦA TÔI</span></div>
       </a>
       <span class="demo-pill" title="Giá và chỉ số thị trường trong bản này là số liệu mô phỏng">Bản dùng thử</span>
@@ -293,10 +350,10 @@ const MKT = {
     anchors:[['2025-01-02',25500],['2025-06-20',27000],['2025-07-22',33000],['2025-08-25',39000],['2025-09-15',38500],['2025-10-20',41500],['2026-01-12',38000],['2026-06-01',34000],['2026-07-01',40000],['2026-11-12',34500]],
     f:{eps:3100,bvps:21500,roe:15,roa:2.4,de:null,gm:null,growth:12,div:1000,peSector:9,pe5y:8,profit:[5500,6000,5800,6500,6100,6300,6600,6800]}},
   DGC:{name:'CTCP Tập đoàn Hóa chất Đức Giang', sector:'Hóa chất', ex:'HOSE', vol:.017,
-    anchors:[['2025-01-02',108000],['2025-04-09',85000],['2025-08-25',110000],['2026-01-12',98000],['2026-04-20',83000],['2026-11-12',90000]],
+    anchors:[['2025-01-02',108000],['2025-04-09',85000],['2025-08-25',110000],['2026-01-12',98000],['2026-04-20',83000],['2026-11-11',84200],['2026-11-12',90000]],
     f:{eps:8000,bvps:42000,roe:20,roa:17,de:0.15,gm:32,growth:-8,div:3000,peSector:13,pe5y:13,profit:[800,750,780,770,740,720,700,690]}},
   VNM:{name:'CTCP Sữa Việt Nam', sector:'Thực phẩm', ex:'HOSE', vol:.010,
-    anchors:[['2025-01-02',64000],['2025-04-09',55000],['2025-10-10',60000],['2026-11-12',61000]],
+    anchors:[['2025-01-02',64000],['2025-04-09',55000],['2025-10-10',60000],['2026-11-11',65500],['2026-11-12',61000]],
     f:{eps:4300,bvps:16500,roe:26,roa:19,de:0.5,gm:41,growth:2,div:3850,peSector:18,pe5y:18,profit:[2200,2400,2300,2100,2250,2450,2350,2200]}}
 };
 const TICKERS = Object.keys(MKT).filter(k=>k!=='VNINDEX');
@@ -319,6 +376,14 @@ const PX = {};
 })();
 const px = (t,i=LAST) => PX[t] ? PX[t][Math.max(0,Math.min(LAST,i))] : 0;
 const runup = (t,i,n=20) => px(t,i)/px(t,Math.max(0,i-n))-1;
+// Quy ước bảng giá Việt Nam: biên độ HOSE ±7%, trần tím, sàn xanh lơ, tham chiếu vàng
+const BAND={HOSE:.07,HNX:.10,UPCOM:.15};
+function vnCls(t,i=LAST){ const ref=px(t,i-1), p_=px(t,i), b=BAND[(MKT[t]&&MKT[t].ex)||'HOSE']||.07, tk_=tick(ref);
+  const ceil=Math.floor(ref*(1+b)/tk_)*tk_, floor=Math.ceil(ref*(1-b)/tk_)*tk_;
+  return p_>=ceil?'ceil':p_<=floor?'floor':p_>ref?'up':p_<ref?'down':'ref'; }
+const VN_LABEL={ceil:'Trần',floor:'Sàn',up:'Tăng',down:'Giảm',ref:'Tham chiếu'};
+function chgPill(t){ const c=px(t)/px(t,LAST-1)-1, k=vnCls(t); return `<span class="pill vn-${k}">${k==='ceil'?'Trần ':k==='floor'?'Sàn ':''}${PCT(c)}</span>`; }
+const VN_LEGEND=`<div class="legend-vn"><span><i style="background:var(--ceil)"></i>Trần</span><span><i style="background:var(--up)"></i>Tăng</span><span><i style="background:var(--ref)"></i>Tham chiếu</span><span><i style="background:var(--down)"></i>Giảm</span><span><i style="background:var(--floor)"></i>Sàn</span></div>`;
 
 /* ============ Trạng thái và lưu trữ ============ */
 const KEY='talenta-demo-v2';
@@ -579,49 +644,92 @@ function route(){
 addEventListener('hashchange',()=>{ route(); scrollTo(0,0); });
 
 function stat(lbl,val,sub,c=''){ return `<div class="stat"><div class="lbl">${lbl}</div><div class="val ${c}">${val}</div>${sub?`<div class="sub">${sub}</div>`:''}</div>`; }
-function alertHtml(a){ return `<div class="alert ${a.lv}"><span class="dot"></span><div class="body"><div class="t">${esc(a.t)}</div><div class="d">${esc(a.d)}</div></div>${a.review?`<button class="btn sm" data-act="review" data-tk="${a.review[0]}">Xem lại ${a.review[0]}</button>`:a.tk?`<a class="btn sm" href="#ma-${a.tk}">Mở ${a.tk}</a>`:''}</div>`; }
+const ICO=(c,inner)=>`<svg class="ic" viewBox="0 0 22 22" aria-hidden="true"><circle cx="11" cy="11" r="11" fill="${c}"/>${inner}</svg>`;
+const ICON={
+  crit:ICO('var(--down)','<path d="M11 5.5v7" stroke="#fff" stroke-width="2.4" stroke-linecap="round"/><circle cx="11" cy="16" r="1.4" fill="#fff"/>'),
+  warn:ICO('var(--warn)','<path d="M11 6v6" stroke="#fff" stroke-width="2.2" stroke-linecap="round"/><circle cx="11" cy="15.6" r="1.3" fill="#fff"/>'),
+  info:ICO('var(--info)','<path d="M6.5 13.5l3-3 2.2 2.2 4-4.2M12.5 8.4h3.2v3.2" stroke="#fff" stroke-width="1.8" fill="none" stroke-linecap="round" stroke-linejoin="round"/>'),
+  good:ICO('var(--up)','<path d="M6.5 11.3l3 3 6-6.3" stroke="#fff" stroke-width="2.2" fill="none" stroke-linecap="round" stroke-linejoin="round"/>')};
+function alertHtml(a){ const inner=`${ICON[a.lv]||''}<div class="body"><div class="t">${esc(a.t)}</div><div class="d">${esc(a.d)}</div></div>`;
+  if(a.review) return `<div class="alert ${a.lv}">${inner}<button class="btn sm" data-act="review" data-tk="${a.review[0]}">Xem lại ${a.review[0]}</button></div>`;
+  return a.tk?`<a class="alert ${a.lv}" href="#ma-${a.tk}">${inner}</a>`:`<div class="alert ${a.lv}">${inner}</div>`; }
 
 function pageDashboard(){
-  const pnl=M.nav-M.netDep, dayChg=M.nav-M.navPrev, ds=M.discipline;
+  const pnl=M.nav-M.netDep, dayChg=M.total-(M.navPrev+M.otherVal), ds=M.discipline;
   charts.perf = el => M.series.length<2 ? (el.innerHTML='<div class="empty">Biểu đồ sẽ hiện khi bạn có giao dịch đầu tiên. Bắt đầu bằng một lệnh nạp tiền.</div>') : drawLine(el,{label:'Lợi suất danh mục so với VN-Index', dates:M.series.map(s=>s.date), zero:true,
-    series:[{name:'Danh mục của bạn',values:M.series.map(s=>s.cum),color:'var(--accent)',area:true,w:2.2},{name:'VN-Index',values:M.series.map(s=>s.vni),color:'var(--silver)',w:1.6}],
-    yFmt:(v)=>PCT(v,true,0), extra:i=>`<div class="muted">Tài sản: ${C(M.series[i].nav)}</div>`});
+    series:[{name:'Danh mục của bạn',values:M.series.map(s=>s.cum),color:'var(--c1)',area:true,w:2.2},{name:'VN-Index',values:M.series.map(s=>s.vni),color:'var(--silver)',w:1.6,dash:true}],
+    yFmt:(v)=>PCT(v,true,0), extra:i=>`<div class="muted">Tài sản chứng khoán: ${C(M.series[i].nav)}</div>`});
+  const cls_=[['Cổ phiếu',M.stockVal,ASSET_COLOR['Cổ phiếu']],['Tiền mặt chứng khoán',M.cash,ASSET_COLOR['Tiền mặt']]];
+  KINDS.forEach(k=>{ const v=M.other.filter(a=>a.kind===k).reduce((s,a)=>s+a.value,0); if(v) cls_.push([k,v,ASSET_COLOR[k]]); });
   const sec=Object.entries(M.sectors).sort((a,b)=>b[1]-a[1]);
   const pend=S.plans||[];
   const recent=[...S.journal].sort((a,b)=>b.date.localeCompare(a.date)).slice(0,3);
+  const cnt=lv=>M.alerts.filter(a=>a.lv===lv).length;
+  const scoreCol= ds.score>=75?'var(--up)':ds.score>=50?'var(--warn)':'var(--down)';
+  const maxR=Math.max(Math.abs(M.twr),Math.abs(M.vni),.01);
+  const secOver=sec.filter(([,v])=>v/M.nav>S.settings.maxSector);
   return `
-  <div class="page-head"><div><h1>Tổng quan</h1><p>Số liệu tính từ sổ giao dịch của bạn, cập nhật theo giá đóng cửa ngày ${D(TODAY)}.</p></div></div>
-  <div class="stats">
-    ${stat('Tổng tài sản', C(M.total), `Chứng khoán ${C(M.nav)} · khác ${C(M.otherVal)}`)}
-    ${stat('Tài khoản chứng khoán', C(M.nav), `<span class="${cls(dayChg)}">${dayChg>=0?'+':'−'}${C(Math.abs(dayChg)).replace('−','')} hôm nay</span> · ${ACCTS.map(a=>a+' '+C(M.acctVal[a].cash+M.acctVal[a].stock)).join(' · ')}`)}
-    ${stat('Lãi/lỗ chứng khoán', (pnl>=0?'+':'')+C(pnl), `So với ${C(M.netDep)} đã nạp ròng`, cls(pnl))}
-    ${stat('Lợi suất thật (TWR)', PCT(M.twr), `${PCT(M.twrYr)}/năm · từ ${D(M.firstDate)}`, cls(M.twr))}
-    ${stat('VN-Index cùng kỳ', PCT(M.vni), `Bạn ${M.twr>=M.vni?'hơn':'kém'} thị trường ${PCT(Math.abs(M.twr-M.vni),false)}`, cls(M.vni))}
-    ${stat('Điểm kỷ luật', ds.score+'/100', `${ds.withT}/${ds.buys} lệnh mua có luận điểm`)}
-  </div>
+  <section class="card hero">
+    <div>
+      <div class="lbl">Tổng tài sản</div>
+      <div class="hero-num">${C(M.total)}</div>
+      <div class="hero-sub"><span class="pill vn-${dayChg>0?'up':dayChg<0?'down':'ref'}">${dayChg>=0?'▲ +':'▼ −'}${C(Math.abs(dayChg)).replace('−','')}</span> hôm nay · giá đóng cửa ${D(TODAY)}</div>
+      <div class="kpis">
+        <div class="kpi"><div class="k">Lãi/lỗ chứng khoán</div><div class="v ${cls(pnl)}">${pnl>=0?'+':''}${C(pnl)}</div><div class="s">trên ${C(M.netDep)} đã nạp ròng</div></div>
+        <div class="kpi"><div class="k">Lợi suất thật so với VN-Index</div>
+          <div class="vs"><div><span>Bạn</span><b style="width:${Math.max(2,Math.abs(M.twr)/maxR*100)}%;background:var(--c1)"></b><span class="${cls(M.twr)}">${PCT(M.twr,true,1)}</span></div>
+          <div><span>VN-Index</span><b style="width:${Math.max(2,Math.abs(M.vni)/maxR*100)}%;background:var(--silver)"></b><span class="${cls(M.vni)}">${PCT(M.vni,true,1)}</span></div></div>
+          <div class="s" style="margin-top:4px">Bạn ${M.twr>=M.vni?'hơn':'kém'} thị trường ${PCT(Math.abs(M.twr-M.vni),false)}</div></div>
+        <div class="kpi"><div class="k">Điểm kỷ luật</div><div class="ring">${ring(ds.score,scoreCol)}<div class="s">${ds.withT}/${ds.buys} lệnh mua có luận điểm<br>${ds.onPlan}/${ds.sells} lệnh bán đúng kế hoạch</div></div></div>
+      </div>
+    </div>
+    <div><div class="lbl" style="margin-bottom:10px">Phân bổ tài sản</div>
+      ${donut(cls_.map(([l,v,c])=>({label:l,value:v,color:c})), 168, C(M.total), 'tổng tài sản')}</div>
+  </section>
   <div class="grid">
-    <section class="card c8"><div class="card-head"><h2>Lợi suất của bạn so với VN-Index</h2><span class="small">Đã loại trừ ảnh hưởng của tiền nạp, rút</span></div>
-      <div class="legend"><span><i style="background:var(--accent)"></i>Danh mục của bạn</span><span><i style="background:var(--silver)"></i>VN-Index</span></div>
-      <div class="chart" data-chart="perf" data-h="260"></div></section>
-    <section class="card c4"><div class="card-head"><h2>Cần chú ý</h2><span class="small">${M.alerts.length} mục</span></div>
-      <div class="alerts">${M.alerts.length?M.alerts.map(alertHtml).join(''):'<div class="empty">Không có gì cần chú ý.</div>'}</div></section>
-    <section class="card c12"><div class="card-head"><h2>Phân bổ tổng tài sản</h2><span class="small">Cổ phiếu, tiền trong tài khoản chứng khoán và các tài sản khác</span></div>
-      <div class="grid">${(()=>{ const cl=[['Cổ phiếu',M.stockVal],['Tiền mặt chứng khoán',M.cash]]; KINDS.forEach(k=>{ const v=M.other.filter(a=>a.kind===k).reduce((s,a)=>s+a.value,0); if(v) cl.push([k,v]); });
-        const half=Math.ceil(cl.length/2); return [cl.slice(0,half),cl.slice(half)].map(g=>`<div class="c6 bars">${g.map(([k,v])=>barRow(esc(k),v/M.total,null)+'').join('')}</div>`).join(''); })()}</div></section>
-    <section class="card c6"><div class="card-head"><h2>Tỷ trọng theo mã</h2><span class="small">Vạch đứt: mức tối đa ${PCT(S.settings.maxTicker,false,0)}</span></div>
-      <div class="bars">${M.holdings.map(h=>barRow(`<a class="tk" href="#ma-${h.ticker}">${h.ticker}</a>`,h.weight,S.settings.maxTicker)).join('')}${barRow('<span class="muted">Tiền mặt</span>',M.cash/M.nav,null)}</div></section>
-    <section class="card c6"><div class="card-head"><h2>Tỷ trọng theo ngành</h2><span class="small">Vạch đứt: mức tối đa ${PCT(S.settings.maxSector,false,0)}</span></div>
-      <div class="bars">${sec.map(([s,v])=>barRow(esc(s),v/M.nav,S.settings.maxSector)).join('')}</div></section>
+    <section class="card c8"><div class="card-head"><h2>Lợi suất của bạn so với VN-Index</h2><span class="small">Đã loại trừ tiền nạp, rút</span></div>
+      <div class="legend"><span><i style="background:var(--c1)"></i>Danh mục của bạn ${PCT(M.twr)}</span><span><i style="background:var(--silver)"></i>VN-Index ${PCT(M.vni)}</span></div>
+      <div class="chart" data-chart="perf" data-h="330"></div></section>
+    <section class="card c4"><div class="card-head"><h2>Cần chú ý</h2>
+      <span class="chips">${cnt('crit')?`<span class="sev"><i style="background:var(--down)"></i>${cnt('crit')} khẩn</span>`:''}${cnt('warn')?`<span class="sev"><i style="background:var(--warn)"></i>${cnt('warn')} cảnh báo</span>`:''}${cnt('info')?`<span class="sev"><i style="background:var(--info)"></i>${cnt('info')} thông tin</span>`:''}</span></div>
+      <div class="alerts">${M.alerts.length?M.alerts.map(alertHtml).join(''):`<div class="alert good">${ICON.good}<div class="body"><div class="t">Mọi thứ đang theo kế hoạch</div></div></div>`}</div></section>
+    <section class="card c7"><div class="card-head"><h2>Bản đồ danh mục</h2><span class="small">Ô càng lớn tỷ trọng càng cao · màu theo lãi/lỗ</span></div>
+      ${treemap(M.holdings)}
+      <div class="scale"><span>Lỗ 30%</span><b></b><span>Lãi 30%</span></div></section>
+    <section class="card c5"><div class="card-head"><h2>Tỷ trọng theo ngành</h2><span class="small">Tối đa ${PCT(S.settings.maxSector,false,0)} mỗi ngành</span></div>
+      ${donut(sec.map(([s,v])=>({label:s,value:v,color:SECTOR_COLOR[s]||'var(--silver)',warn:v/M.nav>S.settings.maxSector})).concat([{label:'Tiền mặt',value:M.cash,color:'var(--line)'}]), 150, PCT(M.stockVal/M.nav,false,0), 'là cổ phiếu')}
+      ${secOver.length?`<div class="small down" style="margin-top:10px">Ngành vượt mức: ${secOver.map(([s])=>esc(s)).join(', ')}</div>`:''}</section>
     <section class="card c6"><div class="card-head"><h2>Danh sách theo dõi</h2><span class="small">Vùng giá bạn muốn mua</span></div>
-      ${S.watch.length?`<div class="tbl"><table><thead><tr><th>Mã</th><th class="r">Giá</th><th class="r">Muốn mua dưới</th><th class="r">Còn cách</th></tr></thead><tbody>
-      ${S.watch.map(w=>{const p_=px(w.ticker), gap=p_/w.buyBelow-1; return `<tr><td><a class="tk" href="#ma-${w.ticker}">${w.ticker}</a><div class="small muted">${esc(w.note)}</div></td><td class="r">${P(p_)}</td><td class="r">${P(w.buyBelow)}</td><td class="r"><span class="chip ${gap<=0?'up':''}">${gap<=0?'Đã vào vùng':PCT(gap,false)}</span></td></tr>`;}).join('')}
-      </tbody></table></div>`:'<div class="empty">Chưa theo dõi mã nào.</div>'}
+      ${S.watch.length?`<div class="alerts">${S.watch.map(w=>{const p_=px(w.ticker), gap=p_/w.buyBelow-1, k=vnCls(w.ticker); return `<a class="alert ${gap<=0?'good':''}" href="#ma-${w.ticker}"><div class="body"><div class="t" style="display:flex;justify-content:space-between;gap:8px"><span>${w.ticker} <span class="pill vn-${k}">${P(p_)}</span></span><span class="small">${gap<=0?'<span class="up">Đã vào vùng mua</span>':`còn ${PCT(gap,false)} tới ${P(w.buyBelow)}`}</span></div><div class="d">${esc(w.note)}</div></div></a>`;}).join('')}</div>`:'<div class="empty">Chưa theo dõi mã nào. Mở một mã và bấm “Theo dõi mã này”.</div>'}
       ${pend.length?`<h3 style="margin:16px 0 8px">Kế hoạch mua đang chờ 24 giờ</h3>${pend.map(planRow).join('')}`:''}
     </section>
     <section class="card c6"><div class="card-head"><h2>Nhật ký gần đây</h2><a class="small" href="#nhat-ky">Xem tất cả</a></div>
       <div class="entries">${recent.map(e=>entryHtml(e,true)).join('')}</div></section>
   </div>`;
 }
+const ASSET_COLOR={'Cổ phiếu':'var(--c1)','Tiền mặt':'var(--silver)','Vàng':'var(--gold)','Tiết kiệm':'var(--c3)','Quỹ mở':'var(--c6)','Crypto':'var(--c2)','Khác':'var(--c5)'};
+const SECTOR_COLOR={'Công nghệ':'var(--c1)','Ngân hàng':'var(--c6)','Tiện ích':'var(--c3)','Thép':'var(--c2)','Bán lẻ':'var(--c5)','Hóa chất':'var(--c4)','Thực phẩm':'var(--gold)'};
+function donut(items, size, center, sub){
+  const tot=items.reduce((s,i)=>s+Math.max(0,i.value),0)||1, r=size/2-12, cx=size/2, sw=22, C_=2*Math.PI*r; let off=0;
+  let svg=`<svg width="${size}" height="${size}" viewBox="0 0 ${size} ${size}" role="img" aria-label="Biểu đồ phân bổ"><circle cx="${cx}" cy="${cx}" r="${r}" fill="none" stroke="var(--surface-2)" stroke-width="${sw}"/>`;
+  items.forEach(it=>{ const f=Math.max(0,it.value)/tot, len=Math.max(0,f*C_-2);
+    if(f>0) svg+=`<circle cx="${cx}" cy="${cx}" r="${r}" fill="none" stroke="${it.color}" stroke-width="${sw}" stroke-dasharray="${len.toFixed(2)} ${(C_-len).toFixed(2)}" stroke-dashoffset="${(-off).toFixed(2)}" transform="rotate(-90 ${cx} ${cx})"><title>${esc(it.label)}: ${C(it.value)} (${PCT(f,false)})</title></circle>`;
+    off+=f*C_; });
+  svg+=`<text x="${cx}" y="${cx}" text-anchor="middle" style="font:600 15px var(--font-display);fill:var(--ink)">${esc(center)}</text><text x="${cx}" y="${cx+16}" text-anchor="middle" style="font-size:10.5px;fill:var(--muted)">${esc(sub)}</text></svg>`;
+  return `<div class="donut-wrap">${svg}<div class="dleg">${items.map(it=>`<div><i style="background:${it.color}"></i><span>${esc(it.label)}${it.warn?' <span class="chip down">vượt mức</span>':''}</span><span class="p">${PCT(it.value/tot,false)}</span></div>`).join('')}</div></div>`;
+}
+function ring(score,col){ const r=20, C_=2*Math.PI*r, f=score/100;
+  return `<svg width="52" height="52" viewBox="0 0 52 52" aria-label="Điểm kỷ luật ${score}/100"><circle cx="26" cy="26" r="${r}" fill="none" stroke="var(--surface-2)" stroke-width="6"/><circle cx="26" cy="26" r="${r}" fill="none" stroke="${col}" stroke-width="6" stroke-linecap="round" stroke-dasharray="${(f*C_).toFixed(1)} ${C_.toFixed(1)}" transform="rotate(-90 26 26)"/><text x="26" y="30.5" text-anchor="middle" style="font:600 14px var(--font-display);fill:var(--ink)">${score}</text></svg>`; }
+function plColor(p){ const k=Math.min(1,Math.abs(p)/.30), pct=Math.round(18+k*72); return `color-mix(in srgb, var(--${p>=0?'up':'down'}) ${pct}%, var(--surface))`; }
+function treemap(hs){
+  if(!hs.length) return '<div class="empty">Bạn chưa giữ mã nào.</div>';
+  const tot=hs.reduce((s,h)=>s+h.value,0), rows=[[],[]]; let acc=0;
+  hs.forEach(h=>{ (acc<tot*.5||!rows[0].length?rows[0]:rows[1]).push(h); acc+=h.value; });
+  return `<div class="tm">${rows.filter(r=>r.length).map(r=>{ const rs=r.reduce((s,h)=>s+h.value,0);
+    return `<div class="tm-row" style="flex:${rs}">${r.map(h=>{ const strong=Math.abs(h.pnlPct)>.15;
+      return `<a class="tm-tile" href="#ma-${h.ticker}" style="flex:${h.value};background:${plColor(h.pnlPct)};color:${strong?'#fff':'var(--ink)'}" title="${h.ticker}: ${C(h.value)}, ${PCT(h.weight,false)} danh mục, lãi/lỗ ${PCT(h.pnlPct)}"><b>${h.ticker}</b><span>${PCT(h.pnlPct)} · ${PCT(h.weight,false,0)}</span></a>`; }).join('')}</div>`; }).join('')}</div>`;
+}
+
 function barRow(name,w,lim){ return `<div class="bar-row"><div class="name">${name}</div><div class="bar"><i class="${lim&&w>lim?'over':''}" style="width:${Math.min(100,w*100).toFixed(1)}%"></i>${lim?`<span class="lim" style="left:${lim*100}%"></span>`:''}</div><div class="pct">${PCT(w,false)}</div></div>`; }
 function planRow(p){ const left=p.unlockAt-Date.now(), ready=left<=0; const h=Math.ceil(left/36e5);
   return `<div class="alert ${ready?'info':''}"><span class="dot"></span><div class="body"><div class="t">Mua ${p.ticker} ${N(p.qty)} cp × ${P(p.price)}</div><div class="d">${ready?'Đã qua 24 giờ. Đọc lại luận điểm rồi quyết định.':`Còn khoảng ${h} giờ nữa mới ghi lệnh được.`} “${esc(p.thesis.reason.slice(0,90))}”</div></div>
@@ -632,31 +740,30 @@ function pageHoldings(){
   return `<div class="page-head"><div><h1>Danh mục</h1><p>Giá vốn đã gồm phí mua 0,15%. Lãi/lỗ chưa chốt chưa trừ phí bán 0,15% và thuế bán 0,1%.</p></div></div>
   <div class="stats">
     ${ACCTS.map(a=>stat('Tài khoản '+a, C(M.acctVal[a].cash+M.acctVal[a].stock), `Cổ phiếu ${C(M.acctVal[a].stock)} · tiền ${C(M.acctVal[a].cash)}`)).join('')}
-    ${stat('Giá trị cổ phiếu', C(M.stockVal), `${M.holdings.length} mã`)}
-    ${stat('Tiền mặt', C(M.cash), PCT(M.cash/M.nav,false)+' tài khoản')}
     ${stat('Lãi/lỗ chưa chốt', (tot>=0?'+':'')+C(tot), '', cls(tot))}
     ${stat('Lãi/lỗ đã chốt', (M.realized>=0?'+':'')+C(M.realized), `${M.closed.length} lệnh bán`, cls(M.realized))}
-    ${stat('Cổ tức tiền đã nhận', C(M.divInc), 'Sau thuế 5%')}
-    ${stat('Phí và thuế đã trả', C(M.fees), '')}
+    ${stat('Cổ tức tiền đã nhận', C(M.divInc), `Sau thuế 5% · đã trả phí và thuế ${C(M.fees)}`)}
   </div>
   <section class="card"><div class="tbl"><table>
     <thead><tr><th>Mã</th><th class="r">Khối lượng</th><th class="r">Giá vốn</th><th class="r">Giá</th><th class="r">Hôm nay</th><th class="r">Giá trị</th><th class="r">Lãi/lỗ</th><th class="r">Tỷ trọng</th><th>Kế hoạch (cắt lỗ → mục tiêu)</th><th></th></tr></thead>
     <tbody>${M.holdings.map(h=>{ const t=h.thesis; let plan='<span class="chip warn">Chưa có luận điểm</span>';
       if(t){ const span=t.target-t.stop, pos=Math.max(0,Math.min(1,(h.price-t.stop)/span));
-        plan=`<div class="small num">${P(t.stop)} → ${P(t.target)}</div><div class="range" style="min-width:140px"><i style="left:${pos*100}%;background:${h.price<=t.stop?'var(--down)':h.price>=t.target?'var(--up)':'var(--accent)'}"></i></div>`; }
+        const z=Math.max(1,Math.min(99,10+80*(h.price-t.stop)/span)), st=h.price<=t.stop?'<span class="chip down">Dưới cắt lỗ</span>':h.price>=t.target?'<span class="chip up">Chạm mục tiêu</span>':'';
+        plan=`<div class="small num" style="display:flex;justify-content:space-between;gap:8px"><span class="down">${P(t.stop)}</span>${st}<span class="up">${P(t.target)}</span></div><div class="zone" title="Giá hiện tại ${P(h.price)}"><i style="left:${z}%"></i></div>`; }
       return `<tr><td><a class="tk" href="#ma-${h.ticker}">${h.ticker}</a><div class="small muted">${esc(h.sector)}</div><div class="small muted nowrap">${h.by.map(b=>`${b.acct} ${N(b.qty)}`).join(' · ')}</div></td><td class="r">${N(h.qty)}</td><td class="r">${P(h.avg)}</td><td class="r">${P(h.price)}</td>
-      <td class="r ${cls(h.chg)}">${PCT(h.chg)}</td><td class="r">${C(h.value)}</td><td class="r ${cls(h.pnl)}">${h.pnl>=0?'+':''}${C(h.pnl)}<div class="small">${PCT(h.pnlPct)}</div></td>
-      <td class="r ${h.weight>S.settings.maxTicker?'down':''}">${PCT(h.weight,false)}</td><td>${plan}</td>
+      <td class="r">${chgPill(h.ticker)}</td><td class="r">${C(h.value)}</td><td class="r ${cls(h.pnl)}">${h.pnl>=0?'+':''}${C(h.pnl)}<div class="small">${PCT(h.pnlPct)}</div></td>
+      <td class="r"><div class="${h.weight>S.settings.maxTicker?'down':''}" style="font-weight:600">${PCT(h.weight,false)}</div><div class="bar" style="width:70px;margin-left:auto;height:6px"><i class="${h.weight>S.settings.maxTicker?'over':''}" style="width:${Math.min(100,h.weight/.4*100)}%"></i><span class="lim" style="left:${S.settings.maxTicker/.4*100}%"></span></div></td><td>${plan}</td>
       <td class="nowrap">${t?`<button class="btn sm" data-act="review" data-tk="${h.ticker}">Xem lại</button>`:`<button class="btn sm" data-act="new-thesis" data-tk="${h.ticker}">Viết luận điểm</button>`}</td></tr>`; }).join('')}
       <tr><td><b>Tiền mặt</b></td><td colspan="4"></td><td class="r">${C(M.cash)}</td><td></td><td class="r">${PCT(M.cash/M.nav,false)}</td><td colspan="2"></td></tr>
     </tbody></table></div></section>`;
 }
 
 function pageTickers(){
-  return `<div class="page-head"><div><h1>Mã cổ phiếu</h1><p>Mở một mã để xem chỉ số, lịch sử mua bán, luận điểm và nhật ký của bạn với mã đó trên cùng một trang.</p></div></div>
+  return `<div class="page-head"><div><h1>Mã cổ phiếu</h1><p>Mở một mã để xem chỉ số, lịch sử mua bán, luận điểm và nhật ký của bạn với mã đó trên cùng một trang.</p></div>${VN_LEGEND}</div>
   <div class="tk-grid">${TICKERS.map(tk=>{ const m=MKT[tk], p_=px(tk), c=p_/px(tk,LAST-1)-1, held=M.pos[tk]&&M.pos[tk].qty>0, w=S.watch.find(x=>x.ticker===tk);
-    return `<a class="tk-card" href="#ma-${tk}"><div class="row"><b class="tk" style="font-size:16px">${tk}</b><span class="num">${P(p_)}</span></div>
-    <div class="row small"><span class="muted" style="overflow:hidden;text-overflow:ellipsis;white-space:nowrap">${esc(m.sector)} · ${m.ex}</span><span class="${cls(c)} num">${PCT(c)}</span></div>
+    const k=vnCls(tk);
+    return `<a class="tk-card" href="#ma-${tk}" style="--t:var(--${k==='ceil'?'ceil':k==='floor'?'floor':k==='up'?'up':k==='down'?'down':'ref'})"><div class="row"><b class="tk" style="font-size:17px">${tk}</b><span class="num vn-${k}" style="font-weight:600;font-size:16px">${P(p_)}</span></div>
+    <div class="row small" style="margin-top:4px"><span class="muted" style="overflow:hidden;text-overflow:ellipsis;white-space:nowrap"><i style="display:inline-block;width:8px;height:8px;border-radius:2px;background:${SECTOR_COLOR[m.sector]};margin-right:5px"></i>${esc(m.sector)} · ${m.ex}</span>${chgPill(tk)}</div>
     <div class="chips" style="margin-top:8px">${held?'<span class="chip acc">Đang giữ</span>':''}${w?'<span class="chip">Theo dõi</span>':''}<span class="chip">P/E ${(p_/m.f.eps).toLocaleString('vi-VN',{maximumFractionDigits:1})}</span></div></a>`; }).join('')}</div>`;
 }
 
@@ -690,8 +797,9 @@ function pageTicker(tk){
   <div class="page-head" style="margin-bottom:12px"><a class="btn ghost" href="#ma">← Tất cả mã</a></div>
   <section class="card" style="margin-bottom:16px"><div class="tk-head">
     <div><div class="tk-name"><h1>${tk}</h1><span class="muted">${esc(m.name)}</span></div>
-      <div class="chips" style="margin-top:6px"><span class="chip">${m.ex}</span><span class="chip">${esc(m.sector)}</span>${h?`<span class="chip acc">Đang giữ ${N(h.qty)} cp</span>`:''}${watch?`<span class="chip">Theo dõi, muốn mua dưới ${P(watch.buyBelow)}</span>`:''}</div></div>
-    <div style="text-align:right"><div class="price-big">${P(p_)} <span class="${cls(chg)}" style="font-size:16px">${PCT(chg)}</span></div>
+      <div class="chips" style="margin-top:6px"><span class="chip">${m.ex}</span><span class="chip" style="border-color:${SECTOR_COLOR[m.sector]}">${esc(m.sector)}</span>${h?`<span class="chip acc">Đang giữ ${N(h.qty)} cp</span>`:''}${watch?`<span class="chip">Theo dõi, muốn mua dưới ${P(watch.buyBelow)}</span>`:''}</div></div>
+    <div style="text-align:right"><div class="price-big vn-${vnCls(tk)}">${P(p_)} <span style="font-size:15px;vertical-align:middle">${chgPill(tk)}</span></div>
+      <div class="small muted">Tham chiếu ${P(px(tk,LAST-1))} · trần ${P(Math.floor(px(tk,LAST-1)*1.07/tick(px(tk,LAST-1)))*tick(px(tk,LAST-1)))} · sàn ${P(Math.ceil(px(tk,LAST-1)*.93/tick(px(tk,LAST-1)))*tick(px(tk,LAST-1)))}</div>
       <div class="small muted">Đáy và đỉnh 52 tuần: ${P(lo)} – ${P(hi)}</div><div class="range"><i style="left:${((p_-lo)/(hi-lo||1)*100).toFixed(1)}%"></i></div></div>
   </div>
   <div class="chips" style="margin-top:14px;justify-content:flex-end"><button class="btn primary" data-act="decide" data-tk="${tk}">Ra quyết định mua mới</button>${h?`<button class="btn" data-act="sell" data-tk="${tk}">Ghi lệnh bán</button><button class="btn" data-act="review" data-tk="${tk}">Xem lại luận điểm</button>`:''}${watch?'':`<button class="btn" data-act="watch" data-tk="${tk}">Theo dõi mã này</button>`}</div></section>
@@ -736,7 +844,7 @@ function pageTicker(tk){
     </section>
   </div>`;
 }
-function moodCls(m){ return m==='Sợ hãi'||m==='Hưng phấn'?'down':m==='Lo lắng'?'warn':'acc'; }
+function moodCls(m){ return 'mood mood-'+({'Bình tĩnh':'b','Tự tin':'t','Lo lắng':'l','Sợ hãi':'s','Hưng phấn':'h'}[m]||'x'); }
 function txLine(t){
   if(t.type==='buy'){ const th=t.thesisId?thesisById(t.thesisId):null; return `<b class="up">Mua</b> ${N(t.qty)} cp × ${P(t.price)} = ${C(t.qty*t.price)}${th?'':' <span class="chip warn">Không có luận điểm</span>'}${t.note?`<div class="small muted">${esc(t.note)}</div>`:''}`; }
   if(t.type==='sell'){ const c=M.closed.find(x=>x.id===t.id); return `<b class="down">Bán</b> ${N(t.qty)} cp × ${P(t.price)}${c?` · <span class="${cls(c.pnl)}">${c.pnl>=0?'Lãi':'Lỗ'} ${C(Math.abs(c.pnl))} (${PCT(c.pnlPct)})</span>`:''}<div class="chips" style="margin:4px 0">${(t.tags||[]).map(g=>`<span class="chip ${tagCls(g)}">${esc(g)}</span>`).join('')}</div>${t.review?`<div class="quote">${esc(t.review)}</div>`:''}`; }
@@ -800,8 +908,9 @@ function pageAssets(){
     ${stat('Lãi/lỗ', (M.otherVal-M.otherCost>=0?'+':'')+C(M.otherVal-M.otherCost), PCT(M.otherCost?M.otherVal/M.otherCost-1:0), cls(M.otherVal-M.otherCost))}
     ${KINDS.map(k=>{ const v=list.filter(a=>a.kind===k).reduce((s,a)=>s+a.value,0); return v?stat(k, C(v), PCT(v/M.total,false)+' tổng tài sản'):''; }).join('')}
   </div>
+  ${list.length?`<section class="card" style="margin-bottom:16px">${donut(KINDS.map(k=>({label:k,value:list.filter(a=>a.kind===k).reduce((s,a)=>s+a.value,0),color:ASSET_COLOR[k]})).filter(x=>x.value>0),150,C(M.otherVal),'tài sản khác')}</section>`:''}
   <section class="card"><div class="tbl"><table><thead><tr><th>Loại</th><th>Tài sản</th><th>Từ ngày</th><th class="r">Vốn</th><th class="r">Giá trị</th><th class="r">Lãi/lỗ</th><th>Cập nhật</th><th></th></tr></thead><tbody>
-  ${list.map(a=>`<tr><td><span class="chip acc">${esc(a.kind)}</span></td><td><b>${esc(a.name)}</b>${a.rate?`<div class="small muted">Lãi suất ${a.rate.toLocaleString('vi-VN')}%/năm</div>`:''}<div class="small muted">${esc(a.note||'')}</div></td>
+  ${list.map(a=>`<tr><td><span class="chip" style="background:color-mix(in srgb,${ASSET_COLOR[a.kind]} 16%,var(--surface));border-color:transparent;color:var(--ink)"><i style="display:inline-block;width:8px;height:8px;border-radius:50%;background:${ASSET_COLOR[a.kind]};margin-right:5px"></i>${esc(a.kind)}</span></td><td><b>${esc(a.name)}</b>${a.rate?`<div class="small muted">Lãi suất ${a.rate.toLocaleString('vi-VN')}%/năm</div>`:''}<div class="small muted">${esc(a.note||'')}</div></td>
     <td class="nowrap">${D(a.date)}</td><td class="r">${C(a.cost)}</td><td class="r">${C(a.value)}</td><td class="r ${cls(a.pnl)}">${a.pnl>=0?'+':''}${C(a.pnl)}<div class="small">${PCT(a.pnlPct)}</div></td>
     <td class="small muted nowrap">${a.rate?'Tự tính':D(a.vdate)}</td>
     <td class="nowrap">${a.rate?'':`<button class="btn sm" data-act="asset-val" data-id="${a.id}">Cập nhật giá trị</button> `}<button class="btn sm danger" data-act="del-asset" data-id="${a.id}">Xóa</button></td></tr>`).join('')||'<tr><td colspan="8" class="empty">Chưa có tài sản nào.</td></tr>'}
@@ -818,7 +927,7 @@ function openAssetVal(id){
   open('asset-val', `<p style="margin:0">${esc(a.name)}: giá trị gần nhất <b>${C(a.value)}</b> ngày ${D(a.vdate)}.</p><div class="fields">${fld('f_date','Ngày',`<input type="date" id="f_date" value="${TODAY}">`)}${fld('f_value','Giá trị hiện tại (đồng)',`<input type="number" id="f_value" step="100000" value="${Math.round(a.value)}">`)}</div>`, 'Cập nhật giá trị');
 }
 function entryHtml(e, short){
-  return `<article class="entry"><div class="entry-head"><b>${D(e.date)}</b><span class="chip ${moodCls(e.mood)}">${esc(e.mood)}</span>${e.tickers.map(t=>`<a class="chip acc" href="#ma-${t}" style="text-decoration:none">${t}</a>`).join('')}${e.tags.map(g=>`<span class="chip">#${esc(g)}</span>`).join('')}
+  return `<article class="entry ${moodCls(e.mood)}"><div class="entry-head"><b>${D(e.date)}</b><span class="chip ${moodCls(e.mood)}">${esc(e.mood)}</span>${e.tickers.map(t=>`<a class="chip acc" href="#ma-${t}" style="text-decoration:none">${t}</a>`).join('')}${e.tags.map(g=>`<span class="chip">#${esc(g)}</span>`).join('')}
   ${short?'':`<span style="margin-left:auto"><button class="btn sm danger" data-act="del-j" data-id="${e.id}">Xóa</button></span>`}</div><p>${esc(short&&e.text.length>180?e.text.slice(0,180)+'…':e.text)}</p></article>`;
 }
 function pageJournal(){
