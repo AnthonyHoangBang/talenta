@@ -1,0 +1,19 @@
+name: Thu nguon gia
+on:
+  workflow_dispatch:
+  push:
+    paths: ['probe/probe.sh', '.github/workflows/probe.yml']
+permissions:
+  contents: write
+jobs:
+  probe:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - run: bash probe/probe.sh
+      - run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add probe/results.txt
+          git commit -m "Ket qua thu nguon gia" || exit 0
+          git push
