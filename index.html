@@ -2,8 +2,9 @@
 <html lang="vi">
 <head>
 <meta charset="utf-8">
-<link rel="icon" type="image/svg+xml" href="logo.svg">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Talenta · Nén Bạc</title>
+<link rel="icon" type="image/svg+xml" href="logo.svg">
 <style>:root{padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}body{margin:0}img{max-width:100%}[hidden]{display:none!important}</style>
 <title>Talenta · Nén Bạc</title>
 <meta name="claude:viewport-fit-sides" content="cover">
@@ -19,7 +20,7 @@
   --up:#0A8456; --down:#C8382C; --ref:#AD7F0C; --up-bg:#E1F3EA; --down-bg:#FBE8E6; --warn-bg:#FBF2DC;
   --shadow:0 1px 2px rgba(23,33,43,.06),0 4px 14px rgba(23,33,43,.05);
   --brand:#143A52; --gold:#B8860B; --ceil:#8E3CC8; --floor:#118DB8; --warn:#C27C0A; --info:#2A78D6; --info-bg:#E4EEFB;
-  --c1:#2a78d6; --c2:#eb6834; --c3:#1baf7a; --c4:#eda100; --c5:#e87ba4; --c6:#6250d6;
+  --c1:#2a78d6; --c2:#eb6834; --c3:#1baf7a; --c4:#eda100; --c5:#e87ba4; --c6:#6250d6; --c7:#8a5a3c; --c8:#5b7083; --c9:#3d4a57;
   --font-display:'Lexend','Be Vietnam Pro',system-ui,sans-serif;
   --font-body:'Be Vietnam Pro',system-ui,-apple-system,'Segoe UI',Roboto,sans-serif;
   --r:12px;
@@ -30,14 +31,14 @@
   --up:#33C186; --down:#F06C5E; --ref:#E3B33E; --up-bg:#12301F; --down-bg:#3A1D1A; --warn-bg:#2E2712;
   --shadow:0 1px 2px rgba(0,0,0,.3); color-scheme:dark;
   --brand:#1B4A68; --gold:#E2B44A; --ceil:#C383F2; --floor:#43C3EA; --warn:#E8A93A; --info:#5AA0EC; --info-bg:#16283D;
-  --c1:#3987e5; --c2:#d95926; --c3:#199e70; --c4:#c98500; --c5:#d55181; --c6:#9085e9;}}
+  --c1:#3987e5; --c2:#d95926; --c3:#199e70; --c4:#c98500; --c5:#d55181; --c6:#9085e9; --c7:#b98a6a; --c8:#8fa3b5; --c9:#c5cfd9;}}
 :root[data-theme="dark"]{
   --bg:#0E1318; --surface:#151C23; --surface-2:#1B242D; --ink:#E2E8EE; --muted:#93A1AF; --line:#27323D;
   --accent:#78B9DB; --accent-soft:#1A3241; --on-accent:#0E1318; --silver:#7D8A97;
   --up:#33C186; --down:#F06C5E; --ref:#E3B33E; --up-bg:#12301F; --down-bg:#3A1D1A; --warn-bg:#2E2712;
   --shadow:0 1px 2px rgba(0,0,0,.3); color-scheme:dark;
   --brand:#1B4A68; --gold:#E2B44A; --ceil:#C383F2; --floor:#43C3EA; --warn:#E8A93A; --info:#5AA0EC; --info-bg:#16283D;
-  --c1:#3987e5; --c2:#d95926; --c3:#199e70; --c4:#c98500; --c5:#d55181; --c6:#9085e9;}
+  --c1:#3987e5; --c2:#d95926; --c3:#199e70; --c4:#c98500; --c5:#d55181; --c6:#9085e9; --c7:#b98a6a; --c8:#8fa3b5; --c9:#c5cfd9;}
 
 *{box-sizing:border-box}
 body{background:var(--bg);color:var(--ink);font-family:var(--font-body);font-size:14px;line-height:1.5;-webkit-font-smoothing:antialiased}
@@ -58,6 +59,42 @@ button,input,select,textarea{font:inherit;color:inherit}
 .brand svg{flex:none;border-radius:9px}
 .brand b{font-family:var(--font-display);font-size:18px;font-weight:600;letter-spacing:.01em}
 .brand span{display:block;font-size:11px;color:var(--muted);letter-spacing:.04em}
+.live-pill{font-size:11.5px;font-weight:600;padding:4px 10px;border-radius:99px;background:var(--surface-2);color:var(--muted);border:1px solid var(--line);white-space:nowrap;display:inline-flex;align-items:center;gap:6px}
+.live-pill::before{content:"";width:8px;height:8px;border-radius:50%;background:var(--silver)}
+.live-pill.ok{color:var(--up);background:var(--up-bg);border-color:transparent}.live-pill.ok::before{background:var(--up);animation:pulse 2s infinite}
+.live-pill.closed::before{background:var(--ref)}
+.live-pill.fail{color:var(--warn);background:var(--warn-bg);border-color:transparent}.live-pill.fail::before{background:var(--warn)}
+@keyframes pulse{50%{opacity:.35}}
+@media (prefers-reduced-motion:reduce){.live-pill.ok::before{animation:none}}
+.strip{display:flex;gap:18px;overflow-x:auto;scrollbar-width:none;padding-block:7px;border-top:1px solid var(--line);font-size:12.5px;font-variant-numeric:tabular-nums}
+.strip::-webkit-scrollbar{display:none}
+.strip a{display:inline-flex;gap:6px;align-items:baseline;text-decoration:none;color:var(--ink);white-space:nowrap}
+.strip b{font-weight:600}
+.flash{animation:flash .9s}
+@keyframes flash{0%{background:color-mix(in srgb,var(--gold) 35%,transparent)}100%{background:transparent}}
+.about h2{margin-bottom:10px;font-size:18px}
+.about p{max-width:70ch;margin:0 0 10px}
+.about .lead{font-size:17px;line-height:1.5}
+.about-hero{display:flex;gap:22px;align-items:center;margin-bottom:16px;padding:26px;background:linear-gradient(135deg,color-mix(in srgb,var(--brand) 10%,var(--surface)),var(--surface) 70%);flex-wrap:wrap}
+.about-hero h1{font-size:34px;margin-bottom:6px}
+.about-logo svg{border-radius:20px;display:block}
+.about blockquote{margin:12px 0;padding:10px 16px;border-left:4px solid var(--gold);background:var(--surface-2);border-radius:0 10px 10px 0;font-style:italic;font-size:15px}
+.about cite{display:block;font-style:normal;font-size:12px;color:var(--muted);margin-top:4px}
+.creed{display:flex;flex-direction:column;gap:3px;padding:12px 0;border-bottom:1px solid var(--line)}
+.creed:last-child{border-bottom:0}
+.creed b{font-family:var(--font-display);font-size:15px}
+.creed span,.pillar span{color:var(--muted)}
+.pillar{display:flex;flex-direction:column;gap:4px;background:var(--surface-2);border-radius:12px;padding:14px 16px;border-top:4px solid var(--gold)}
+.pillar b{font-family:var(--font-display);font-size:16px}
+.qlist{display:flex;flex-direction:column}
+.qlist a{display:flex;justify-content:space-between;gap:12px;padding:10px 0;border-bottom:1px solid var(--line);text-decoration:none;color:var(--ink);flex-wrap:wrap}
+.qlist a:last-child{border-bottom:0}
+.qlist a:hover b{color:var(--accent)}
+.qlist span{color:var(--muted);font-size:12.5px}
+.plain{margin:0;padding-left:18px;display:flex;flex-direction:column;gap:8px}
+input[type=range]{width:100%;accent-color:var(--accent);padding:0;border:0;background:transparent}
+.mirror{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}
+.mirror div{background:var(--surface-2);border-radius:10px;padding:10px 12px}
 .demo-pill{font-size:11px;font-weight:600;letter-spacing:.05em;text-transform:uppercase;color:var(--ref);background:var(--warn-bg);padding:3px 8px;border-radius:99px}
 .search{position:relative}
 .search input{width:150px;padding:7px 10px;border:1px solid var(--line);border-radius:8px;background:var(--surface-2)}
@@ -268,7 +305,7 @@ footer .row{display:flex;gap:10px;flex-wrap:wrap;align-items:center;justify-cont
         <svg width="40" height="40" viewBox="0 0 64 64" aria-hidden="true"><defs><linearGradient id="lgbg" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#1B4A68"/><stop offset="1" stop-color="#0E2638"/></linearGradient><linearGradient id="lgag" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#F4F7FA"/><stop offset=".55" stop-color="#B9C4CF"/><stop offset="1" stop-color="#7E8C9A"/></linearGradient><linearGradient id="lgtop" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#FFFFFF"/><stop offset="1" stop-color="#C9D2DB"/></linearGradient><linearGradient id="lgau" x1="0" y1="1" x2="1" y2="0"><stop offset="0" stop-color="#C8921A"/><stop offset="1" stop-color="#F3CC5C"/></linearGradient></defs><rect width="64" height="64" rx="15" fill="url(#lgbg)"/><path d="M7 31 C9 28 13 29 15 32 L49 32 C51 29 55 28 57 31 L51 46 C44 51 20 51 13 46 Z" fill="url(#lgag)"/><path d="M15 32 C20 26 44 26 49 32 Z" fill="url(#lgtop)"/><path d="M18 24 L27 17 L33 21 L45 10" fill="none" stroke="url(#lgau)" stroke-width="3.6" stroke-linecap="round" stroke-linejoin="round"/><path d="M39.5 9.2 L46.6 8.4 L45.8 15.5 Z" fill="#F3CC5C"/></svg>
         <div><b>Talenta</b><span>NÉN BẠC · SỔ NÉN BẠC CỦA TÔI</span></div>
       </a>
-      <span class="demo-pill" title="Giá và chỉ số thị trường trong bản này là số liệu mô phỏng">Bản dùng thử</span>
+      <span class="live-pill" id="livePill" title="">Đang tải giá</span>
       <form class="search" id="searchForm" role="search"><input id="searchInput" list="tkList" placeholder="Tìm mã, ví dụ FPT" aria-label="Tìm mã cổ phiếu" autocomplete="off"><datalist id="tkList"></datalist></form>
       <button class="btn" data-act="new-journal">+ Nhật ký</button>
       <button class="btn primary" data-act="new-tx">+ Giao dịch</button>
@@ -280,8 +317,11 @@ footer .row{display:flex;gap:10px;flex-wrap:wrap;align-items:center;justify-cont
       <a href="#tai-san" data-r="tai-san">Tài sản khác</a>
       <a href="#giao-dich" data-r="giao-dich">Sổ giao dịch</a>
       <a href="#nhat-ky" data-r="nhat-ky">Nhật ký</a>
-      <a href="#tong-ket" data-r="tong-ket">Tổng kết lệnh</a>
+      <a href="#tong-ket" data-r="tong-ket">Kết quả của tôi</a>
+      <a href="#muc-tieu" data-r="muc-tieu">Mục tiêu</a>
+      <a href="#gioi-thieu" data-r="gioi-thieu">Giới thiệu</a>
     </nav>
+    <div class="strip" id="strip" aria-label="Bảng giá 20 mã"></div>
   </div>
 </header>
 
@@ -289,13 +329,14 @@ footer .row{display:flex;gap:10px;flex-wrap:wrap;align-items:center;justify-cont
 
 <footer>
   <div class="wrap row">
-    <div>Talenta ghi chép và phân tích dữ liệu của chính bạn. App không đưa ra khuyến nghị mua hay bán.<br>Bản dùng thử: giá và chỉ số thị trường là số liệu mô phỏng. Dữ liệu bạn nhập chỉ nằm trong trình duyệt này.</div>
+    <div>Talenta ghi chép và phân tích dữ liệu của chính bạn. App không đưa ra khuyến nghị mua hay bán.<br><span id="dataNote"></span> Sổ mẫu là ví dụ minh họa. Dữ liệu bạn nhập chỉ nằm trong trình duyệt này.</div>
     <div class="chips"><button class="btn sm" data-act="backup">Sao lưu / khôi phục</button><button class="btn sm danger" data-act="reset">Làm lại từ dữ liệu mẫu</button><button class="btn sm danger" data-act="clear">Xóa hết, bắt đầu sổ trống</button></div>
   </div>
 </footer>
 
 <dialog id="dlg"><form id="dlgForm" novalidate></form></dialog>
 
+<script src="data/market.js"></script>
 <script>
 "use strict";
 /* ============ Tiện ích ============ */
@@ -316,66 +357,76 @@ const toMs = iso => Date.UTC(+iso.slice(0,4), +iso.slice(5,7)-1, +iso.slice(8,10
 const days = (a,b) => Math.round((toMs(b)-toMs(a))/864e5);
 const uid = p => p + Date.now().toString(36) + Math.random().toString(36).slice(2,6);
 
-/* ============ Dữ liệu thị trường mô phỏng ============ */
-function bizDays(a,b){ const out=[]; const d=new Date(a+'T00:00:00Z'), e=new Date(b+'T00:00:00Z');
-  while(d<=e){ const w=d.getUTCDay(); if(w>0&&w<6) out.push(d.toISOString().slice(0,10)); d.setUTCDate(d.getUTCDate()+1); } return out; }
-const DAYS = bizDays('2025-01-02','2026-11-12');
-const TODAY = DAYS[DAYS.length-1];
-const LAST = DAYS.length-1;
+/* ============ Dữ liệu thị trường thật ============ */
+// Giá đóng cửa hằng ngày nằm trong data/market.js (tự cập nhật mỗi ngày). Giá trực tiếp trong phiên lấy từ bảng giá VPS.
+const DATA = window.TALENTA_DATA || null;
+const META = {
+  FPT:['CTCP FPT','Công nghệ'], HPG:['CTCP Tập đoàn Hòa Phát','Thép'], VCB:['Ngân hàng TMCP Ngoại thương Việt Nam','Ngân hàng'], MWG:['CTCP Đầu tư Thế Giới Di Động','Bán lẻ'],
+  REE:['CTCP Cơ Điện Lạnh','Tiện ích'], TCB:['Ngân hàng TMCP Kỹ Thương Việt Nam','Ngân hàng'], DGC:['CTCP Tập đoàn Hóa chất Đức Giang','Hóa chất'], VNM:['CTCP Sữa Việt Nam','Thực phẩm'],
+  VIC:['Tập đoàn Vingroup','Bất động sản'], VHM:['CTCP Vinhomes','Bất động sản'], MSN:['CTCP Tập đoàn Masan','Thực phẩm'], MBB:['Ngân hàng TMCP Quân Đội','Ngân hàng'],
+  ACB:['Ngân hàng TMCP Á Châu','Ngân hàng'], BID:['Ngân hàng TMCP Đầu tư và Phát triển Việt Nam','Ngân hàng'], CTG:['Ngân hàng TMCP Công Thương Việt Nam','Ngân hàng'], SSI:['CTCP Chứng khoán SSI','Chứng khoán'],
+  VND:['CTCP Chứng khoán VNDIRECT','Chứng khoán'], GAS:['Tổng Công ty Khí Việt Nam','Dầu khí'], PNJ:['CTCP Vàng bạc Đá quý Phú Nhuận','Bán lẻ'], VPB:['Ngân hàng TMCP Việt Nam Thịnh Vượng','Ngân hàng'] };
+const DAYS = DATA ? DATA.days.slice() : ['2026-01-02'];
+const PX = {}; if(DATA) for(const k in DATA.px) PX[k]=DATA.px[k].slice();
+const MKT = {VNINDEX:{name:'VN-Index'}};
+for(const k in META) if(PX[k]) MKT[k]={name:META[k][0], sector:META[k][1], ex:'HOSE', f:(DATA.f&&DATA.f[k])||{}};
+const TICKERS = Object.keys(MKT).filter(k=>k!=='VNINDEX');
+let LAST = DAYS.length-1, TODAY = DAYS[LAST];
+const CLOSE_DAY = TODAY; // phiên gần nhất có giá đóng cửa trong file dữ liệu
 function idxOf(date){ let lo=0, hi=LAST; if(date<DAYS[0]) return 0; if(date>=DAYS[LAST]) return LAST;
   while(lo<hi){ const m=(lo+hi+1)>>1; if(DAYS[m]<=date) lo=m; else hi=m-1; } return lo; }
 function rng(seed){ return function(){ seed|=0; seed=seed+0x6D2B79F5|0; let t=Math.imul(seed^seed>>>15,1|seed); t=t+Math.imul(t^t>>>7,61|t)^t; return ((t^t>>>14)>>>0)/4294967296; }; }
-function hash(s){ let h=2166136261; for(const c of s){ h^=c.charCodeAt(0); h=Math.imul(h,16777619);} return h>>>0; }
 const tick = p => p<10000?10:p<50000?50:100;
 const snap = p => { const t=tick(p); return Math.round(p/t)*t; };
-
-const MKT = {
-  VNINDEX:{name:'VN-Index', vol:.0085, anchors:[['2025-01-02',1265],['2025-02-20',1300],['2025-04-09',1130],['2025-05-20',1300],['2025-07-22',1500],['2025-08-25',1680],['2025-10-10',1720],['2025-11-20',1650],['2026-01-12',1820],['2026-03-05',1760],['2026-04-20',1690],['2026-07-01',1780],['2026-09-15',1850],['2026-11-12',1810]]},
-  FPT:{name:'CTCP FPT', sector:'Công nghệ', ex:'HOSE', vol:.016,
-    anchors:[['2025-01-02',133000],['2025-01-08',135000],['2025-02-20',152000],['2025-04-09',110000],['2025-06-09',128000],['2025-06-10',107000],['2025-07-15',110000],['2025-10-10',102000],['2026-01-12',118000],['2026-03-05',112000],['2026-07-01',122000],['2026-11-12',128000]],
-    f:{eps:5900,bvps:24000,roe:28.1,roa:13.0,de:0.8,gm:38.2,growth:18.5,div:2000,peSector:17,pe5y:19,profit:[2100,2300,2350,2700,2450,2600,2700,3050]}},
-  HPG:{name:'CTCP Tập đoàn Hòa Phát', sector:'Thép', ex:'HOSE', vol:.018,
-    anchors:[['2025-01-02',26200],['2025-01-15',26500],['2025-03-10',28000],['2025-04-08',22300],['2025-04-09',21800],['2025-05-20',25500],['2025-07-22',27000],['2025-10-10',27800],['2026-01-12',30500],['2026-04-20',26800],['2026-11-12',29400]],
-    f:{eps:2300,bvps:21000,roe:11.2,roa:6.1,de:0.9,gm:13.1,growth:25,div:0,peSector:12,pe5y:10,profit:[3000,3400,3000,2800,3300,3600,3900,4100]}},
-  VCB:{name:'Ngân hàng TMCP Ngoại thương Việt Nam', sector:'Ngân hàng', ex:'HOSE', vol:.012,
-    anchors:[['2025-01-02',91000],['2025-02-10',92000],['2025-04-09',84000],['2025-08-25',104000],['2026-01-12',99000],['2026-04-20',92000],['2026-11-12',98500]],
-    f:{eps:6600,bvps:42000,roe:17.5,roa:1.7,de:null,gm:null,growth:6.2,div:0,peSector:9,pe5y:15,profit:[8500,8700,8800,9100,8900,9200,9400,9600]}},
-  MWG:{name:'CTCP Đầu tư Thế Giới Di Động', sector:'Bán lẻ', ex:'HOSE', vol:.017,
-    anchors:[['2025-01-02',60000],['2025-03-20',62000],['2025-04-09',53000],['2025-08-25',74000],['2025-11-20',78500],['2026-04-20',70000],['2026-11-12',81500]],
-    f:{eps:3900,bvps:22000,roe:18,roa:7.1,de:1.2,gm:29,growth:45,div:1000,peSector:20,pe5y:17,profit:[1000,1200,1300,1250,1550,1600,1700,1800]}},
-  REE:{name:'CTCP Cơ Điện Lạnh', sector:'Tiện ích', ex:'HOSE', vol:.012,
-    anchors:[['2025-01-02',68000],['2025-04-09',58500],['2025-06-05',66000],['2026-01-12',70000],['2026-06-10',69000],['2026-11-12',72000]],
-    f:{eps:5400,bvps:52000,roe:10.5,roa:5.8,de:0.6,gm:40,growth:12,div:1500,peSector:14,pe5y:11,profit:[600,650,700,620,680,720,760,750]}},
-  TCB:{name:'Ngân hàng TMCP Kỹ Thương Việt Nam', sector:'Ngân hàng', ex:'HOSE', vol:.016,
-    anchors:[['2025-01-02',25500],['2025-06-20',27000],['2025-07-22',33000],['2025-08-25',39000],['2025-09-15',38500],['2025-10-20',41500],['2026-01-12',38000],['2026-06-01',34000],['2026-07-01',40000],['2026-11-12',34500]],
-    f:{eps:3100,bvps:21500,roe:15,roa:2.4,de:null,gm:null,growth:12,div:1000,peSector:9,pe5y:8,profit:[5500,6000,5800,6500,6100,6300,6600,6800]}},
-  DGC:{name:'CTCP Tập đoàn Hóa chất Đức Giang', sector:'Hóa chất', ex:'HOSE', vol:.017,
-    anchors:[['2025-01-02',108000],['2025-04-09',85000],['2025-08-25',110000],['2026-01-12',98000],['2026-04-20',83000],['2026-11-11',84200],['2026-11-12',90000]],
-    f:{eps:8000,bvps:42000,roe:20,roa:17,de:0.15,gm:32,growth:-8,div:3000,peSector:13,pe5y:13,profit:[800,750,780,770,740,720,700,690]}},
-  VNM:{name:'CTCP Sữa Việt Nam', sector:'Thực phẩm', ex:'HOSE', vol:.010,
-    anchors:[['2025-01-02',64000],['2025-04-09',55000],['2025-10-10',60000],['2026-11-11',65500],['2026-11-12',61000]],
-    f:{eps:4300,bvps:16500,roe:26,roa:19,de:0.5,gm:41,growth:2,div:3850,peSector:18,pe5y:18,profit:[2200,2400,2300,2100,2250,2450,2350,2200]}}
-};
-const TICKERS = Object.keys(MKT).filter(k=>k!=='VNINDEX');
-const PX = {};
-(function genSeries(){
-  for(const sym in MKT){
-    const def=MKT[sym], r=rng(hash(sym)), out=new Array(DAYS.length);
-    const g=()=>{ let u=0,v=0; while(!u)u=r(); while(!v)v=r(); return Math.sqrt(-2*Math.log(u))*Math.cos(2*Math.PI*v); };
-    const A=def.anchors.map(([d,p])=>[idxOf(d),p]);
-    for(let a=0;a<A.length-1;a++){
-      const [i0,p0]=A[a], [i1,p1]=A[a+1], n=i1-i0; if(n<=0) continue;
-      const W=[0]; for(let k=1;k<=n;k++) W[k]=W[k-1]+g()*def.vol;
-      for(let k=0;k<=n;k++){
-        const lp=Math.log(p0)+(Math.log(p1)-Math.log(p0))*k/n + W[k]-(k/n)*W[n];
-        const v=Math.exp(lp); out[i0+k]= sym==='VNINDEX'? Math.round(v*100)/100 : snap(v);
-      }
-    }
-    PX[sym]=out;
-  }
-})();
 const px = (t,i=LAST) => PX[t] ? PX[t][Math.max(0,Math.min(LAST,i))] : 0;
 const runup = (t,i,n=20) => px(t,i)/px(t,Math.max(0,i-n))-1;
+
+/* ---- Giá trực tiếp (chỉ chạy được trên trang web thật, ví dụ GitHub Pages) ---- */
+const LIVE = {state:'idle', at:null, fails:0, quotes:{}, src:'bảng giá VPS'};
+function vnNow(){ const d=new Date(Date.now()+7*3600e3); return {iso:d.toISOString().slice(0,10), dow:d.getUTCDay(), min:d.getUTCHours()*60+d.getUTCMinutes(), hms:d.toISOString().slice(11,19)}; }
+function marketOpen(){ const n=vnNow(); return n.dow>=1&&n.dow<=5 && ((n.min>=540&&n.min<=690)||(n.min>=780&&n.min<=905)); }
+function ensureToday(){ const n=vnNow(); if(n.dow>=1&&n.dow<=5 && n.iso>DAYS[LAST] && n.min>=540){ DAYS.push(n.iso); for(const k in PX) PX[k].push(PX[k][PX[k].length-1]); LAST=DAYS.length-1; TODAY=DAYS[LAST]; return true; } return false; }
+async function pollLive(){
+  if(!DATA) return;
+  try{
+    const ctl=new AbortController(), to=setTimeout(()=>ctl.abort(),8000);
+    const [rs,ri]=await Promise.all([fetch('https://bgapidatafeed.vps.com.vn/getliststockdata/'+TICKERS.join(','),{signal:ctl.signal}), fetch('https://bgapidatafeed.vps.com.vn/getlistindexdetail/10',{signal:ctl.signal})]);
+    clearTimeout(to); if(!rs.ok) throw new Error('HTTP '+rs.status);
+    const arr=await rs.json(), idx=ri.ok?await ri.json():[];
+    // Chỉ ghi giá trực tiếp vào hôm nay khi đang trong ngày giao dịch mới; ngoài ra giữ giá đóng cửa trong file.
+    const fresh = ensureToday() || TODAY===vnNow().iso; let changed=false;
+    arr.forEach(q=>{ const p=Math.round(+q.lastPrice*1000); if(!PX[q.sym]||!(p>0)) return; LIVE.quotes[q.sym]={p, ref:Math.round(+q.r*1000), ceil:Math.round(+q.c*1000), floor:Math.round(+q.f*1000), vol:+q.lot*10};
+      if(fresh && PX[q.sym][LAST]!==p){ PX[q.sym][LAST]=p; changed=true; } });
+    if(idx[0]&&+idx[0].cIndex>0){ LIVE.quotes.VNINDEX={p:+idx[0].cIndex, time:idx[0].time}; if(fresh && PX.VNINDEX[LAST]!==+idx[0].cIndex){ PX.VNINDEX[LAST]=+idx[0].cIndex; changed=true; } }
+    LIVE.state='ok'; LIVE.fails=0; LIVE.at=vnNow().hms; onLive(changed);
+  }catch(e){ LIVE.fails++; if(LIVE.fails>=2||LIVE.state==='idle') LIVE.state='fail'; onLive(false); }
+  setTimeout(pollLive, LIVE.state==='fail' ? 60000 : marketOpen() ? 3000 : 60000);
+}
+
+/* ---- Hiển thị trạng thái giá: luôn nói rõ giá đang xem là giá gì ---- */
+let lastRender=0; const stripPrev={};
+function liveMode(){ if(!DATA) return 'none'; const n=vnNow();
+  if(LIVE.state==='ok' && TODAY===n.iso) return marketOpen()?'live':'today';
+  if(LIVE.state==='fail') return 'fail'; if(LIVE.state==='idle') return 'idle'; return 'closed'; }
+function paintLive(){
+  const pill=$('#livePill'); if(!pill) return; const m=liveMode(), close='giá đóng cửa '+D(CLOSE_DAY);
+  const T={none:['fail','Chưa có dữ liệu giá',''],
+    live:['ok','Giá trực tiếp · '+LIVE.at,'Hỏi '+LIVE.src+' khoảng 3 giây một lần. Đây là giá khớp gần nhất mà nguồn trả về, có thể chậm vài giây so với sàn.'],
+    today:['closed','Ngoài giờ khớp lệnh · giá lúc '+LIVE.at,'Giá khớp cuối cùng của hôm nay theo '+LIVE.src+'.'],
+    closed:['closed','Thị trường nghỉ · '+close,'Giá trực tiếp sẽ chạy lại trong giờ giao dịch, 9:00–11:30 và 13:00–15:05 các ngày làm việc.'],
+    idle:['closed','Đang hỏi giá · '+close,''],
+    fail:['fail','Không lấy được giá trực tiếp · '+close,'Trang đang dùng giá đóng cửa trong file dữ liệu. Giá trực tiếp chỉ chạy khi mở trang trên web và nguồn VPS còn cho phép.']}[m];
+  pill.className='live-pill '+T[0]; pill.textContent=T[1]; pill.title=T[2];
+  const hw=$('#heroWhen'); if(hw) hw.textContent = m==='live'?'giá trực tiếp lúc '+LIVE.at : m==='today'?'giá hôm nay lúc '+LIVE.at : close;
+  const dn=$('#dataNote'); if(dn) dn.textContent = DATA ? `Giá đóng cửa và chỉ số doanh nghiệp là số thật, lấy từ ${DATA.source||'VNDirect và DNSE'}, cập nhật ${D(DATA.updated.slice(0,10))}. Giá trong phiên lấy từ ${LIVE.src}. Đây là các nguồn công khai, không chính thức, chỉ nên dùng cho cá nhân.` : 'Chưa có dữ liệu giá.';
+  const st=$('#strip'); if(st && DATA){ st.innerHTML=['VNINDEX',...TICKERS].map(t=>{ const v=px(t), c=v/px(t,LAST-1)-1, k=t==='VNINDEX'?cls(c):vnCls(t), fl=stripPrev[t]!=null&&stripPrev[t]!==v; stripPrev[t]=v;
+    return `<a ${t==='VNINDEX'?'':`href="#ma-${t}"`} class="${fl?'flash':''}"><b>${t==='VNINDEX'?'VN-Index':t}</b>${t==='VNINDEX'?v.toLocaleString('vi-VN',{minimumFractionDigits:2,maximumFractionDigits:2}):P(v)}<span style="color:var(--${k})">${PCT(c,true,2)}</span></a>`; }).join(''); }
+}
+function onLive(changed){
+  paintLive(); if(!changed) return;
+  const ae=document.activeElement, busy=dlg.open || (ae && /^(INPUT|SELECT|TEXTAREA)$/.test(ae.tagName)) || document.querySelector('.readout:not([hidden])');
+  if(!busy && Date.now()-lastRender>15000){ const y=scrollY; route(); scrollTo(0,y); }
+}
 // Quy ước bảng giá Việt Nam: biên độ HOSE ±7%, trần tím, sàn xanh lơ, tham chiếu vàng
 const BAND={HOSE:.07,HNX:.10,UPCOM:.15};
 function vnCls(t,i=LAST){ const ref=px(t,i-1), p_=px(t,i), b=BAND[(MKT[t]&&MKT[t].ex)||'HOSE']||.07, tk_=tick(ref);
@@ -386,7 +437,7 @@ function chgPill(t){ const c=px(t)/px(t,LAST-1)-1, k=vnCls(t); return `<span cla
 const VN_LEGEND=`<div class="legend-vn"><span><i style="background:var(--ceil)"></i>Trần</span><span><i style="background:var(--up)"></i>Tăng</span><span><i style="background:var(--ref)"></i>Tham chiếu</span><span><i style="background:var(--down)"></i>Giảm</span><span><i style="background:var(--floor)"></i>Sàn</span></div>`;
 
 /* ============ Trạng thái và lưu trữ ============ */
-const KEY='talenta-demo-v2';
+const KEY='talenta-v3';
 const FEE=0.0015, TAX=0.001, DIVTAX=0.05;
 const ACCTS=['SSI','VNDIRECT'];
 const KINDS=['Vàng','Tiết kiệm','Quỹ mở','Crypto','Khác'];
@@ -399,78 +450,74 @@ function load(){ try{ const raw=localStorage.getItem(KEY); if(raw){ S=JSON.parse
 function save(){ try{ localStorage.setItem(KEY, JSON.stringify(S)); }catch(e){} }
 
 function seed(){
+  // Sổ mẫu: ngày và khối lượng là ví dụ, còn giá mua bán lấy đúng giá đóng cửa thật của ngày đó.
   let n=0; const tid=()=> 't'+(++n);
-  const theses=[], tx=[];
-  const th = o => { const id='h'+(theses.length+1); theses.push({id, reviews:[], ...o}); return id; };
+  const theses=[], tx=[], pos={};
+  const pAt=(tk,d)=>px(tk,idxOf(d));
   const add = o => tx.push({id:tid(), ...o});
-  add({date:'2025-01-03',type:'deposit',acct:'SSI',amount:300e6,note:'Vốn ban đầu'});
-  add({date:'2025-01-03',type:'deposit',acct:'VNDIRECT',amount:150e6,note:'Vốn ban đầu'});
-  add({date:'2025-01-08',acct:'SSI',type:'buy',ticker:'FPT',qty:1000,price:135000,thesisId:th({ticker:'FPT',date:'2025-01-08',
-    reason:'Mảng chuyển đổi số ở nước ngoài tăng trưởng trên 25%/năm, hợp đồng ký mới với Nhật và Mỹ tăng mạnh. Lợi nhuận tăng đều 18–20%/năm, ROE gần 28%. P/E khoảng 23, cao hơn ngành nhưng tương xứng với tăng trưởng.',
-    target:165000, stop:112000, horizon:'2–3 năm', wrongIf:'Hợp đồng ký mới mảng nước ngoài tăng dưới 15% trong hai quý liền.', weight:25,
-    letter:'Nếu một năm nữa FPT giảm mà hợp đồng mới vẫn tăng, đừng bán chỉ vì giá.'})});
-  add({date:'2025-01-15',acct:'VNDIRECT',type:'buy',ticker:'HPG',qty:3000,price:26500,thesisId:th({ticker:'HPG',date:'2025-01-15',
-    reason:'Giá thép đang ở đáy chu kỳ. Dung Quất 2 sắp chạy lò cao số 1, sản lượng có thể tăng 30%. P/B khoảng 1,3, thấp so với lịch sử.',
-    target:34000, stop:20000, horizon:'1–2 năm', wrongIf:'Dung Quất 2 chậm tiến độ quá 6 tháng, hoặc giá thép cán nóng tiếp tục giảm.', weight:15})});
-  add({date:'2025-02-10',acct:'SSI',type:'buy',ticker:'VCB',qty:1000,price:92000,thesisId:th({ticker:'VCB',date:'2025-02-10',
-    reason:'Chất lượng tài sản tốt nhất ngành, nợ xấu thấp, bao phủ nợ xấu trên 200%. P/B khoảng 2,2, thấp nhất 5 năm.',
-    target:110000, stop:80000, horizon:'3 năm', wrongIf:'Nợ xấu vượt 1,5% hoặc tín dụng tăng chậm hơn ngành hai năm liền.', weight:20,
-    reviews:[{date:'2026-09-20',valid:true,note:'Nợ xấu 0,9%, biên lãi ròng giảm nhẹ. Lý do mua vẫn đúng, giữ.'}]})});
-  add({date:'2025-03-20',acct:'SSI',type:'buy',ticker:'MWG',qty:1000,price:62000,thesisId:th({ticker:'MWG',date:'2025-03-20',
-    reason:'Bách Hóa Xanh bắt đầu có lãi, mảng điện thoại và điện máy đã qua đáy. Lợi nhuận năm 2025 có thể tăng trên 40%.',
-    target:80000, stop:52000, horizon:'1–2 năm', wrongIf:'Bách Hóa Xanh lỗ trở lại hai quý liên tiếp.', weight:15})});
-  add({date:'2025-04-09',acct:'VNDIRECT',type:'sell',ticker:'HPG',qty:3000,price:21800,
-    review:'Bán vì hoảng theo tin thuế quan Mỹ, không phải vì luận điểm sai. Giá chưa chạm điểm cắt lỗ 20.000. Sáu tuần sau HPG hồi lên 25.500.',
-    tags:['bán hoảng loạn','không theo kế hoạch']});
+  function buy(date,acct,tk,budget,mood,th){ const price=pAt(tk,date), qty=Math.max(100,Math.floor(budget/price/100)*100); let thesisId;
+    if(th){ thesisId='h'+(theses.length+1); theses.push({id:thesisId, ticker:tk, date, reviews:[], ...th, target:snap(price*th.up), stop:snap(price*th.dn)}); delete theses[theses.length-1].up; delete theses[theses.length-1].dn; }
+    pos[tk]=pos[tk]||{q:0,c:0}; pos[tk].q+=qty; pos[tk].c+=qty*price;
+    add({date,acct,type:'buy',ticker:tk,qty,price,mood,...(thesisId?{thesisId}:{note:'Mua theo nhóm bạn, chưa viết luận điểm'})}); }
+  function sell(date,acct,tk,frac,win,lose){ const P_=pos[tk], price=pAt(tk,date), qty=Math.max(100,Math.round(P_.q*frac/100)*100), gain=price>P_.c/P_.q, o=gain?win:lose;
+    P_.c-=P_.c/P_.q*qty; P_.q-=qty; add({date,acct,type:'sell',ticker:tk,qty,price,review:o[0],tags:o[1]}); }
+  add({date:'2025-01-03',acct:'SSI',type:'deposit',amount:300e6,note:'Vốn ban đầu'});
+  add({date:'2025-01-03',acct:'VNDIRECT',type:'deposit',amount:150e6,note:'Vốn ban đầu'});
+  buy('2025-01-08','SSI','FPT',130e6,'Bình tĩnh',{up:1.25,dn:.85,horizon:'2–3 năm',weight:25,
+    reason:'Mảng chuyển đổi số ở nước ngoài tăng trưởng nhanh, hợp đồng ký mới tăng đều. Lợi nhuận tăng ổn định nhiều năm, ROE cao.',
+    wrongIf:'Hợp đồng ký mới mảng nước ngoài tăng dưới 15% trong hai quý liền.', letter:'Nếu một năm nữa FPT giảm mà hợp đồng mới vẫn tăng, đừng bán chỉ vì giá.'});
+  buy('2025-01-15','VNDIRECT','HPG',80e6,'Bình tĩnh',{up:1.3,dn:.75,horizon:'1–2 năm',weight:15,
+    reason:'Giá thép ở vùng thấp của chu kỳ. Nhà máy mới sắp chạy, sản lượng có thể tăng mạnh.', wrongIf:'Nhà máy mới chậm tiến độ quá 6 tháng, hoặc giá thép tiếp tục giảm.'});
+  buy('2025-02-10','SSI','VCB',90e6,'Bình tĩnh',{up:1.2,dn:.87,horizon:'3 năm',weight:20,
+    reason:'Chất lượng tài sản tốt nhất ngành, nợ xấu thấp. Định giá ở vùng thấp so với chính nó nhiều năm qua.', wrongIf:'Nợ xấu tăng mạnh hoặc tín dụng tăng chậm hơn ngành hai năm liền.',
+    reviews:[{date:'2026-09-21',valid:true,note:'Đọc báo cáo quý: nợ xấu vẫn thấp. Lý do mua còn đúng, giữ.'}]});
+  buy('2025-03-20','SSI','MWG',60e6,'Hào hứng',{up:1.3,dn:.85,horizon:'1–2 năm',weight:15,
+    reason:'Chuỗi bách hóa bắt đầu có lãi, mảng điện thoại và điện máy đã qua đáy.', wrongIf:'Chuỗi bách hóa lỗ trở lại hai quý liên tiếp.'});
+  sell('2025-04-09','VNDIRECT','HPG',1,
+    ['Bán vì hoảng theo tin thuế quan Mỹ dù luận điểm chưa sai và giá chưa chạm điểm cắt lỗ.',['bán hoảng loạn','không theo kế hoạch']],
+    ['Bán vì hoảng theo tin thuế quan Mỹ, không phải vì luận điểm sai. Giá chưa chạm điểm cắt lỗ đã đặt.',['bán hoảng loạn','không theo kế hoạch']]);
   add({date:'2025-06-02',acct:'SSI',type:'deposit',amount:100e6,note:'Tiền thưởng nửa năm'});
-  add({date:'2025-06-05',acct:'VNDIRECT',type:'buy',ticker:'REE',qty:2000,price:66000,thesisId:th({ticker:'REE',date:'2025-06-05',
-    reason:'Dòng tiền ổn định từ thủy điện, nước sạch và cho thuê văn phòng. P/B dưới 1,3, trả cổ tức đều.',
-    target:82000, stop:58000, horizon:'3 năm', wrongIf:'Thủy điện kém hai năm liền và văn phòng trống trên 20%.', weight:15,
-    reviews:[{date:'2026-10-05',valid:true,note:'Tòa văn phòng mới đã cho thuê 85%. Giữ.'}]})});
-  add({date:'2025-06-10',acct:'SSI',type:'stockdiv',ticker:'FPT',qty:200,note:'Cổ tức bằng cổ phiếu tỷ lệ 10:2'});
-  add({date:'2025-07-15',acct:'SSI',type:'cashdiv',ticker:'FPT',amount:1140000,note:'1.000 đ/cp × 1.200 cp, đã trừ thuế 5%'});
-  add({date:'2025-07-22',acct:'SSI',type:'buy',ticker:'TCB',qty:3000,price:33000,note:'Mua theo nhóm bạn, chưa viết luận điểm'});
-  add({date:'2025-09-15',acct:'SSI',type:'sell',ticker:'TCB',qty:3000,price:38500,
-    review:'Lãi 16% nhưng không có kế hoạch bán từ đầu, bán vì thấy đủ rồi. Một tháng sau TCB lên 41.500.',
-    tags:['mua đuổi','bán non']});
-  add({date:'2025-10-10',acct:'SSI',type:'buy',ticker:'HPG',qty:2000,price:27800,thesisId:th({ticker:'HPG',date:'2025-10-10',
-    reason:'Mua lại sau lần bán hoảng loạn tháng 4. Dung Quất 2 đã chạy lò cao 1, sản lượng quý 3 tăng 28%.',
-    target:35000, stop:24000, horizon:'1–2 năm', wrongIf:'Biên lợi nhuận gộp dưới 12% hai quý liền.', weight:10})});
-  add({date:'2025-11-20',acct:'SSI',type:'sell',ticker:'MWG',qty:500,price:78500,
-    review:'Chốt một nửa gần giá mục tiêu như kế hoạch. Giữ phần còn lại vì Bách Hóa Xanh vẫn tăng trưởng.',
-    tags:['đúng kế hoạch','chốt lời']});
-  add({date:'2026-01-12',acct:'SSI',type:'buy',ticker:'DGC',qty:1000,price:98000,thesisId:th({ticker:'DGC',date:'2026-01-12',
-    reason:'Giá phốt pho vàng ổn định, dự án mới mở ra mảng kinh doanh mới. Tiền mặt ròng lớn, gần như không vay nợ.',
-    target:125000, stop:85000, horizon:'1–2 năm', wrongIf:'Lợi nhuận quý giảm quá 15% so với cùng kỳ.', weight:15})});
+  buy('2025-06-05','VNDIRECT','REE',120e6,'Bình tĩnh',{up:1.25,dn:.87,horizon:'3 năm',weight:15,
+    reason:'Dòng tiền ổn định từ thủy điện, nước sạch và cho thuê văn phòng. Trả cổ tức đều.', wrongIf:'Thủy điện kém hai năm liền và văn phòng trống nhiều.',
+    reviews:[{date:'2026-10-05',valid:true,note:'Mảng văn phòng vẫn kín chỗ. Giữ.'}]});
+  buy('2025-07-22','SSI','TCB',95e6,'Sợ bỏ lỡ',null);
+  sell('2025-09-15','SSI','TCB',1,
+    ['Có lãi nhưng không có kế hoạch bán từ đầu, bán vì thấy đủ rồi.',['mua đuổi','bán non']],
+    ['Mua vì sợ lỡ, không có luận điểm, bán khi chán.',['mua đuổi','không theo kế hoạch']]);
+  buy('2025-10-10','SSI','HPG',55e6,'Muốn gỡ',{up:1.25,dn:.86,horizon:'1–2 năm',weight:10,
+    reason:'Mua lại sau lần bán hoảng loạn tháng 4. Nhà máy mới đã chạy, sản lượng tăng.', wrongIf:'Biên lợi nhuận gộp giảm hai quý liền.'});
+  sell('2025-11-20','SSI','MWG',.5,
+    ['Chốt một nửa như kế hoạch đã viết. Giữ phần còn lại vì chuỗi bách hóa vẫn tăng trưởng.',['đúng kế hoạch','chốt lời']],
+    ['Giảm một nửa vì kết quả chưa như luận điểm. Làm theo điều đã viết lúc mua.',['đúng kế hoạch','cắt lỗ']]);
+  buy('2026-01-12','SSI','DGC',95e6,'Hào hứng',{up:1.28,dn:.87,horizon:'1–2 năm',weight:15,
+    reason:'Giá bán sản phẩm ổn định, dự án mới mở ra mảng kinh doanh mới. Tiền mặt nhiều, gần như không vay nợ.', wrongIf:'Lợi nhuận quý giảm quá 15% so với cùng kỳ.'});
   add({date:'2026-03-02',acct:'SSI',type:'deposit',amount:100e6,note:'Góp thêm'});
-  add({date:'2026-03-05',acct:'SSI',type:'buy',ticker:'FPT',qty:300,price:112000,thesisId:th({ticker:'FPT',date:'2026-03-05',
-    reason:'Giá giảm về 112.000 nhưng hợp đồng ký mới quý 4/2025 vẫn tăng 30%. Luận điểm cũ còn đúng, mua thêm để hạ giá vốn.',
-    target:145000, stop:98000, horizon:'2 năm', wrongIf:'Như luận điểm cũ: hợp đồng mới tăng dưới 15% hai quý liền.', weight:25})});
-  add({date:'2026-04-20',acct:'SSI',type:'sell',ticker:'DGC',qty:1000,price:83000,
-    review:'Cắt lỗ ở 83.000, ngay dưới điểm 85.000 đã đặt lúc mua. Lỗ 15% nhưng giữ được kỷ luật.',
-    tags:['đúng kế hoạch','cắt lỗ']});
-  add({date:'2026-06-10',acct:'VNDIRECT',type:'cashdiv',ticker:'REE',amount:2850000,note:'1.500 đ/cp × 2.000 cp, đã trừ thuế 5%'});
-  add({date:'2026-07-01',acct:'SSI',type:'buy',ticker:'TCB',qty:2000,price:40000,thesisId:th({ticker:'TCB',date:'2026-07-01',
-    reason:'Tín dụng tăng nhanh, mảng bảo hiểm và chứng khoán đóng góp tốt. Giá vừa vượt đỉnh cũ 38.000.',
-    target:48000, stop:35000, horizon:'1 năm', wrongIf:'Giá đóng cửa dưới 35.000.', weight:10})});
+  buy('2026-03-05','SSI','FPT',35e6,'Bình tĩnh',{up:1.3,dn:.86,horizon:'2 năm',weight:25,
+    reason:'Đọc lại luận điểm cũ: hợp đồng ký mới vẫn tăng. Lý do mua còn đúng nên mua thêm.', wrongIf:'Như luận điểm cũ: hợp đồng mới tăng dưới 15% hai quý liền.'});
+  sell('2026-04-20','SSI','DGC',1,
+    ['Bán theo kế hoạch đã viết lúc mua.',['đúng kế hoạch','chốt lời']],
+    ['Cắt lỗ theo điểm đã đặt lúc mua. Khó chịu nhưng giữ được kỷ luật.',['đúng kế hoạch','cắt lỗ']]);
+  add({date:'2026-06-10',acct:'VNDIRECT',type:'cashdiv',ticker:'REE',amount:1710000,note:'Cổ tức tiền, đã trừ thuế 5%'});
+  buy('2026-07-01','SSI','TCB',80e6,'Sợ bỏ lỡ',{up:1.2,dn:.88,horizon:'1 năm',weight:10,
+    reason:'Tín dụng tăng nhanh, mảng bảo hiểm và chứng khoán đóng góp tốt. Giá vừa vượt đỉnh cũ.', wrongIf:'Giá đóng cửa thủng điểm cắt lỗ.'});
   add({date:'2026-08-03',acct:'SSI',type:'withdraw',amount:50e6,note:'Rút tiền đóng học phí'});
 
   const J = (date,tickers,mood,tags,text) => ({id:uid('j'),date,tickers,mood,tags,text});
   const journal=[
-    J('2025-01-08',['FPT'],'Bình tĩnh',['luận điểm'],'Mua FPT 1.000 cổ. Đã viết luận điểm đầy đủ. Kế hoạch là giữ 2–3 năm, không nhìn giá hằng ngày.'),
-    J('2025-04-08',['HPG','VCB'],'Sợ hãi',['thị trường'],'VN-Index giảm hơn 6% trong hai phiên vì thuế quan Mỹ. Danh mục mất gần 40 triệu. Hoảng quá, chắc bán HPG thôi.'),
-    J('2025-05-20',['HPG'],'Lo lắng',['bài học'],'HPG đã hồi về 25.500, cao hơn giá mình bán 17%. Bán đúng đáy. Bài học: không bán khi chưa đọc lại luận điểm. Luận điểm có nói gì về thuế quan đâu.'),
-    J('2025-07-21',['TCB'],'Hưng phấn',['sợ lỡ tàu'],'TCB tăng 25% trong một tháng, nhóm bạn ai cũng có. Sợ lỡ tàu nên mai sẽ mua, chưa kịp viết luận điểm.'),
-    J('2025-09-15',['TCB'],'Bình tĩnh',['chốt lời'],'Bán TCB lãi 16%. Vui, nhưng nhận ra mình không có kế hoạch bán từ đầu. Bán vì thấy đủ rồi.'),
-    J('2025-11-20',['MWG'],'Bình tĩnh',['đúng kế hoạch'],'MWG chạm vùng 78–80 nghìn như mục tiêu. Chốt một nửa, giữ phần còn lại vì Bách Hóa Xanh vẫn tăng trưởng tốt.'),
-    J('2026-03-05',['FPT'],'Bình tĩnh',['xem lại luận điểm'],'FPT giảm về 112 nghìn. Đọc lại luận điểm: hợp đồng ký mới vẫn tăng 30%. Lý do mua còn đúng, mua thêm 300 cổ.'),
-    J('2026-04-20',['DGC'],'Lo lắng',['cắt lỗ','đúng kế hoạch'],'Cắt lỗ DGC ở 83 nghìn, dưới điểm 85 nghìn đã đặt. Khó chịu nhưng làm đúng điều đã viết lúc tỉnh táo.'),
-    J('2026-07-01',['TCB'],'Hưng phấn',['sợ lỡ tàu'],'TCB vượt đỉnh cũ. Lần này có viết luận điểm, nhưng thật lòng vẫn là cảm giác sợ lỡ tàu như năm ngoái.'),
-    J('2026-10-28',[],'Bình tĩnh',['tổng kết tháng'],'Tổng kết tháng 10: danh mục vẫn kém VN-Index. Hai lệnh tệ nhất đều có thẻ mua đuổi hoặc hoảng loạn. Quý tới: không mua mã nào đã tăng trên 15% trong một tháng.')
+    J('2025-01-08',['FPT'],'Bình tĩnh',['luận điểm'],'Mua FPT. Đã viết luận điểm đầy đủ. Kế hoạch là giữ 2–3 năm, không nhìn giá hằng ngày.'),
+    J('2025-04-08',['HPG','VCB'],'Sợ hãi',['thị trường'],'Thị trường giảm rất mạnh mấy phiên liền vì thuế quan Mỹ. Hoảng quá, chắc bán HPG thôi.'),
+    J('2025-05-20',['HPG'],'Lo lắng',['bài học'],'Nhìn lại lần bán HPG tháng trước. Bài học: không bán khi chưa đọc lại luận điểm. Luận điểm có nói gì về thuế quan đâu.'),
+    J('2025-07-21',['TCB'],'Hưng phấn',['sợ lỡ tàu'],'TCB tăng nhanh, nhóm bạn ai cũng có. Sợ lỡ tàu nên mai sẽ mua, chưa kịp viết luận điểm.'),
+    J('2025-09-15',['TCB'],'Bình tĩnh',['tổng kết'],'Bán hết TCB. Nhận ra mình không có kế hoạch bán từ đầu.'),
+    J('2025-11-20',['MWG'],'Bình tĩnh',['đúng kế hoạch'],'Giảm một nửa MWG theo đúng điều đã viết lúc mua.'),
+    J('2026-03-05',['FPT'],'Bình tĩnh',['xem lại luận điểm'],'Đọc lại luận điểm FPT: hợp đồng ký mới vẫn tăng. Lý do mua còn đúng, mua thêm một ít.'),
+    J('2026-04-20',['DGC'],'Lo lắng',['đúng kế hoạch'],'Bán DGC theo kế hoạch đã đặt. Làm đúng điều đã viết lúc tỉnh táo.'),
+    J('2026-07-01',['TCB'],'Hưng phấn',['sợ lỡ tàu'],'Mua lại TCB. Lần này có viết luận điểm, nhưng thật lòng vẫn là cảm giác sợ lỡ tàu như năm ngoái.'),
+    J('2026-10-28',[],'Bình tĩnh',['tổng kết tháng'],'Tổng kết tháng 10: các lệnh tệ nhất đều có thẻ mua đuổi hoặc hoảng loạn. Quý tới: không mua mã nào đã tăng trên 15% trong một tháng.')
   ];
   const watch=[
-    {ticker:'VNM', buyBelow:58000, note:'Thương hiệu mạnh, cổ tức khoảng 6%/năm. Chờ P/E dưới 13.'},
-    {ticker:'DGC', buyBelow:85000, note:'Xem lại sau báo cáo quý 4. Lần trước đã cắt lỗ ở 83.000.'}
+    {ticker:'VNM', buyBelow:snap(px('VNM')*.94), note:'Thương hiệu mạnh, cổ tức đều. Chờ giá rẻ hơn.'},
+    {ticker:'DGC', buyBelow:snap(px('DGC')*.92), note:'Xem lại sau báo cáo quý 4.'}
   ];
   const assets=[
     {id:'a1',kind:'Vàng',name:'Vàng nhẫn 9999, 5 chỉ',date:'2025-03-10',cost:45e6,vals:[{date:'2025-03-10',value:45e6},{date:'2025-10-15',value:68e6},{date:'2026-11-10',value:78e6}],note:'Giữ dài hạn, không bán theo giá.'},
@@ -478,7 +525,7 @@ function seed(){
     {id:'a3',kind:'Quỹ mở',name:'Chứng chỉ quỹ cổ phiếu',date:'2025-09-01',cost:30e6,vals:[{date:'2025-09-01',value:30e6},{date:'2026-11-07',value:33.6e6}],note:'Góp đều 2,5 triệu mỗi tháng.'},
     {id:'a4',kind:'Crypto',name:'Bitcoin',date:'2025-05-01',cost:20e6,vals:[{date:'2025-05-01',value:20e6},{date:'2026-11-11',value:17.5e6}],note:'Tối đa 5% tổng tài sản.'}
   ];
-  return {v:2, tx, theses, journal, watch, assets, plans:[], settings:{maxTicker:.20, maxSector:.40, reviewDays:90}};
+  return {v:3, tx, theses, journal, watch, assets, plans:[], goal:{target:2e9,years:5,monthly:10e6}, settings:{maxTicker:.20, maxSector:.40, reviewDays:90, riskPct:.01}};
 }
 
 /* ============ Tính toán ============ */
@@ -621,6 +668,142 @@ function drawBars(el, cfg){
 function drawAll(){ document.querySelectorAll('[data-chart]').forEach(el=>{ const f=charts[el.dataset.chart]; if(f) f(el); }); }
 let rT; addEventListener('resize',()=>{ clearTimeout(rT); rT=setTimeout(drawAll,150); });
 
+/* ============ Mô hình tài chính (lời thường) ============ */
+// Giả định dài hạn cho từng loại tài sản: mức tăng mỗi năm và mức lên xuống mỗi năm. Đây là giả định, không phải dự báo.
+const CLS={ 'Cổ phiếu':{mu:.12,sd:.22}, 'Tiền mặt':{mu:.005,sd:.001}, 'Vàng':{mu:.07,sd:.15}, 'Tiết kiệm':{mu:.05,sd:.005}, 'Quỹ mở':{mu:.10,sd:.16}, 'Crypto':{mu:.20,sd:.65}, 'Khác':{mu:.05,sd:.10} };
+const CORR={ 'Cổ phiếu|Quỹ mở':.85, 'Cổ phiếu|Crypto':.3, 'Quỹ mở|Crypto':.25, 'Vàng|Crypto':.1 };
+const corr=(a,b)=> a===b?1:(CORR[a+'|'+b]??CORR[b+'|'+a]??0);
+function classMix(){ const v={'Cổ phiếu':M.stockVal,'Tiền mặt':M.cash}; M.other.forEach(a=>v[a.kind]=(v[a.kind]||0)+a.value);
+  const tot=Object.values(v).reduce((s,x)=>s+x,0)||1; return Object.entries(v).filter(([,x])=>x>0).map(([k,x])=>({k,v:x,w:x/tot})); }
+function portStats(mix){ let mu=0,va=0; mix.forEach(a=>{ mu+=a.w*CLS[a.k].mu; });
+  mix.forEach(a=>mix.forEach(b=>{ va+=a.w*b.w*CLS[a.k].sd*CLS[b.k].sd*corr(a.k,b.k); }));
+  const rc=mix.map(a=>{ let c=0; mix.forEach(b=>c+=b.w*CLS[a.k].sd*CLS[b.k].sd*corr(a.k,b.k)); return {k:a.k,w:a.w,rc:va?a.w*c/va:0}; });
+  return {mu, sd:Math.sqrt(va), rc}; }
+function sigmaOf(tk){ const a=PX[tk], from=Math.max(1,LAST-250); let s=0,s2=0,n=0; for(let i=from;i<=LAST;i++){ const r=Math.log(a[i]/a[i-1]); s+=r; s2+=r*r; n++; }
+  const m=s/n; return Math.sqrt(Math.max(0,s2/n-m*m))*Math.sqrt(250); }
+const Z={p5:-1.645,p25:-.674,p50:0,p75:.674,p95:1.645};
+function coneAt(S0,sd,tYears,z,mu=0){ return S0*Math.exp((mu-sd*sd/2)*tYears+z*sd*Math.sqrt(tYears)); }
+// Khả năng chạm mục tiêu trước khi chạm cắt lỗ. mu = mức tăng giá mỗi năm giả định.
+function hitFirst(S0,stop,target,sd,mu=0){ if(!(stop<S0&&S0<target)||!(sd>0)) return NaN; const a=Math.log(S0/stop), b=Math.log(target/S0), nu=mu-sd*sd/2;
+  if(Math.abs(nu)<1e-9) return a/(a+b); const k=2*nu/(sd*sd); return (1-Math.exp(k*a))/(Math.exp(-k*b)-Math.exp(k*a)); }
+function edge(){ const c=M.closed, n=c.length, w=c.filter(x=>x.pnl>0), l=c.filter(x=>x.pnl<=0);
+  const p=n?w.length/n:0, W=w.length?w.reduce((s,x)=>s+x.pnlPct,0)/w.length:0, L=l.length?-l.reduce((s,x)=>s+x.pnlPct,0)/l.length:0;
+  const kelly=(W>0&&L>0)?p-(1-p)/(W/L):NaN; const z=1.645, den=1+z*z/(n||1), ctr=(p+z*z/(2*(n||1)))/den, hw=z*Math.sqrt(p*(1-p)/(n||1)+z*z/(4*(n||1)*(n||1)))/den;
+  const lo=n?Math.max(0,ctr-hw):0, hi=n?Math.min(1,ctr+hw):1, kLo=(W>0&&L>0)?lo-(1-lo)/(W/L):NaN;
+  return {n,p,W,L,kelly,lo,hi,kLo, exp:p*W-(1-p)*L, holdW:w.length?w.reduce((s,x)=>s+x.days,0)/w.length:NaN, holdL:l.length?l.reduce((s,x)=>s+x.days,0)/l.length:NaN}; }
+function buyMood(c){ const b=S.tx.filter(t=>t.type==='buy'&&t.ticker===c.ticker&&t.date<=c.date&&t.date>=c.start).sort((a,b)=>a.date.localeCompare(b.date))[0]; return (b&&b.mood)||'Không ghi'; }
+function perfStats(){ const s=M.series; if(s.length<30) return null; const f=k=>{ let peak=1, mdd=0, sum=0, s2=0, n=0; const dd=[]; let ddStart=null, longest=0;
+    for(let i=0;i<s.length;i++){ const v=1+s[i][k]; if(i){ const r=v/(1+s[i-1][k])-1; sum+=r; s2+=r*r; n++; } if(v>=peak){ peak=v; ddStart=null; } else { if(ddStart==null) ddStart=i; longest=Math.max(longest,i-ddStart+1); } const d=v/peak-1; dd.push(d); mdd=Math.min(mdd,d); }
+    const m=sum/n, vol=Math.sqrt(Math.max(0,s2/n-m*m))*Math.sqrt(250), yr=Math.pow(1+s[s.length-1][k],1/M.years)-1; return {yr,vol,mdd,dd,longest,sharpe:vol?(yr-RF)/vol:NaN}; };
+  return {me:f('cum'), vn:f('vni')}; }
+const RF=.05; // lãi tiết kiệm làm mốc "không làm gì"
+function simulateGoal(start, monthly, years, mu, sd, target, n=4000){ const r=rng(20261113), g=()=>{ let u=0,v=0; while(!u)u=r(); while(!v)v=r(); return Math.sqrt(-2*Math.log(u))*Math.cos(2*Math.PI*v); };
+  const T=Math.round(years*12), dm=(mu-sd*sd/2)/12, ds=sd/Math.sqrt(12), end=new Float64Array(n); const ys=Math.round(years), byYear=Array.from({length:ys+1},()=>new Float64Array(n));
+  for(let k=0;k<n;k++){ let v=start; byYear[0][k]=v; for(let t=1;t<=T;t++){ v=v*Math.exp(dm+ds*g())+monthly; if(t%12===0&&t/12<=ys) byYear[t/12][k]=v; } end[k]=v; }
+  const q=(arr,p)=>{ const a=Float64Array.from(arr).sort(); return a[Math.min(a.length-1,Math.floor(p*a.length))]; };
+  let hit=0; for(let k=0;k<n;k++) if(end[k]>=target) hit++;
+  return {prob:hit/n, p5:q(end,.05), p50:q(end,.5), p95:q(end,.95), bands:byYear.map(a=>({p5:q(a,.05),p25:q(a,.25),p50:q(a,.5),p75:q(a,.75),p95:q(a,.95)})), paid:start+monthly*T}; }
+
+// Biểu đồ hình phễu: phần đã qua (hist) nối với các dải khả năng trong tương lai
+function drawFan(el,cfg){
+  const W=Math.max(280, el.clientWidth||600), H=+(el.dataset.h||260), pad={l:cfg.padL||64,r:cfg.padR||64,t:14,b:26};
+  const h=cfg.hist||[], nH=h.length, nF=cfg.bands.length, n=nH+nF-(nH?1:0);
+  let lo=Infinity, hi=-Infinity; h.forEach(v=>{lo=Math.min(lo,v);hi=Math.max(hi,v);}); cfg.bands.forEach(b=>{lo=Math.min(lo,b.p5);hi=Math.max(hi,b.p95);}); (cfg.hlines||[]).forEach(l=>{lo=Math.min(lo,l.y);hi=Math.max(hi,l.y);});
+  const sp=(hi-lo)||1; lo=Math.max(0,lo-sp*.06); hi+=sp*.06;
+  const X=i=>pad.l+(W-pad.l-pad.r)*(n>1?i/(n-1):.5), Y=v=>pad.t+(H-pad.t-pad.b)*(1-(v-lo)/(hi-lo)), off=nH?nH-1:0, col=cfg.color||'var(--c1)';
+  let s=`<svg viewBox="0 0 ${W} ${H}" width="${W}" height="${H}" role="img" aria-label="${esc(cfg.label)}"><g class="grid">`;
+  for(const v of niceTicks(lo,hi,4)) s+=`<line x1="${pad.l}" x2="${W-pad.r}" y1="${Y(v)}" y2="${Y(v)}"/><text x="${pad.l-8}" y="${Y(v)+4}" text-anchor="end">${esc(cfg.yFmt(v))}</text>`;
+  s+='</g>';
+  (cfg.xLabels||[]).forEach(([i,t])=>{ s+=`<text x="${X(i)}" y="${H-6}" text-anchor="middle">${esc(t)}</text>`; });
+  const band=(a,b,op)=>{ let d=''; cfg.bands.forEach((q,i)=>d+=(i?'L':'M')+X(off+i).toFixed(1)+' '+Y(q[b]).toFixed(1)); for(let i=nF-1;i>=0;i--) d+='L'+X(off+i).toFixed(1)+' '+Y(cfg.bands[i][a]).toFixed(1); return `<path d="${d}Z" fill="${col}" opacity="${op}"/>`; };
+  s+=band('p5','p95',.13)+band('p25','p75',.24);
+  let d=''; cfg.bands.forEach((q,i)=>d+=(i?'L':'M')+X(off+i).toFixed(1)+' '+Y(q.p50).toFixed(1)); s+=`<path d="${d}" fill="none" stroke="${col}" stroke-width="1.6" stroke-dasharray="5 4"/>`;
+  if(nH){ let dh=''; h.forEach((v,i)=>dh+=(i?'L':'M')+X(i).toFixed(1)+' '+Y(v).toFixed(1)); s+=`<path d="${dh}" fill="none" stroke="var(--ink)" stroke-width="1.7"/><line x1="${X(off)}" x2="${X(off)}" y1="${pad.t}" y2="${H-pad.b}" stroke="var(--silver)" stroke-dasharray="2 3"/><circle cx="${X(off)}" cy="${Y(h[nH-1])}" r="3.5" fill="var(--ink)"/>`; }
+  (cfg.hlines||[]).forEach(l=>{ const y=Y(l.y); s+=`<line x1="${pad.l}" x2="${W-pad.r}" y1="${y}" y2="${y}" stroke="${l.color}" stroke-dasharray="6 4" stroke-width="1.3"/><text x="${pad.l+6}" y="${y-5}" style="fill:${l.color};font-weight:600">${esc(l.label)}</text>`; });
+  const e=cfg.bands[nF-1], xe=W-pad.r+6; [['p95',e.p95],['p50',e.p50],['p5',e.p5]].forEach(([k,v])=>{ s+=`<text x="${xe}" y="${Y(v)+4}" style="fill:var(--ink);font-weight:${k==='p50'?600:400}">${esc(cfg.yFmt(v))}</text>`; });
+  el.innerHTML=s+'</svg>';
+}
+
+function pageGoal(){
+  const g=S.goal||(S.goal={target:2e9,years:5,monthly:10e6}), mix=classMix(), ps=portStats(mix);
+  const r=simulateGoal(M.total,g.monthly,g.years,ps.mu,ps.sd,g.target);
+  charts.goal = el => drawFan(el,{label:'Các tương lai có thể của tổng tài sản', bands:r.bands, yFmt:v=>C(v), padL:78, padR:78,
+    xLabels:r.bands.map((_,i)=>[i, i===0?'Hôm nay':'Năm '+i]).filter((_,i,a)=>a.length<=8||i%Math.ceil(a.length/8)===0),
+    hlines:[{y:g.target,label:'Mục tiêu '+C(g.target),color:'var(--gold)'}]});
+  const pc=r.prob>=.7?'up':r.prob>=.4?'ref':'down';
+  return `<div class="page-head"><div><h1>Mục tiêu</h1><p>Máy tính “tung xúc xắc” 4.000 lần, mỗi lần là một tương lai có thể xảy ra cho tài sản của bạn, rồi đếm xem bao nhiêu lần chạm mục tiêu. Đây là dự báo kiểu thời tiết, không phải lời hứa.</p></div></div>
+  <div class="grid">
+    <section class="card c4"><div class="card-head"><h2>Bạn muốn gì?</h2></div>
+      <div class="field"><label for="g_target">Số tiền muốn có: <b id="g_target_v">${C(g.target)}</b></label><input type="range" id="g_target" min="${Math.round(M.total/1e8)*1e8}" max="${Math.max(1e10,M.total*10)}" step="1e8" value="${g.target}"></div>
+      <div class="field" style="margin-top:14px"><label for="g_years">Sau bao lâu: <b id="g_years_v">${g.years} năm</b></label><input type="range" id="g_years" min="1" max="30" step="1" value="${g.years}"></div>
+      <div class="field" style="margin-top:14px"><label for="g_monthly">Mỗi tháng góp thêm: <b id="g_monthly_v">${C(g.monthly)}</b></label><input type="range" id="g_monthly" min="0" max="1e8" step="1e6" value="${g.monthly}"></div>
+      <div class="preview" style="margin-top:16px"><div>Điểm xuất phát: <b>${C(M.total)}</b> (tổng tài sản hôm nay)</div><div>Tổng tiền bạn bỏ vào đến cuối kỳ: <b>${C(r.paid)}</b></div></div>
+    </section>
+    <section class="card c8"><div class="card-head"><h2>Khả năng đạt mục tiêu</h2><span class="small">Vùng đậm: một nửa số tương lai · vùng nhạt: 9 trên 10</span></div>
+      <div class="stats" style="margin-bottom:8px">
+        ${stat('Khả năng đạt', PCT(r.prob,false,0), `khoảng ${Math.round(r.prob*10)} trên 10 tương lai`, pc)}
+        ${stat('Trường hợp xấu', C(r.p5), '1 trên 20 tương lai tệ hơn mức này')}
+        ${stat('Trường hợp giữa', C(r.p50), 'một nửa tốt hơn, một nửa kém hơn')}
+        ${stat('Trường hợp tốt', C(r.p95), '1 trên 20 tương lai tốt hơn mức này')}
+      </div>
+      <div class="chart" data-chart="goal" data-h="280"></div></section>
+    <section class="card c12"><div class="card-head"><h2>Talenta đang giả định gì</h2><span class="small">Bạn nên biết để tự đánh giá con số trên</span></div>
+      <p style="margin:0 0 10px;max-width:75ch">Với cách chia tiền hiện tại, danh mục của bạn được giả định tăng trung bình <b>${PCT(ps.mu,false)}</b> mỗi năm và lên xuống khoảng <b>${PCT(ps.sd,false)}</b> mỗi năm. Hai con số này ghép từ giả định cho từng loại tài sản dưới đây. Thực tế có thể khác xa, nhất là với cổ phiếu và crypto.</p>
+      <div class="tbl"><table><thead><tr><th>Loại tài sản</th><th class="r">Phần tiền của bạn</th><th class="r">Giả định tăng mỗi năm</th><th class="r">Giả định lên xuống mỗi năm</th></tr></thead><tbody>
+      ${mix.map(a=>`<tr><td><i style="display:inline-block;width:10px;height:10px;border-radius:3px;background:${ASSET_COLOR[a.k]};margin-right:8px"></i>${esc(a.k)}</td><td class="r">${PCT(a.w,false)}</td><td class="r">${PCT(CLS[a.k].mu,false)}</td><td class="r">${PCT(CLS[a.k].sd,false)}</td></tr>`).join('')}
+      </tbody></table></div></section>
+  </div>`;
+}
+
+function riskCard(){
+  const mix=classMix(), ps=portStats(mix); if(mix.length<2) return '';
+  const top=[...ps.rc].sort((a,b)=>(b.rc-b.w)-(a.rc-a.w))[0];
+  return `<section class="card c12"><div class="card-head"><h2>Tiền nằm ở đâu, rủi ro nằm ở đâu</h2><span class="small">Số tiền bỏ vào không bằng phần sóng gió phải gánh</span></div>
+    <div class="grid" style="align-items:center"><div class="c6"><div class="lbl small muted" style="margin-bottom:6px;font-weight:600">TIỀN CỦA TÔI</div>${donut(mix.map(a=>({label:a.k==='Tiền mặt'?'Tiền mặt chứng khoán':a.k,value:a.w,color:ASSET_COLOR[a.k]})),150,C(M.total),'tổng tài sản')}</div>
+    <div class="c6"><div class="lbl small muted" style="margin-bottom:6px;font-weight:600">RỦI RO CỦA TÔI</div>${donut(ps.rc.map(a=>({label:a.k==='Tiền mặt'?'Tiền mặt chứng khoán':a.k,value:Math.max(0,a.rc),color:ASSET_COLOR[a.k]})),150,PCT(ps.sd,false,0),'lên xuống mỗi năm')}</div></div>
+    ${top&&top.rc-top.w>.1?`<div class="alert warn" style="margin-top:12px">${ICON.warn}<div class="body"><div class="t">${esc(top.k)} chiếm ${PCT(top.w,false,0)} số tiền nhưng gánh ${PCT(top.rc,false,0)} rủi ro</div><div class="d" style="display:block">Giống thìa ớt trong nồi lẩu: ít nhưng quyết định độ cay. Tính theo giả định về mức lên xuống của từng loại tài sản ở trang Mục tiêu.</div></div></div>`:''}</section>`;
+}
+
+function pageAbout(){
+  return `<div class="about">
+  <section class="card about-hero"><div class="about-logo">${$('.brand svg').outerHTML.replace('width="40" height="40"','width="88" height="88"').replace(/lg(bg|ag|top|au)/g,'ab$1')}</div>
+    <div><h1>Talenta · Nén Bạc</h1><p class="lead">Cuốn sổ giúp bạn nhớ vì sao mình mua, thấy đúng kết quả của mình, và rút kinh nghiệm từ chính mình.</p></div></section>
+  <div class="grid">
+    <section class="card c7"><h2>Vì sao tên là Nén Bạc</h2>
+      <p>Tên lấy từ dụ ngôn những nén bạc trong Tin Mừng Mát-thêu, chương 25. Ông chủ đi xa, giao tài sản cho các đầy tớ: người năm nén, người hai nén, người một nén. Hai người đầu đem vốn đi làm ăn và sinh lời gấp đôi. Người thứ ba vì sợ nên đào lỗ chôn nén bạc xuống đất.</p>
+      <blockquote>“Et uni dedit quinque talenta, alii autem duo, alii vero unum.”<cite>Mt 25,15, bản Vulgata</cite></blockquote>
+      <p><i>Talenta</i> là chữ Latinh trong chính câu ấy, số nhiều của <i>talentum</i>, một đơn vị cân bạc rất lớn. Chữ này gốc từ tiếng Hy Lạp <i>talanton</i>, nghĩa là cái cân.</p>
+      <p>Tiếng Việt có một trùng hợp đẹp: <b>tài</b> là của cải (tài sản), và <b>tài</b> cũng là năng lực (tài năng), giống hệt chữ “talent” ở phương Tây. Còn chữ <b>nén</b> có ba nghĩa, và cả ba đều là việc của cuốn sổ này: <b>nén bạc</b> là đồng vốn, <b>nén lòng</b> là giữ kỷ luật khi thị trường biến động, <b>nén hương</b> là giữ cho việc làm giàu một hướng nhìn cao hơn.</p></section>
+    <section class="card c5"><h2>Triết lý</h2>
+      <div class="creed"><b>Vốn là của được trao để sinh lời.</b><span>Không phải để chôn xuống đất, cũng không phải để đánh bạc. Người quản lý trung tín thì cẩn trọng mà không sợ hãi.</span></div>
+      <div class="creed"><b>Có ngày tính sổ.</b><span>“Posuit rationem cum eis” (Mt 25,19). Chữ <i>ratio</i> vừa là sổ sách, vừa là lý do. Talenta là cuốn sổ ghi lý do.</span></div>
+      <div class="creed"><b>Trung tín trong việc nhỏ.</b><span>“Super pauca fuisti fidelis” (Mt 25,21). Ghi đều từng lệnh, từng dòng lý do, chính là việc nhỏ ấy.</span></div></section>
+    <section class="card c12"><h2>Sứ mệnh</h2>
+      <p class="lead" style="max-width:70ch">Giúp nhà đầu tư cá nhân Việt Nam đầu tư có kỷ luật và hiểu chính mình, thay vì mua bán theo cảm xúc và tin đồn.</p>
+      <div class="grid" style="margin-top:6px">
+        <div class="c4 pillar"><b>Ghi lại</b><span>Mỗi lệnh mua đi kèm lý do, giá mục tiêu, điểm cắt lỗ và cảm xúc lúc đó. Viết khi còn tỉnh táo, để đọc lại khi thị trường làm mình rối.</span></div>
+        <div class="c4 pillar"><b>Nhìn lại</b><span>Thấy đúng mình lãi hay lỗ so với thị trường và so với gửi tiết kiệm. Thấy mình hay sai ở đâu qua chính số liệu của mình.</span></div>
+        <div class="c4 pillar"><b>Cân nhắc</b><span>Trước mỗi quyết định, cái cân bày ra các khả năng: giá có thể đi tới đâu, lệnh này có đáng làm, mình đang gánh rủi ro ở chỗ nào.</span></div>
+      </div></section>
+    <section class="card c7"><h2>Tám câu hỏi Talenta giúp bạn trả lời</h2>
+      <div class="qlist">
+        <a href="#ma"><b>Mã mình giữ có thể lên xuống tới đâu?</b><span>Hình phễu giá trên trang từng mã</span></a>
+        <a href="#muc-tieu"><b>Mình có bao nhiêu cơ hội đạt mục tiêu?</b><span>Trang Mục tiêu</span></a>
+        <a href="#ma"><b>Đặt cắt lỗ ở đâu thì hợp lý?</b><span>Dòng “khả năng chạm mục tiêu trước” khi ghi lệnh mua</span></a>
+        <a href="#tong-ket"><b>Lãi như vậy là giỏi hay liều?</b><span>Trang Kết quả của tôi</span></a>
+        <a href="#tong-quan"><b>Chia tiền thế nào cho an toàn?</b><span>Hai hình tròn: tiền ở đâu, rủi ro ở đâu</span></a>
+        <a href="#tong-ket"><b>Mỗi lần mua nên bỏ bao nhiêu?</b><span>Thẻ “Lợi thế của tôi” và gợi ý khối lượng</span></a>
+        <a href="#tong-ket"><b>Vì sao mình bán non và gồng lỗ?</b><span>Tấm gương hành vi</span></a>
+        <a href="#ma"><b>Mã này đắt hay rẻ?</b><span>P/E so với ngành và với chính nó</span></a>
+      </div></section>
+    <section class="card c5"><h2>Điều Talenta không làm</h2>
+      <ul class="plain"><li><b>Không khuyên mua hay bán.</b> App bày ra dữ liệu và lời của chính bạn. Quyết định là của bạn.</li>
+      <li><b>Không đoán giá ngày mai.</b> Các mô hình giống dự báo thời tiết: nói “7 trên 10 khả năng”, không nói “chắc chắn”.</li>
+      <li><b>Không thúc bạn giao dịch nhiều.</b> Giá cập nhật lặng lẽ ở một dải nhỏ, không có nút mua bán nhanh.</li>
+      <li><b>Không bán dữ liệu của bạn.</b> Sổ của bạn là của bạn.</li></ul></section>
+  </div></div>`;
+}
+
 /* ============ Các trang ============ */
 const view=$('#view');
 let state={range:'1N', jFilter:{q:'',tk:'',mood:''}, txFilter:''};
@@ -637,9 +820,11 @@ function route(){
   else if(h==='tai-san') view.innerHTML=pageAssets();
   else if(h==='nhat-ky') view.innerHTML=pageJournal();
   else if(h==='tong-ket') view.innerHTML=pageReview();
+  else if(h==='muc-tieu') view.innerHTML=pageGoal();
+  else if(h==='gioi-thieu') view.innerHTML=pageAbout();
   else { view.innerHTML=pageDashboard(); r='tong-quan'; }
   document.querySelectorAll('#tabs a').forEach(a=>a.classList.toggle('on',a.dataset.r===r));
-  drawAll();
+  drawAll(); paintLive(); lastRender=Date.now();
 }
 addEventListener('hashchange',()=>{ route(); scrollTo(0,0); });
 
@@ -673,7 +858,7 @@ function pageDashboard(){
     <div>
       <div class="lbl">Tổng tài sản</div>
       <div class="hero-num">${C(M.total)}</div>
-      <div class="hero-sub"><span class="pill vn-${dayChg>0?'up':dayChg<0?'down':'ref'}">${dayChg>=0?'▲ +':'▼ −'}${C(Math.abs(dayChg)).replace('−','')}</span> hôm nay · giá đóng cửa ${D(TODAY)}</div>
+      <div class="hero-sub"><span class="pill vn-${dayChg>0?'up':dayChg<0?'down':'ref'}">${dayChg>=0?'▲ +':'▼ −'}${C(Math.abs(dayChg)).replace('−','')}</span> hôm nay · <span id="heroWhen">giá ngày ${D(TODAY)}</span></div>
       <div class="kpis">
         <div class="kpi"><div class="k">Lãi/lỗ chứng khoán</div><div class="v ${cls(pnl)}">${pnl>=0?'+':''}${C(pnl)}</div><div class="s">trên ${C(M.netDep)} đã nạp ròng</div></div>
         <div class="kpi"><div class="k">Lợi suất thật so với VN-Index</div>
@@ -693,6 +878,7 @@ function pageDashboard(){
     <section class="card c4"><div class="card-head"><h2>Cần chú ý</h2>
       <span class="chips">${cnt('crit')?`<span class="sev"><i style="background:var(--down)"></i>${cnt('crit')} khẩn</span>`:''}${cnt('warn')?`<span class="sev"><i style="background:var(--warn)"></i>${cnt('warn')} cảnh báo</span>`:''}${cnt('info')?`<span class="sev"><i style="background:var(--info)"></i>${cnt('info')} thông tin</span>`:''}</span></div>
       <div class="alerts">${M.alerts.length?M.alerts.map(alertHtml).join(''):`<div class="alert good">${ICON.good}<div class="body"><div class="t">Mọi thứ đang theo kế hoạch</div></div></div>`}</div></section>
+    ${riskCard()}
     <section class="card c7"><div class="card-head"><h2>Bản đồ danh mục</h2><span class="small">Ô càng lớn tỷ trọng càng cao · màu theo lãi/lỗ</span></div>
       ${treemap(M.holdings)}
       <div class="scale"><span>Lỗ 30%</span><b></b><span>Lãi 30%</span></div></section>
@@ -708,7 +894,7 @@ function pageDashboard(){
   </div>`;
 }
 const ASSET_COLOR={'Cổ phiếu':'var(--c1)','Tiền mặt':'var(--silver)','Vàng':'var(--gold)','Tiết kiệm':'var(--c3)','Quỹ mở':'var(--c6)','Crypto':'var(--c2)','Khác':'var(--c5)'};
-const SECTOR_COLOR={'Công nghệ':'var(--c1)','Ngân hàng':'var(--c6)','Tiện ích':'var(--c3)','Thép':'var(--c2)','Bán lẻ':'var(--c5)','Hóa chất':'var(--c4)','Thực phẩm':'var(--gold)'};
+const SECTOR_COLOR={'Công nghệ':'var(--c1)','Ngân hàng':'var(--c6)','Tiện ích':'var(--c3)','Thép':'var(--c2)','Bán lẻ':'var(--c5)','Hóa chất':'var(--c4)','Thực phẩm':'var(--gold)','Bất động sản':'var(--c7)','Chứng khoán':'var(--c8)','Dầu khí':'var(--c9)'};
 function donut(items, size, center, sub){
   const tot=items.reduce((s,i)=>s+Math.max(0,i.value),0)||1, r=size/2-12, cx=size/2, sw=22, C_=2*Math.PI*r; let off=0;
   let svg=`<svg width="${size}" height="${size}" viewBox="0 0 ${size} ${size}" role="img" aria-label="Biểu đồ phân bổ"><circle cx="${cx}" cy="${cx}" r="${r}" fill="none" stroke="var(--surface-2)" stroke-width="${sw}"/>`;
@@ -764,13 +950,13 @@ function pageTickers(){
     const k=vnCls(tk);
     return `<a class="tk-card" href="#ma-${tk}" style="--t:var(--${k==='ceil'?'ceil':k==='floor'?'floor':k==='up'?'up':k==='down'?'down':'ref'})"><div class="row"><b class="tk" style="font-size:17px">${tk}</b><span class="num vn-${k}" style="font-weight:600;font-size:16px">${P(p_)}</span></div>
     <div class="row small" style="margin-top:4px"><span class="muted" style="overflow:hidden;text-overflow:ellipsis;white-space:nowrap"><i style="display:inline-block;width:8px;height:8px;border-radius:2px;background:${SECTOR_COLOR[m.sector]};margin-right:5px"></i>${esc(m.sector)} · ${m.ex}</span>${chgPill(tk)}</div>
-    <div class="chips" style="margin-top:8px">${held?'<span class="chip acc">Đang giữ</span>':''}${w?'<span class="chip">Theo dõi</span>':''}<span class="chip">P/E ${(p_/m.f.eps).toLocaleString('vi-VN',{maximumFractionDigits:1})}</span></div></a>`; }).join('')}</div>`;
+    <div class="chips" style="margin-top:8px">${held?'<span class="chip acc">Đang giữ</span>':''}${w?'<span class="chip">Theo dõi</span>':''}${m.f.eps>0?`<span class="chip">P/E ${(p_/m.f.eps).toLocaleString('vi-VN',{maximumFractionDigits:1})}</span>`:''}</div></a>`; }).join('')}</div>`;
 }
 
 function pageTicker(tk){
   const m=MKT[tk], f=m.f, p_=px(tk), chg=p_/px(tk,LAST-1)-1;
   const s52=PX[tk].slice(Math.max(0,LAST-250)), hi=Math.max(...s52), lo=Math.min(...s52);
-  const pe=p_/f.eps, pb=p_/f.bvps, dy=f.div/p_;
+  const pe=f.eps>0?p_/f.eps:(f.pe||0), pb=f.bvps>0?p_/f.bvps:(f.pb||0), sd=sigmaOf(tk);
   const h=M.holdings.find(x=>x.ticker===tk), myTx=S.tx.filter(t=>t.ticker===tk).sort((a,b)=>a.date.localeCompare(b.date));
   const theses=S.theses.filter(t=>t.ticker===tk).sort((a,b)=>a.date.localeCompare(b.date));
   const cur=thesisAt(tk,TODAY), notes=S.journal.filter(j=>j.tickers.includes(tk)).sort((a,b)=>a.date.localeCompare(b.date));
@@ -782,7 +968,11 @@ function pageTicker(tk){
     const hl=[]; if(cur && h){ hl.push({y:cur.target,label:'Mục tiêu '+P(cur.target),color:'var(--up)'}); hl.push({y:cur.stop,label:'Cắt lỗ '+P(cur.stop),color:'var(--down)'}); }
     if(h) hl.push({y:h.avg,label:'Giá vốn '+P(h.avg),color:'var(--accent)'});
     drawLine(el,{label:`Giá ${tk}`, dates, series:[{name:tk,values:vals,color:'var(--ink)',w:1.6}], markers:mk, hlines:hl, yFmt:v=>N(v), padR:10}); };
-  charts.profit = el => drawBars(el,{label:`Lợi nhuận sau thuế 8 quý của ${tk}`, values:f.profit, labels:['Q1/25','Q2/25','Q3/25','Q4/25','Q1/26','Q2/26','Q3/26','Q4/26'].map((x,i)=>x).slice(0,8).map((x,i)=>['Q4/24','Q1/25','Q2/25','Q3/25','Q4/25','Q1/26','Q2/26','Q3/26'][i])});
+  charts.cone = el => { const steps=[]; for(let d=0;d<=250;d+=5) steps.push(d); const bands=steps.map(d=>{ const t=d/250, o={}; for(const k in Z) o[k]=coneAt(p_,sd,t,Z[k]); return o; });
+    const hist=[]; for(let i=Math.max(0,LAST-120);i<=LAST;i+=5) hist.push(px(tk,i)); if((LAST-Math.max(0,LAST-120))%5) hist.push(p_);
+    const hl=[]; if(cur&&h){ hl.push({y:cur.target,label:'Mục tiêu '+P(cur.target),color:'var(--up)'}); hl.push({y:cur.stop,label:'Cắt lỗ '+P(cur.stop),color:'var(--down)'}); }
+    const nH=hist.length; drawFan(el,{label:`Vùng giá có thể của ${tk} trong 1 năm`, hist, bands, hlines:hl, yFmt:v=>N(v), color:'var(--c1)', padL:58, padR:58,
+      xLabels:[[0,'6 tháng trước'],[nH-1,'Hôm nay'],[nH-1+13,'3 tháng'],[nH-1+25,'6 tháng'],[nH-1+50,'1 năm']]}); };
   const cmp=(v,ref,lowerBetter)=>{ if(ref==null) return ''; const d=v/ref-1; return `<div class="c">${lowerBetter?(d<0?'Thấp hơn':'Cao hơn'):(d>0?'Cao hơn':'Thấp hơn')} ${PCT(Math.abs(d),false,0)}</div>`; };
   const ru=runup(tk,LAST);
 
@@ -819,21 +1009,20 @@ function pageTicker(tk){
       :`<div class="empty">Bạn không giữ ${tk}.${myClosed.length?` Đã từng giao dịch ${myClosed.length} lần.`:''}</div>`}
     </section>
 
-    <section class="card c7"><div class="card-head"><h2>Chỉ số doanh nghiệp</h2><span class="small">Số liệu mô phỏng, 4 quý gần nhất</span></div>
+    <section class="card c7"><div class="card-head"><h2>Giá có thể đi tới đâu trong 1 năm</h2><span class="small">Vùng đậm: một nửa khả năng · vùng nhạt: 9 trên 10</span></div>
+      <div class="chart" data-chart="cone" data-h="270"></div>
+      <p style="margin:10px 0 0;max-width:75ch">Một ngày bình thường, ${tk} dao động khoảng <b>${PCT(sd/Math.sqrt(250),false)}</b>, tức quanh ${P(p_*sd/Math.sqrt(250))} đ. Sau 1 năm, 9 trên 10 khả năng giá nằm trong khoảng <b>${P(snap(coneAt(p_,sd,1,Z.p5)))}</b> đến <b>${P(snap(coneAt(p_,sd,1,Z.p95)))}</b>.
+      ${cur&&h&&cur.stop<p_&&p_<cur.target?` Với cắt lỗ ${P(cur.stop)} và mục tiêu ${P(cur.target)} bạn đã đặt, khả năng chạm mục tiêu trước là khoảng <b>${PCT(hitFirst(p_,cur.stop,cur.target,sd),false,0)}</b> nếu bạn không có lợi thế gì riêng về mã này.`:''}</p>
+      <div class="small muted" style="margin-top:6px">Tính từ mức lên xuống thật của ${tk} trong 250 phiên gần nhất, không giả định mã sẽ tăng hay giảm. Đây không phải dự báo giá.</div></section>
+    <section class="card c5"><div class="card-head"><h2>Mã này đắt hay rẻ</h2><span class="small">${f.date?'Lợi nhuận 4 quý đến '+D(f.date):'Chưa có chỉ số'}</span></div>
       <div class="kv">
-        <div><div class="k">P/E</div><div class="v">${pe.toLocaleString('vi-VN',{maximumFractionDigits:1})}</div>${cmp(pe,f.peSector,true).replace('<div class="c">','<div class="c">So với ngành ('+f.peSector+'): ')}</div>
-        <div><div class="k">P/E trung bình 5 năm</div><div class="v">${f.pe5y}</div>${cmp(pe,f.pe5y,true).replace('<div class="c">','<div class="c">Hiện tại ')}</div>
-        <div><div class="k">P/B</div><div class="v">${pb.toLocaleString('vi-VN',{maximumFractionDigits:2})}</div></div>
-        <div><div class="k">EPS</div><div class="v">${N(f.eps)}</div><div class="c">đồng/cổ phiếu</div></div>
-        <div><div class="k">ROE</div><div class="v">${f.roe.toLocaleString('vi-VN')}%</div></div>
-        <div><div class="k">ROA</div><div class="v">${f.roa.toLocaleString('vi-VN')}%</div></div>
-        <div><div class="k">Nợ vay / vốn chủ</div><div class="v">${f.de==null?'–':f.de.toLocaleString('vi-VN')}</div>${f.de==null?'<div class="c">Không áp dụng cho ngân hàng</div>':''}</div>
-        <div><div class="k">Biên lợi nhuận gộp</div><div class="v">${f.gm==null?'–':f.gm.toLocaleString('vi-VN')+'%'}</div></div>
-        <div><div class="k">Tăng trưởng lợi nhuận</div><div class="v ${cls(f.growth)}">${PCT(f.growth/100)}</div><div class="c">So với cùng kỳ</div></div>
-        <div><div class="k">Tỷ suất cổ tức tiền</div><div class="v">${PCT(dy,false)}</div><div class="c">${N(f.div)} đ/cp/năm</div></div>
-      </div></section>
-    <section class="card c5"><div class="card-head"><h2>Lợi nhuận sau thuế theo quý</h2><span class="small">tỷ đồng</span></div>
-      <div class="chart" data-chart="profit" data-h="190"></div></section>
+        <div><div class="k">P/E</div><div class="v">${pe?pe.toLocaleString('vi-VN',{maximumFractionDigits:1}):'–'}</div><div class="c">số năm lợi nhuận để hoàn vốn</div></div>
+        <div><div class="k">P/B</div><div class="v">${pb?pb.toLocaleString('vi-VN',{maximumFractionDigits:2}):'–'}</div><div class="c">giá so với vốn chủ</div></div>
+        <div><div class="k">Lợi nhuận mỗi cổ phiếu</div><div class="v">${f.eps?N(f.eps):'–'}</div><div class="c">đồng (EPS)</div></div>
+        <div><div class="k">Vốn chủ mỗi cổ phiếu</div><div class="v">${f.bvps?N(f.bvps):'–'}</div><div class="c">đồng</div></div>
+        <div><div class="k">ROE</div><div class="v">${f.roe?PCT(f.roe,false):'–'}</div><div class="c">lãi trên vốn chủ</div></div>
+      </div>
+      <div class="small muted" style="margin-top:10px">P/E thấp có khi là rẻ thật, có khi vì thị trường biết lợi nhuận sắp giảm. Luôn hỏi thêm “vì sao nó rẻ”. Nguồn chỉ số: VNDirect.</div></section>
 
     <section class="card c7"><div class="card-head"><h2>Lịch sử của bạn với ${tk}</h2><span class="small">Mới nhất ở trên</span></div>
       ${items.length?`<div class="timeline">${items.map(it=>`<div class="tl-item ${it.k}"><div class="tl-date">${D(it.date)}</div>${it.html}</div>`).join('')}</div>`:`<div class="empty">Bạn chưa có giao dịch, luận điểm hay nhật ký nào về ${tk}.</div>`}
@@ -945,7 +1134,46 @@ function pageReview(){
   const C_=M.closed, wins=C_.filter(c=>c.pnl>0), losses=C_.filter(c=>c.pnl<=0);
   const avg=a=>a.length?a.reduce((s,c)=>s+c.pnlPct,0)/a.length:0, avgD=C_.length?C_.reduce((s,c)=>s+c.days,0)/C_.length:0;
   const ds=M.discipline, tags=tagStats(C_), hb=hotBuys();
-  return `<div class="page-head"><div><h1>Tổng kết lệnh</h1><p>Mỗi lệnh bán là một lần nhìn lại: kế hoạch lúc mua là gì, thực tế ra sao, và bạn tự gắn thẻ gì cho nó.</p></div></div>
+  const ps=perfStats(), e=edge(), curDD=ps?ps.me.dd[ps.me.dd.length-1]:0;
+  if(ps) charts.under = el => drawLine(el,{label:'Khoảng cách tới đỉnh cũ', dates:M.series.map(s=>s.date), zero:true,
+    series:[{name:'Danh mục của bạn',values:ps.me.dd,color:'var(--down)',area:true,w:2},{name:'VN-Index',values:ps.vn.dd,color:'var(--silver)',w:1.4,dash:true}], yFmt:v=>PCT(v,false,0)});
+  const sh=x=>isFinite(x)?x.toLocaleString('vi-VN',{minimumFractionDigits:2,maximumFractionDigits:2}):'–';
+  const byMood={}; C_.forEach(c=>{ const m=buyMood(c); (byMood[m]=byMood[m]||[]).push(c); });
+  const k4=e.kelly/4;
+  const perf = ps ? `<div class="stats">
+    ${stat('Mỗi năm tôi lãi', PCT(ps.me.yr), `VN-Index ${PCT(ps.vn.yr)} · gửi tiết kiệm ${PCT(RF)}`, cls(ps.me.yr))}
+    ${stat('Điểm hiệu quả', sh(ps.me.sharpe), `VN-Index ${sh(ps.vn.sharpe)} · trên 1 là tốt`, ps.me.sharpe>ps.vn.sharpe?'up':'')}
+    ${stat('Mức lên xuống mỗi năm', PCT(ps.me.vol,false), `VN-Index ${PCT(ps.vn.vol,false)}`)}
+    ${stat('Lần sụt sâu nhất', PCT(ps.me.mdd), `VN-Index ${PCT(ps.vn.mdd)}`, 'down')}
+    ${stat('Lâu nhất dưới đỉnh', ps.me.longest+' phiên', `VN-Index ${ps.vn.longest} phiên`)}
+  </div>
+  <div class="grid" style="margin-bottom:16px">
+    <section class="card c8"><div class="card-head"><h2>Tôi đã từng cách đỉnh bao xa</h2><span class="small">0% là đang ở đỉnh. Càng sâu càng đau.</span></div>
+      <div class="chart" data-chart="under" data-h="220"></div>
+      <p class="small muted" style="margin:8px 0 0">“Điểm hiệu quả” (chỉ số Sharpe) = phần lãi nhiều hơn gửi tiết kiệm, chia cho mức lên xuống. Nó trả lời câu hỏi: mỗi phần sóng gió tôi chịu đổi được bao nhiêu phần lãi.</p></section>
+    <section class="card c4"><div class="card-head"><h2>Lỗ thì dễ, gỡ thì khó</h2></div>
+      <div class="tbl"><table><thead><tr><th>Nếu lỗ</th><th class="r">Cần lãi để về bờ</th></tr></thead><tbody>
+      ${[.1,.2,.3,.5].map(l=>`<tr><td class="down">−${l*100}%</td><td class="r up">+${Math.round((1/(1-l)-1)*100)}%</td></tr>`).join('')}
+      </tbody></table></div>
+      <p class="small" style="margin:10px 0 0">${curDD<-.001?`Hôm nay danh mục cách đỉnh <b class="down">${PCT(curDD)}</b>, cần tăng <b>${PCT(1/(1+curDD)-1)}</b> để về lại đỉnh.`:'Hôm nay danh mục đang ở đỉnh của chính nó.'}</p></section>
+  </div>` : `<div class="card" style="margin-bottom:16px"><div class="empty">Cần ít nhất 30 phiên có giao dịch để tính lợi suất, điểm hiệu quả và mức sụt giảm.</div></div>`;
+  const edgeCard = `<section class="card c6"><div class="card-head"><h2>Lợi thế của tôi</h2><span class="small">Tính từ ${e.n} lệnh đã bán</span></div>
+      ${e.n<3?'<div class="empty">Cần ít nhất 3 lệnh đã bán để tính.</div>':`
+      <div class="mirror"><div><div class="small muted">Tôi thắng</div><b>${PCT(e.p,false,0)}</b> số lệnh</div><div><div class="small muted">Trung bình mỗi lệnh</div><b class="${cls(e.exp)}">${PCT(e.exp)}</b></div>
+        <div><div class="small muted">Lệnh thắng lãi</div><b class="up">${PCT(e.W)}</b></div><div><div class="small muted">Lệnh thua lỗ</div><b class="down">${PCT(-e.L)}</b></div></div>
+      <p style="margin:12px 0 6px">${isFinite(e.kelly)&&e.kelly>0?`Với thành tích này, công thức Kelly cho ra mức đặt tối đa <b>${PCT(e.kelly,false,0)}</b> tài sản cho một lệnh. Người thận trọng chỉ dùng một phần tư: <b>${PCT(k4,false,0)}</b>.`:`Với ${e.n} lệnh này, công thức Kelly <b>chưa thấy lợi thế</b>: lãi của lệnh thắng chưa đủ bù lỗ của lệnh thua.`}</p>
+      <div class="alert warn">${ICON.warn}<div class="body"><div class="t">${e.n} lệnh là rất ít</div><div class="d" style="display:block">Tỷ lệ thắng thật của bạn có thể nằm đâu đó từ ${PCT(e.lo,false,0)} đến ${PCT(e.hi,false,0)}. ${isFinite(e.kLo)?(e.kLo>0?`Ở đầu thấp, Kelly chỉ còn ${PCT(e.kLo,false,0)}.`:'Ở đầu thấp, Kelly ra số âm, nghĩa là chưa chứng minh được lợi thế.'):''} Đây là phép tính trên quá khứ của bạn, không phải lời khuyên đặt lệnh.</div></div></div>`}
+    </section>
+    <section class="card c6"><div class="card-head"><h2>Tấm gương hành vi</h2><span class="small">Thói quen lộ ra từ chính sổ của bạn</span></div>
+      ${e.n<3?'<div class="empty">Cần ít nhất 3 lệnh đã bán để soi.</div>':`
+      <div class="mirror"><div><div class="small muted">Lệnh lãi, tôi giữ</div><b>${isFinite(e.holdW)?Math.round(e.holdW)+' ngày':'–'}</b></div><div><div class="small muted">Lệnh lỗ, tôi giữ</div><b>${isFinite(e.holdL)?Math.round(e.holdL)+' ngày':'–'}</b></div></div>
+      <p class="small" style="margin:8px 0 12px">${isFinite(e.holdW)&&isFinite(e.holdL)?(e.holdL>e.holdW*1.2?'Bạn giữ lệnh lỗ lâu hơn lệnh lãi. Đây là thói quen rất phổ biến: chốt lãi sớm vì sợ mất, gồng lỗ vì không muốn nhận sai.':e.holdW>e.holdL*1.2?'Bạn giữ lệnh lãi lâu hơn lệnh lỗ. Số liệu cho thấy bạn cắt lỗ nhanh và để lãi chạy.':'Thời gian giữ lệnh lãi và lệnh lỗ gần như nhau.'):'Chưa có đủ cả lệnh lãi và lệnh lỗ để so.'}</p>
+      <div class="tbl"><table><thead><tr><th>Cảm xúc lúc mua</th><th class="r">Số lệnh</th><th class="r">Lệnh lãi</th><th class="r">Lãi/lỗ trung bình</th></tr></thead><tbody>
+      ${Object.entries(byMood).sort((a,b)=>b[1].length-a[1].length).map(([m,cs])=>{ const a=cs.reduce((s,c)=>s+c.pnlPct,0)/cs.length; return `<tr><td>${esc(m)}</td><td class="r">${cs.length}</td><td class="r">${cs.filter(c=>c.pnl>0).length}</td><td class="r ${cls(a)}">${PCT(a)}</td></tr>`; }).join('')}
+      </tbody></table></div>`}
+    </section>`;
+  return `<div class="page-head"><div><h1>Kết quả của tôi</h1><p>Tôi lãi bao nhiêu, đã chịu bao nhiêu sóng gió để có nó, và thói quen nào đang giúp hay hại tôi. Mọi con số ở đây tính từ chính sổ giao dịch của bạn.</p></div></div>
+  ${perf}
   <div class="stats">
     ${stat('Số lệnh đã bán', C_.length, `${wins.length} lãi · ${losses.length} lỗ`)}
     ${stat('Tỷ lệ thắng', PCT(C_.length?wins.length/C_.length:0,false,0), '')}
@@ -954,6 +1182,7 @@ function pageReview(){
     ${stat('Thời gian giữ trung bình', Math.round(avgD)+' ngày', '')}
   </div>
   <div class="grid">
+    ${edgeCard}
     <section class="card c6"><div class="card-head"><h2>Điểm kỷ luật: ${ds.score}/100</h2><span class="small">Thưởng cho quy trình đúng, không cho may mắn</span></div>
       <div class="bars">
         ${barRow('Có luận điểm',ds.a,null)}<div class="small muted" style="margin:-4px 0 4px">${ds.withT}/${ds.buys} lệnh mua có ghi lý do, mục tiêu, cắt lỗ (40% điểm)</div>
@@ -979,6 +1208,7 @@ const dlg=$('#dlg'), form=$('#dlgForm');
 let mode=null, ctx={};
 const TAGS=['đúng kế hoạch','chốt lời','cắt lỗ','bán non','bán hoảng loạn','mua đuổi','không theo kế hoạch','giữ lỗ quá lâu'];
 const MOODS=['Bình tĩnh','Lo lắng','Sợ hãi','Hưng phấn','Tự tin'];
+const BUY_MOODS=['Bình tĩnh','Hào hứng','Sợ bỏ lỡ','Muốn gỡ'];
 const fld=(id,label,input,cls='',hint='')=>`<div class="field ${cls}"><label for="${id}">${label}</label>${input}${hint?`<div class="hint">${hint}</div>`:''}</div>`;
 const acctSelect=(val)=>fld('f_acct','Tài khoản',`<select id="f_acct">${ACCTS.map(a=>`<option ${a===val?'selected':''}>${a}</option>`).join('')}</select>`);
 const heldPos=()=>Object.values(M.acctPos).filter(a=>a.qty>0);
@@ -1033,6 +1263,7 @@ function openBuy(tk, plan){
     ${fld('f_wrong','Điều gì xảy ra thì mình sai và sẽ bán?',`<input id="f_wrong" value="${esc(th.wrongIf||'')}">`,'full')}
     ${fld('f_horizon','Thời gian dự kiến nắm giữ',`<input id="f_horizon" placeholder="Ví dụ: 1–2 năm" value="${esc(th.horizon||'')}">`)}
     ${fld('f_weight','Tỷ trọng dự kiến (% danh mục)',`<input type="number" id="f_weight" min="0" max="100" value="${th.weight||''}">`)}
+    ${fld('f_bmood','Cảm xúc của tôi lúc này',`<select id="f_bmood">${BUY_MOODS.map(m=>`<option>${m}</option>`).join('')}</select>`,'','Ghi thật lòng. Talenta sẽ cho bạn thấy cảm xúc nào hay đi cùng lệnh lỗ.')}
     ${fld('f_letter','Thư gửi chính mình một năm sau (không bắt buộc)',`<input id="f_letter" placeholder="Ví dụ: Nếu giá giảm mà lý do vẫn đúng, đừng bán." value="${esc(th.letter||'')}">`,'full')}
   </div></fieldset>`;
   ctx={planId:p0.id};
@@ -1072,6 +1303,19 @@ function openBackup(){
 function val(id){ const e=document.getElementById(id); return e?e.value.trim():''; }
 function num(id){ const v=parseFloat(val(id)); return isFinite(v)?v:NaN; }
 function err(msg){ const e=$('#err'); e.textContent=msg; e.hidden=!msg; }
+function planLine(tk,price){
+  const target=num('f_target'), stop=num('f_stop'), mood=val('f_bmood'); let h='';
+  if(price>0 && stop>0 && target>0 && stop<price && price<target && PX[tk]){
+    const sd=sigmaOf(tk), ph=hitFirst(price,stop,target,sd), up=target/price-1, dn=1-stop/price, R=up/dn, need=1/(1+R);
+    const risk=(S.settings.riskPct||.01)*M.total, q=Math.floor(risk/(price-stop)/100)*100;
+    h+=`<div style="margin-top:6px;padding-top:6px;border-top:1px dashed var(--line)">Nếu đúng: lãi <b class="up">${PCT(up)}</b>. Nếu sai: lỗ <b class="down">${PCT(-dn)}</b>. Tức là được <b>${R.toLocaleString('vi-VN',{maximumFractionDigits:1})}</b> đồng cho mỗi đồng chấp nhận mất.</div>
+      <div>Nếu giá ${tk} chỉ đi ngẫu nhiên với mức lên xuống như một năm qua (${PCT(sd,false,0)}/năm), khả năng chạm mục tiêu trước khi chạm cắt lỗ là khoảng <b>${PCT(ph,false,0)}</b>. Kế hoạch này cần bạn đúng ít nhất <b>${PCT(need,false,0)}</b> số lần để không lỗ về lâu dài.</div>
+      <div>Phép tính cỡ lệnh: nếu chỉ chấp nhận mất ${PCT(S.settings.riskPct||.01,false,0)} tổng tài sản (${C(risk)}) khi chạm cắt lỗ, khối lượng tối đa là <b>${N(Math.max(0,q))} cổ phiếu</b>.</div>`;
+  } else h+=`<div class="muted" style="margin-top:6px">Điền giá mục tiêu và điểm cắt lỗ để xem tỷ lệ lãi/lỗ và khả năng chạm mục tiêu trước.</div>`;
+  if(mood && mood!=='Bình tĩnh'){ const cs=M.closed.filter(c=>buyMood(c)===mood), w=cs.filter(c=>c.pnl>0).length;
+    h+= cs.length? `<div class="${w/cs.length<.5?'down':'muted'}">Soi gương: ${cs.length} lệnh trước đây bạn mua khi “${esc(mood)}”, có ${w} lệnh lãi.</div>` : `<div class="muted">Bạn đang ghi cảm xúc “${esc(mood)}”. Chưa có lệnh cũ nào cùng cảm xúc để so.</div>`; }
+  return h;
+}
 function updatePreview(){
   const pv=$('#pv'); if(!pv) return;
   const tk=val('f_tk'), q=num('f_qty'), p_=num('f_price');
@@ -1082,6 +1326,7 @@ function updatePreview(){
       <div>Tiền mặt ${esc(val('f_acct'))} còn <b class="${(M.cashBy[val('f_acct')]||0)-v-fee<0?'down':''}">${isFinite(v)?C((M.cashBy[val('f_acct')]||0)-v-fee):'–'}</b></div>
       <div>Tỷ trọng ${tk} sau lệnh <b class="${w>S.settings.maxTicker?'down':''}">${isFinite(w)?PCT(w,false):'–'}</b>${w>S.settings.maxTicker?` (vượt mức ${PCT(S.settings.maxTicker,false,0)})`:''}</div>
       ${ru>0.15?`<div class="down">${tk} đã tăng ${PCT(ru,false)} trong 20 phiên. ${hotBuys().length} lệnh mua trước đây của bạn trong tình huống này.</div>`:''}
+      ${planLine(tk,p_)}
       ${mine.length?`<div class="muted">Lần trước với ${tk}: ${mine.map(c=>`${D(c.date)} ${PCT(c.pnlPct)}${c.tags.length?' ('+c.tags.join(', ')+')':''}`).join('; ')}</div>`:''}`;
   } else if(mode==='tx' && val('f_type')==='sell' && curPos()){
     const P_=curPos(), tk=P_.ticker, avg=P_.cost/P_.qty, v=q*p_, net=v*(1-FEE-TAX), pnl=net-avg*q, t=thesisAt(tk,TODAY);
@@ -1102,14 +1347,14 @@ function readBuy(){
   if(!(target>0)||!(stop>0)) return err('Hãy đặt giá mục tiêu và điểm cắt lỗ.');
   if(stop>=price) return err('Điểm cắt lỗ phải thấp hơn giá mua.');
   if(target<=price) return err('Giá mục tiêu phải cao hơn giá mua.');
-  return {tk,qty,price,date,acct:val('f_acct')||ACCTS[0],thesis:{ticker:tk,date,reason,target,stop,wrongIf:val('f_wrong'),horizon:val('f_horizon'),weight:num('f_weight')||null,letter:val('f_letter'),reviews:[]}};
+  return {tk,qty,price,date,mood:val('f_bmood')||'Bình tĩnh',acct:val('f_acct')||ACCTS[0],thesis:{ticker:tk,date,reason,target,stop,wrongIf:val('f_wrong'),horizon:val('f_horizon'),weight:num('f_weight')||null,letter:val('f_letter'),reviews:[]}};
 }
 form.addEventListener('submit', e=>{
   e.preventDefault(); err('');
   if(mode==='buy'){ const b=readBuy(); if(!b) return;
     const have=M.cashBy[b.acct]||0;
     if(b.qty*b.price*(1+FEE)>have+1) return err(`Tài khoản ${b.acct} chỉ có ${C(have)} tiền mặt. Ghi một lệnh nạp tiền vào tài khoản này trước.`);
-    const id=uid('h'); S.theses.push({id,...b.thesis}); S.tx.push({id:uid('t'),date:b.date,acct:b.acct,type:'buy',ticker:b.tk,qty:b.qty,price:b.price,thesisId:id});
+    const id=uid('h'); S.theses.push({id,...b.thesis}); S.tx.push({id:uid('t'),date:b.date,acct:b.acct,type:'buy',ticker:b.tk,qty:b.qty,price:b.price,mood:b.mood,thesisId:id});
     if(ctx.planId) S.plans=S.plans.filter(p=>p.id!==ctx.planId);
     done(`Đã ghi lệnh mua ${b.tk} kèm luận điểm`);
   } else if(mode==='tx'){
@@ -1170,26 +1415,31 @@ document.addEventListener('click', e=>{
     if(a==='del-tx'){ S.tx=S.tx.filter(t=>t.id!==b.dataset.id); toast('Đã xóa giao dịch'); }
     else if(a==='del-asset'){ S.assets=S.assets.filter(x=>x.id!==b.dataset.id); toast('Đã xóa tài sản'); }
     else if(a==='del-j'){ S.journal=S.journal.filter(j=>j.id!==b.dataset.id); toast('Đã xóa dòng nhật ký'); }
-    else if(a==='reset'){ S=seed(); toast('Đã nạp lại dữ liệu mẫu'); }
-    else if(a==='clear'){ S={v:2,tx:[],theses:[],journal:[],watch:[],assets:[],plans:[],settings:{maxTicker:.20,maxSector:.40,reviewDays:90}}; toast('Sổ đã trống. Bắt đầu bằng một lệnh nạp tiền.'); }
+    else if(a==='reset'){ if(!DATA) return; S=seed(); toast('Đã nạp lại dữ liệu mẫu'); }
+    else if(a==='clear'){ S={v:3,tx:[],theses:[],journal:[],watch:[],assets:[],plans:[],goal:{target:2e9,years:5,monthly:10e6},settings:{maxTicker:.20,maxSector:.40,reviewDays:90,riskPct:.01}}; toast('Sổ đã trống. Bắt đầu bằng một lệnh nạp tiền.'); }
     save(); route();
   }
   else if(a==='copy-json'){ const ta=$('#f_json'); const ok=()=>toast('Đã sao chép'); try{ navigator.clipboard.writeText(ta.value).then(ok,()=>{ ta.select(); toast('Hãy nhấn Ctrl+C (hoặc giữ và chọn Sao chép)'); }); }catch(_){ ta.select(); toast('Hãy nhấn Ctrl+C để sao chép'); } }
-  else if(a==='restore'){ try{ const d=JSON.parse($('#f_json').value); if(!Array.isArray(d.tx)||!Array.isArray(d.journal)) throw 0; d.theses=d.theses||[]; d.watch=d.watch||[]; d.plans=d.plans||[]; d.assets=d.assets||[]; d.settings=d.settings||{maxTicker:.2,maxSector:.4,reviewDays:90}; S=d; done('Đã khôi phục dữ liệu'); }catch(_){ err('Đoạn dữ liệu không đúng định dạng sao lưu của Talenta.'); } }
+  else if(a==='restore'){ try{ const d=JSON.parse($('#f_json').value); if(!Array.isArray(d.tx)||!Array.isArray(d.journal)) throw 0; d.theses=d.theses||[]; d.watch=d.watch||[]; d.plans=d.plans||[]; d.assets=d.assets||[]; d.settings=d.settings||{maxTicker:.2,maxSector:.4,reviewDays:90,riskPct:.01}; S=d; done('Đã khôi phục dữ liệu'); }catch(_){ err('Đoạn dữ liệu không đúng định dạng sao lưu của Talenta.'); } }
 });
 document.addEventListener('input', e=>{
+  const gk={g_target:'target',g_years:'years',g_monthly:'monthly'}[e.target.id];
+  if(gk){ const v=+e.target.value; $('#'+e.target.id+'_v').textContent = gk==='years'? v+' năm' : C(v); }
   if(e.target.id==='jq'){ state.jFilter.q=e.target.value; const pos=e.target.selectionStart; route(); const n=$('#jq'); n.focus(); n.setSelectionRange(pos,pos); }
 });
 document.addEventListener('change', e=>{
+  const gk={g_target:'target',g_years:'years',g_monthly:'monthly'}[e.target.id];
+  if(gk){ S.goal[gk]=+e.target.value; save(); const id=e.target.id, y=scrollY; route(); scrollTo(0,y); const n=$('#'+id); if(n) n.focus(); }
   if(e.target.id==='jtk'){ state.jFilter.tk=e.target.value; route(); }
   if(e.target.id==='jmood'){ state.jFilter.mood=e.target.value; route(); }
   if(e.target.id==='txFilter'){ state.txFilter=e.target.value; route(); }
 });
 $('#tkList').innerHTML=TICKERS.map(t=>`<option value="${t}">${esc(MKT[t].name)}</option>`).join('');
-$('#searchForm').addEventListener('submit', e=>{ e.preventDefault(); const v=$('#searchInput').value.trim().toUpperCase(); if(MKT[v]&&v!=='VNINDEX'){ location.hash='ma-'+v; $('#searchInput').value=''; } else toast('Bản dùng thử có 8 mã: '+TICKERS.join(', ')); });
+$('#searchForm').addEventListener('submit', e=>{ e.preventDefault(); const v=$('#searchInput').value.trim().toUpperCase(); if(MKT[v]&&v!=='VNINDEX'){ location.hash='ma-'+v; $('#searchInput').value=''; } else toast('Hiện có '+TICKERS.length+' mã: '+TICKERS.join(', ')); });
 $('#searchInput').addEventListener('change', e=>{ const v=e.target.value.trim().toUpperCase(); if(MKT[v]&&v!=='VNINDEX'){ location.hash='ma-'+v; e.target.value=''; } });
 
-load(); route();
+if(DATA){ load(); route(); pollLive(); }
+else { view.innerHTML=`<section class="card"><div class="card-head"><h2>Chưa có dữ liệu giá</h2></div><p style="max-width:70ch">Talenta không tìm thấy file giá <b>data/market.js</b>. App sẽ không tự bịa ra số liệu thay thế. File này được tạo tự động mỗi ngày trên GitHub; hãy mở lại trang sau khi lần lấy giá đầu tiên chạy xong.</p></section>`; paintLive(); }
 </script>
 
 </body>
