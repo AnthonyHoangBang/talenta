@@ -1,0 +1,23 @@
+name: Cap nhat gia dong cua
+on:
+  schedule:
+    - cron: '25 8 * * 1-5'   # 15:25 giờ Việt Nam, sau khi thị trường đóng cửa
+  workflow_dispatch:
+  push:
+    paths: ['scripts/build-data.mjs', '.github/workflows/data.yml']
+permissions:
+  contents: write
+jobs:
+  data:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with: { node-version: 20 }
+      - run: node scripts/build-data.mjs
+      - run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add data
+          git diff --cached --quiet || git commit -m "Cap nhat gia dong cua"
+          git pull --rebase && git push
