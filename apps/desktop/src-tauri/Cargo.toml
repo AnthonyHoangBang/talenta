@@ -1,0 +1,17 @@
+[package]
+name = "talenta"
+version = "1.0.0"
+description = "Talenta · Nén Bạc, sổ tay đầu tư cá nhân"
+edition = "2021"
+
+[build-dependencies]
+tauri-build = { version = "2", features = [] }
+
+[dependencies]
+tauri = { version = "2", features = [] }
+
+[profile.release]
+codegen-units = 1
+lto = true
+opt-level = "s"
+strip = true

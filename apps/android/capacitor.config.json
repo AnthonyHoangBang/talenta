@@ -1,0 +1,7 @@
+{
+  "appId": "vn.talenta.nenbac",
+  "appName": "Talenta",
+  "webDir": "www",
+  "server": { "url": "https://anthonyhoangbang.github.io/talenta/", "androidScheme": "https", "cleartext": false },
+  "android": { "backgroundColor": "#143A52" }
+}

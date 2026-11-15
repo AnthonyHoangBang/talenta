@@ -5,6 +5,13 @@
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>Talenta · Nén Bạc</title>
 <link rel="icon" type="image/svg+xml" href="logo.svg">
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="apple-touch-icon" href="icons/apple-touch-icon.png">
+<meta name="theme-color" content="#143A52">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="Talenta">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <style>:root{padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}body{margin:0}img{max-width:100%}[hidden]{display:none!important}</style>
 <title>Talenta · Nén Bạc</title>
 <meta name="claude:viewport-fit-sides" content="cover">
@@ -111,6 +118,7 @@ input[type=range]{width:100%;accent-color:var(--accent);padding:0;border:0;backg
 .btn.primary:hover{filter:brightness(1.08)}
 .btn.ghost{border-color:transparent;background:transparent;color:var(--accent);padding-inline:6px}
 .btn.danger{color:var(--down)}
+.sync-ic{color:var(--muted);flex:none}.sync-ic.ok{color:var(--up)}.sync-ic.warn{color:var(--warn)}.sync-ic.bad{color:var(--down)}
 .btn.sm{padding:4px 9px;font-size:12px}
 :focus-visible{outline:2px solid var(--accent);outline-offset:2px}
 
@@ -307,6 +315,7 @@ footer .row{display:flex;gap:10px;flex-wrap:wrap;align-items:center;justify-cont
       </a>
       <span class="live-pill" id="livePill" title="">Đang tải giá</span>
       <form class="search" id="searchForm" role="search"><input id="searchInput" list="tkList" placeholder="Tìm mã, ví dụ FPT" aria-label="Tìm mã cổ phiếu" autocomplete="off"><datalist id="tkList"></datalist></form>
+      <button class="btn" id="syncBtn" data-act="sync" hidden></button>
       <button class="btn" data-act="new-journal">+ Nhật ký</button>
       <button class="btn primary" data-act="new-tx">+ Giao dịch</button>
     </div>
@@ -329,7 +338,7 @@ footer .row{display:flex;gap:10px;flex-wrap:wrap;align-items:center;justify-cont
 
 <footer>
   <div class="wrap row">
-    <div>Talenta ghi chép và phân tích dữ liệu của chính bạn. App không đưa ra khuyến nghị mua hay bán.<br><span id="dataNote"></span> Sổ mẫu là ví dụ minh họa. Dữ liệu bạn nhập chỉ nằm trong trình duyệt này.</div>
+    <div>Talenta ghi chép và phân tích dữ liệu của chính bạn. App không đưa ra khuyến nghị mua hay bán.<br><span id="dataNote"></span> Sổ mẫu là ví dụ minh họa. Dữ liệu nằm trên máy này; đăng nhập đồng bộ để dùng chung trên nhiều máy.</div>
     <div class="chips"><button class="btn sm" data-act="backup">Sao lưu / khôi phục</button><button class="btn sm danger" data-act="reset">Làm lại từ dữ liệu mẫu</button><button class="btn sm danger" data-act="clear">Xóa hết, bắt đầu sổ trống</button></div>
   </div>
 </footer>
@@ -337,6 +346,7 @@ footer .row{display:flex;gap:10px;flex-wrap:wrap;align-items:center;justify-cont
 <dialog id="dlg"><form id="dlgForm" novalidate></form></dialog>
 
 <script src="data/market.js"></script>
+<script src="sync.js" defer></script>
 <script>
 "use strict";
 /* ============ Tiện ích ============ */
@@ -447,7 +457,7 @@ function otherAssets(){ return (S.assets||[]).map(a=>{ let value, vdate;
   return {...a, value, vdate, pnl:value-a.cost, pnlPct:a.cost?value/a.cost-1:0}; }); }
 let S;
 function load(){ try{ const raw=localStorage.getItem(KEY); if(raw){ S=JSON.parse(raw); return; } }catch(e){} S=seed(); save(); }
-function save(){ try{ localStorage.setItem(KEY, JSON.stringify(S)); }catch(e){} }
+function save(){ S.updatedAt=Date.now(); try{ localStorage.setItem(KEY, JSON.stringify(S)); }catch(e){} if(typeof TalentaSync!=='undefined') TalentaSync.changed(); }
 
 function seed(){
   // Sổ mẫu: ngày và khối lượng là ví dụ, còn giá mua bán lấy đúng giá đóng cửa thật của ngày đó.
@@ -1216,7 +1226,7 @@ const curPos=()=>{ const v=val('f_pos'); return v?M.acctPos[v]:null; };
 const tkSelect=(id,val,list=TICKERS)=>`<select id="${id}" name="${id}">${list.map(t=>`<option ${t===val?'selected':''}>${t}</option>`).join('')}</select>`;
 function open(m, html, title, okLabel){
   mode=m; form.innerHTML=`<div class="dlg-head"><h2>${title}</h2><button type="button" class="btn ghost" data-act="close" aria-label="Đóng">Đóng</button></div><div class="dlg-body">${html}<div class="err" id="err" hidden></div></div>
-  <div class="dlg-foot">${m==='buy'?'<button type="button" class="btn" data-act="save-plan">Lưu kế hoạch, chờ 24 giờ</button>':''}${m==='backup'?'':`<button type="button" class="btn" data-act="close">Hủy</button><button class="btn primary" type="submit">${okLabel||'Lưu'}</button>`}</div>`;
+  <div class="dlg-foot">${m==='buy'?'<button type="button" class="btn" data-act="save-plan">Lưu kế hoạch, chờ 24 giờ</button>':''}${m==='backup'||m==='sync'?'':`<button type="button" class="btn" data-act="close">Hủy</button><button class="btn primary" type="submit">${okLabel||'Lưu'}</button>`}</div>`;
   if(!dlg.open) dlg.showModal();
   updatePreview();
 }
@@ -1350,7 +1360,7 @@ function readBuy(){
   return {tk,qty,price,date,mood:val('f_bmood')||'Bình tĩnh',acct:val('f_acct')||ACCTS[0],thesis:{ticker:tk,date,reason,target,stop,wrongIf:val('f_wrong'),horizon:val('f_horizon'),weight:num('f_weight')||null,letter:val('f_letter'),reviews:[]}};
 }
 form.addEventListener('submit', e=>{
-  e.preventDefault(); err('');
+  e.preventDefault(); if(mode==='sync') return TalentaSync.submit(); err('');
   if(mode==='buy'){ const b=readBuy(); if(!b) return;
     const have=M.cashBy[b.acct]||0;
     if(b.qty*b.price*(1+FEE)>have+1) return err(`Tài khoản ${b.acct} chỉ có ${C(have)} tiền mặt. Ghi một lệnh nạp tiền vào tài khoản này trước.`);
@@ -1440,6 +1450,7 @@ $('#searchInput').addEventListener('change', e=>{ const v=e.target.value.trim().
 
 if(DATA){ load(); route(); pollLive(); }
 else { view.innerHTML=`<section class="card"><div class="card-head"><h2>Chưa có dữ liệu giá</h2></div><p style="max-width:70ch">Talenta không tìm thấy file giá <b>data/market.js</b>. App sẽ không tự bịa ra số liệu thay thế. File này được tạo tự động mỗi ngày trên GitHub; hãy mở lại trang sau khi lần lấy giá đầu tiên chạy xong.</p></section>`; paintLive(); }
+if('serviceWorker' in navigator && location.protocol==='https:') navigator.serviceWorker.register('sw.js').catch(()=>{});
 </script>
 
 </body>
