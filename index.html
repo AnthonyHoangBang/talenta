@@ -5,6 +5,13 @@
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>Talenta · Nén Bạc</title>
 <link rel="icon" type="image/svg+xml" href="logo.svg">
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="apple-touch-icon" href="icons/apple-touch-icon.png">
+<meta name="theme-color" content="#143A52">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="Talenta">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <style>:root{padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}body{margin:0}img{max-width:100%}[hidden]{display:none!important}</style>
 <title>Talenta · Nén Bạc</title>
 <meta name="claude:viewport-fit-sides" content="cover">
@@ -1439,6 +1446,7 @@ $('#searchForm').addEventListener('submit', e=>{ e.preventDefault(); const v=$('
 $('#searchInput').addEventListener('change', e=>{ const v=e.target.value.trim().toUpperCase(); if(MKT[v]&&v!=='VNINDEX'){ location.hash='ma-'+v; e.target.value=''; } });
 
 if(DATA){ load(); route(); pollLive(); }
+if('serviceWorker' in navigator && location.protocol==='https:') navigator.serviceWorker.register('sw.js').catch(()=>{});
 else { view.innerHTML=`<section class="card"><div class="card-head"><h2>Chưa có dữ liệu giá</h2></div><p style="max-width:70ch">Talenta không tìm thấy file giá <b>data/market.js</b>. App sẽ không tự bịa ra số liệu thay thế. File này được tạo tự động mỗi ngày trên GitHub; hãy mở lại trang sau khi lần lấy giá đầu tiên chạy xong.</p></section>`; paintLive(); }
 </script>
 

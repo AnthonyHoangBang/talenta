@@ -1,0 +1,7 @@
+{
+  "name": "talenta-android",
+  "private": true,
+  "version": "1.0.0",
+  "dependencies": { "@capacitor/android": "^7", "@capacitor/core": "^7" },
+  "devDependencies": { "@capacitor/cli": "^7" }
+}
