@@ -70,6 +70,16 @@ jobs:
       - uses: actions/upload-artifact@v4
         with: { name: talenta-Android, path: dist/Talenta-Android.apk }
 
+  sync-check:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Kiem tra ket noi Supabase
+        run: |
+          set -x
+          curl -sS -i "https://bluwnjfdqfsvivqzhbqo.supabase.co/rest/v1/notebooks?select=user_id" -H "apikey: sb_publishable_Yhnimkd_9KGxxKbihJEI-A_Dx5uYqr9" | head -20
+          curl -sS "https://bluwnjfdqfsvivqzhbqo.supabase.co/auth/v1/settings" -H "apikey: sb_publishable_Yhnimkd_9KGxxKbihJEI-A_Dx5uYqr9"; echo
+          curl -sS -o /dev/null -w "umd %{http_code}\n" https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.58.0/dist/umd/supabase.js
+
   release:
     if: startsWith(github.ref, 'refs/tags/v')
     needs: [desktop, android]

@@ -3,8 +3,8 @@
    Sổ vẫn nằm trên máy như cũ để mở nhanh và dùng được khi mất mạng.
    Khi đã đăng nhập, mỗi thay đổi được gửi lên mạng, và sổ được kéo về khi mở app, khi quay lại app, và mỗi phút. */
 const SYNC_CFG = {
-  url: '',   // Project URL của Supabase, ví dụ https://xxxx.supabase.co
-  key: ''    // khóa anon / publishable (được phép nằm trong app; quyền đọc ghi do chính sách của bảng quyết định)
+  url: 'https://bluwnjfdqfsvivqzhbqo.supabase.co',   // Project URL của Supabase, ví dụ https://xxxx.supabase.co
+  key: 'sb_publishable_Yhnimkd_9KGxxKbihJEI-A_Dx5uYqr9'    // khóa anon / publishable (được phép nằm trong app; quyền đọc ghi do chính sách của bảng quyết định)
 };
 const TalentaSync = (() => {
   const META_KEY = 'talenta-sync', BACKUP_KEY = 'talenta-ban-truoc-dong-bo';
@@ -37,7 +37,7 @@ const TalentaSync = (() => {
     return new Promise((ok, no) => {
       if (window.supabase) return ok();
       const s = document.createElement('script');
-      s.src = 'https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.45.4/dist/umd/supabase.js';
+      s.src = 'https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.58.0/dist/umd/supabase.js';
       s.onload = ok; s.onerror = () => no(new Error('Không tải được thư viện đồng bộ'));
       document.head.appendChild(s);
     });
