@@ -1,7 +1,7 @@
-Sun Nov 15 15:51:00 UTC 2026
+Sun Nov 15 16:04:47 UTC 2026
 === vnd_prices_fields
 URL https://api-finfo.vndirect.com.vn/v4/stock_prices?sort=date:desc&q=code:FPT&size=2
-status=200 time=1.150391s size=896
+status=200 time=1.253561s size=896
 Content-Type: application/json
 Access-Control-Allow-Origin: *
 Cache-Control: max-age=300
@@ -9,28 +9,28 @@ Cache-Control: max-age=300
 
 === vnd_fin_models
 URL https://api-finfo.vndirect.com.vn/v4/financial_models?sort=displayOrder:asc&q=codeList:FPT~modelType:2,90,102,412&size=200
-status=200 time=1.635427s size=230301
+status=200 time=1.671823s size=230301
 Content-Type: application/json
 Access-Control-Allow-Origin: *
 {"data":[{"modelType":2.0,"modelTypeName":"INCOME","modelVnDesc":"BC KQ Hoạt động kinh doanh - Chung ","modelEnDesc":"","companyForm":"NON_FINANCE","note":"TT202/2014/TT-BTC","codeList":"VIN,TT6,VDG,CCC,AVG,AAH,KTW,BCO,NCG,GDA,CLI,VBT,VLS,BHH,DKG,UXC,BMK,AIG,MZG,ECO,TAB,HLO,MTX,VCG,D17,TBW,VMK,BCR,SBB,HIO,XDC,DMX,AAN,GDH,ALC,STD,CCS,DSH,RYG,TSA,HDS,VGC,BGE,VPL11811,VPL11812,VPL11810,VPL11809,VPL,GEL,HPA,CRV,BQP,HPO,UTT,SLD,TD6,MBT,HMD,DKW,TKRC,ING,DSP,XXX,VNDFUND,QNP,TAL,NEM,SBG,THM,DMS,GCF,TDI,NO1,DSD,PPT,DTH,ODE,BIG,AGE,PCH,TBR,MGR,GEE,PTN,TED,LSG,HMR,CMM,MCD,GPC,DLM,VNZ,VMT,VVS,DVM,CAR,PAT,CVP,IBN,GE2,HSV,CST,SCG,TKG,AAT,BCV,CFM,DPD,DVG,IDP,PLE,BKG,DTE,MCM,MTB,CGL,GMA,NJC,GIC,MHP,CQN,APH,MED,STH,HNE,QNT,GQN,KLM,MDT,MML121021,MML,E29,PTV,PQN,VTR,ATD,SOV,NTF,CFV,TN1122016,TN1,PNP,AQN,PHN,SZC,BNW,BMG,DCG,HVH,PDT,VTP,BLW,DKP,LMH,VSE,ILC,BHB12103,BHB12104,BHEC,BHWC,BBT,TS5,TS3,TLP,SKH
 
 === vnd_fin_stmt_q
 URL https://api-finfo.vndirect.com.vn/v4/financial_statements?q=code:FPT~reportType:QUARTER~modelType:2,90,102,412~fiscalDate:gte:2024-01-01&sort=fiscalDate:desc&size=60
-status=200 time=1.032722s size=12211
+status=200 time=1.041380s size=12211
 Content-Type: application/json
 Access-Control-Allow-Origin: *
 {"data":[{"code":"FPT","itemCode":22051.0,"reportType":"QUARTER","modelType":2.0,"numericValue":3.60533794568E11,"fiscalDate":"2026-09-30","createdDate":"2026-10-29 00:00:00","modifiedDate":"2026-10-29 00:00:00"},{"code":"FPT","itemCode":23900.0,"reportType":"QUARTER","modelType":2.0,"numericValue":2.8958589844E10,"fiscalDate":"2026-09-30","createdDate":"2026-10-29 00:00:00","modifiedDate":"2026-10-29 00:00:00"},{"code":"FPT","itemCode":21900.0,"reportType":"QUARTER","modelType":2.0,"numericValue":2.2603664815E10,"fiscalDate":"2026-09-30","createdDate":"2026-10-29 00:00:00","modifiedDate":"2026-10-29 00:00:00"},{"code":"FPT","itemCode":23110.0,"reportType":"QUARTER","modelType":2.0,"numericValue":3.026965833429E12,"fiscalDate":"2026-09-30","createdDate":"2026-10-29 00:00:00","modifiedDate":"2026-10-29 00:00:00"},{"code":"FPT","itemCode":21500.0,"reportType":"QUARTER","modelType":2.0,"num
 
 === vnd_fin_stmt_q_bank
 URL https://api-finfo.vndirect.com.vn/v4/financial_statements?q=code:VCB~reportType:QUARTER~modelType:2,90,102,412~fiscalDate:gte:2025-01-01&sort=fiscalDate:desc&size=60
-status=200 time=1.014994s size=12121
+status=200 time=1.055515s size=12121
 Content-Type: application/json
 Access-Control-Allow-Origin: *
 {"data":[{"code":"VCB","itemCode":421602.0,"reportType":"QUARTER","modelType":102.0,"numericValue":4.84903E11,"fiscalDate":"2026-09-30","createdDate":"2026-10-30 00:00:00","modifiedDate":"2026-10-30 00:00:00"},{"code":"VCB","itemCode":421601.0,"reportType":"QUARTER","modelType":102.0,"numericValue":1.488096E12,"fiscalDate":"2026-09-30","createdDate":"2026-10-30 00:00:00","modifiedDate":"2026-10-30 00:00:00"},{"code":"VCB","itemCode":22070.0,"reportType":"QUARTER","modelType":102.0,"numericValue":2.176555E12,"fiscalDate":"2026-09-30","createdDate":"2026-10-30 00:00:00","modifiedDate":"2026-10-30 00:00:00"},{"code":"VCB","itemCode":22051.0,"reportType":"QUARTER","modelType":102.0,"numericValue":2.175584E12,"fiscalDate":"2026-09-30","createdDate":"2026-10-30 00:00:00","modifiedDate":"2026-10-30 00:00:00"},{"code":"VCB","itemCode":23003.0,"reportType":"QUARTER","modelType":102.0,"numericValu
 
 === vnd_ratios_q
 URL https://api-finfo.vndirect.com.vn/v4/ratios?q=code:FPT~ratioCode:NET_PROFIT_QUARTER,NET_REVENUE_QUARTER~reportDate:gte:2024-01-01&size=50
-status=200 time=0.906925s size=70
+status=200 time=0.910752s size=70
 Content-Type: application/json
 Access-Control-Allow-Origin: *
 Cache-Control: max-age=300
