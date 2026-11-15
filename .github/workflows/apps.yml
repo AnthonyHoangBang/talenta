@@ -4,7 +4,7 @@ on:
   push:
     tags: ['v*']
     branches: ['claude/**']
-    paths: ['apps/**', 'icons/**', '.github/workflows/apps.yml']
+    paths: ['apps/**', 'icons/**', 'index.html', 'sync.js', '.github/workflows/apps.yml']
 permissions:
   contents: write
 jobs:
@@ -39,7 +39,9 @@ jobs:
       - run: npx tauri build ${{ matrix.args }}
       - run: mkdir -p ../../dist && cp src-tauri/${{ matrix.out }} ../../dist/${{ matrix.file }}
       - uses: actions/upload-artifact@v4
-        with: { name: talenta-${{ matrix.name }}, path: dist/${{ matrix.file }} }
+        with:
+          name: talenta-${{ matrix.name }}
+          path: dist/${{ matrix.file }}
 
   android:
     runs-on: ubuntu-latest
