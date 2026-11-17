@@ -86,7 +86,9 @@ S = {
   theses:  [ { id, ticker, date, reason, wrongIf, target, stop, horizon, weight, letter, reviews:[{date,valid,note}] } ],
   journal: [ { id, date, tickers:[], mood, tags:[], text } ],
   watch:   [ { ticker, buyBelow, note } ],
-  assets:  [ { id, kind:'Vàng'|'Tiết kiệm'|'Quỹ mở'|'Crypto'|'Khác', name, date, cost, rate, vals:[{date,value}], note } ],
+  assets:  [ { id, kind:'Vàng'|'Tiết kiệm'|'Quỹ mở'|'Crypto'|'Khác', name, date, cost, rate, term /*tháng, tiết kiệm*/, qty, unit, vals:[{date,value}], note } ],
+  demo: true|false,                       // đang xem sổ mẫu (hiện biểu ngữ "Bạn đang xem sổ mẫu")
+  onboardDone: true|false,                // đã ẩn thẻ "Hoàn tất sổ của bạn" trên Tổng quan
   plans:   [ kế hoạch mua chờ 24 giờ ],
   priceAlerts: [ { id, ticker, op:'above'|'below', price, note, notified } ],
   goal: { target, years, monthly },
@@ -141,3 +143,11 @@ Mỗi trang gán hàm vẽ vào `charts[key]`, và phần tử `<div class="char
 3. Tách `index.html` thành module (ES modules) và thêm kiểm thử cho `compute()`, `rebalance()`, bộ đọc sao kê.
 4. Ký số bản Windows và Mac.
 5. Sự kiện doanh nghiệp tự động (chia tách, cổ tức cổ phiếu) từ nguồn dữ liệu, thay vì nhập tay.
+
+## 8. Trải nghiệm người dùng
+
+- **Điều hướng**: màn hình từ 1024px có thanh bên trái chia nhóm (Tài sản, Suy ngẫm); hẹp hơn dùng tab ngang; điện thoại dùng thanh dưới đáy. Thêm trang mới thì thêm vào cả `#side`, `#tabs`, `#bnav`/`#moreMenu` và `PAGE_NAMES`.
+- **Tìm nhanh**: `Ctrl+K` hoặc `/` mở bảng tìm (`openCmdk`, `cmdItems`) gồm việc cần làm, trang và mã. Phím tắt `N` ghi giao dịch, `J` viết nhật ký.
+- **Ô nhập số**: dùng `numIn(id, giá trị, 'money'|'qty')`. Ô tự thêm dấu chấm khi gõ, hiểu `200tr`, `1,5 tỷ`, `500k`; đọc giá trị bằng `num(id)` (gọi `parseMoney`).
+- **Xóa có hoàn tác**: `removeWithUndo(key, id, thông báo)`; `toast(msg, undoFn)` hiện nút Hoàn tác. `done(msg, undoFn)` cũng nhận hàm hoàn tác.
+- **Người mới**: sổ trống hiện `welcomeCard(true)` với 4 bước; các trang trống dùng `emptyCta()`.
