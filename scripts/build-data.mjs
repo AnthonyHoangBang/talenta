@@ -37,6 +37,36 @@ for(const s of T){ let m=await vnd(s), src='VNDirect'; if(!m){ m=await entrade('
 console.log('Co nen va khoi luong:', Object.keys(ohlcv).length, 'ma; co loi nhuan quy:', Object.keys(qp).length, 'ma', qp.FPT?JSON.stringify(qp.FPT):'');
 if(Object.keys(px).length<15) throw new Error('Thiếu quá nhiều mã, giữ file cũ');
 const out={updated:new Date().toISOString(), source:'VNDirect và DNSE', days, px, f, via, ohlcv, qp};
+// ---- Toàn bộ mã trên HOSE, HNX, UPCoM: tên, sàn, ngành, giá đóng cửa gần nhất (data/universe.js)
+async function universe(){
+  const st=await j('https://api-finfo.vndirect.com.vn/v4/stocks?q=type:STOCK~status:LISTED~floor:HOSE,HNX,UPCOM&fields=code,companyName,shortName,floor&size=3000');
+  if(!st||!st.data||st.data.length<500) throw new Error('Không lấy được danh sách mã');
+  const sec={}; const ind=await j('https://api-finfo.vndirect.com.vn/v4/industry_classification?q=industryLevel:2&size=200')||await j('https://api-finfo.vndirect.com.vn/v4/industry_classification?q=industryLevel:1&size=50');
+  if(ind&&ind.data) ind.data.forEach(x=>String(x.codeList||'').split(',').forEach(c=>{ if(c&&!sec[c]) sec[c]=String(x.vietnameseName||'').trim(); }));
+  const codes=st.data.map(x=>x.code).filter(c=>/^[A-Z0-9]{3}$/.test(c)), q={};
+  for(let i=0;i<codes.length;i+=80){ const d=await j('https://bgapidatafeed.vps.com.vn/getliststockdata/'+codes.slice(i,i+80).join(','));
+    if(Array.isArray(d)) d.forEach(x=>{ const p=Math.round(+x.lastPrice*1000)||Math.round(+x.r*1000); q[x.sym]=[p, Math.round(+x.r*1000), Math.round((+x.lot||0)*10)]; }); await sleep(150); }
+  const list=st.data.filter(x=>codes.includes(x.code)).map(x=>{ const z=q[x.code]||[0,0,0]; return [x.code, String(x.shortName||x.companyName||'').trim(), x.floor, sec[x.code]||'', z[0], z[1], z[2]]; })
+    .sort((a,b)=>a[0].localeCompare(b[0]));
+  const U={updated:new Date().toISOString(), date:days[days.length-1], list};
+  fs.writeFileSync('data/universe.js','window.TALENTA_UNIVERSE='+JSON.stringify(U)+';\n');
+  console.log('Universe', list.length, 'ma, co gia', list.filter(x=>x[4]>0).length);
+}
+// ---- Quyền cổ tức (tiền và cổ phiếu) của mọi mã từ đầu bộ dữ liệu (data/events.js)
+async function events(){ const out=[]; let page=1, total=1;
+  while((page-1)*1000<total && page<=10){ const d=await j(`https://api-finfo.vndirect.com.vn/v4/events?q=type:DIVIDEND,STOCKDIV,KINDDIV~locale:VN~effectiveDate:gte:${FROM}&sort=effectiveDate:asc&size=1000&page=${page}`);
+    if(!d||!d.data) break; total=d.totalElements||0; d.data.forEach(x=>out.push([x.code, x.type==='DIVIDEND'?'cash':'stock', x.effectiveDate||'', x.actualDate||x.expiredDate||'', +x.dividend||0, +x.ratio||0, String(x.note||'').slice(0,90)])); page++; await sleep(300); }
+  if(!out.length) throw new Error('Không có sự kiện cổ tức');
+  fs.writeFileSync('data/events.js','window.TALENTA_EVENTS='+JSON.stringify({updated:new Date().toISOString(), list:out})+';\n'); console.log('Events', out.length); }
+// ---- Giá vàng (PNJ), giá chứng chỉ quỹ mở (Fmarket), giá crypto (CoinGecko) (data/other.js)
+async function others(){ const o={updated:new Date().toISOString(), gold:[], funds:[], crypto:[]};
+  const g=await j('https://edge-api.pnj.io/ecom-frontend/v1/get-gold-price?zone=00'); if(g&&g.data) o.gold=g.data.map(x=>[x.masp, x.tensp, Math.round(+x.giamua*1000), Math.round(+x.giaban*1000)]);
+  try{ const r=await fetch('https://api.fmarket.vn/res/products/filter',{method:'POST',headers:{...UA,'content-type':'application/json'},body:JSON.stringify({types:['NEW_FUND','TRADING_FUND'],issuerIds:[],sortOrder:'DESC',sortField:'navTo6Months',page:1,pageSize:200,isIpo:false,fundAssetTypes:[],bondRemainPeriods:[],searchField:'',isBuyByReward:false,thirdAppIds:[]}),signal:AbortSignal.timeout(20000)});
+    const d=await r.json(); o.funds=((d.data&&d.data.rows)||[]).map(x=>[x.code||x.shortName, String(x.name||'').trim(), Math.round(+x.nav||0), (x.productNavChange&&x.productNavChange.updateAt)?new Date(x.productNavChange.updateAt).toISOString().slice(0,10):'', (x.dataFundAssetType&&x.dataFundAssetType.name)||'']).filter(x=>x[2]>0); }catch(e){ console.error('Fmarket', e.message); }
+  const c=await j('https://api.coingecko.com/api/v3/coins/markets?vs_currency=vnd&order=market_cap_desc&per_page=40&page=1'); if(Array.isArray(c)) o.crypto=c.map(x=>[x.id, String(x.symbol).toUpperCase(), x.name, Math.round(x.current_price)]);
+  fs.writeFileSync('data/other.js','window.TALENTA_OTHER='+JSON.stringify(o)+';\n'); console.log('Other', o.gold.length, 'vang,', o.funds.length, 'quy,', o.crypto.length, 'crypto'); }
+fs.mkdirSync('data',{recursive:true});
+for(const [n,fn] of [['universe',universe],['events',events],['others',others]]){ try{ await fn(); }catch(e){ console.error('Bo qua', n, e.message); } }
 fs.mkdirSync('data',{recursive:true});
 fs.writeFileSync('data/market.json',JSON.stringify(out));
 fs.writeFileSync('data/market.js','window.TALENTA_DATA='+JSON.stringify(out)+';\n');
