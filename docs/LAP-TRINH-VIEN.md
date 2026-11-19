@@ -138,11 +138,11 @@ Mỗi trang gán hàm vẽ vào `charts[key]`, và phần tử `<div class="char
 
 ## 11. Việc nên làm tiếp
 
-1. Thêm nhiều mã hơn 20 (cân nhắc chuyển `market.js` sang tải theo mã khi cần để file không quá lớn).
+1. ~~Thêm nhiều mã hơn 20~~ (đã có: `data/universe.js` + tải lịch sử khi mở mã, xem mục 12).
 2. Thu file sao kê thật của SSI và VNDirect để tinh chỉnh bộ nhập; nhập cả lệnh nạp, rút tiền và cổ tức.
 3. Tách `index.html` thành module (ES modules) và thêm kiểm thử cho `compute()`, `rebalance()`, bộ đọc sao kê.
 4. Ký số bản Windows và Mac.
-5. Sự kiện doanh nghiệp tự động (chia tách, cổ tức cổ phiếu) từ nguồn dữ liệu, thay vì nhập tay.
+5. ~~Sự kiện cổ tức tự động~~ (đã có, mục 12). Còn thiếu: chia tách, phát hành thêm có trả tiền.
 
 ## 8. Trải nghiệm người dùng
 
@@ -151,3 +151,24 @@ Mỗi trang gán hàm vẽ vào `charts[key]`, và phần tử `<div class="char
 - **Ô nhập số**: dùng `numIn(id, giá trị, 'money'|'qty')`. Ô tự thêm dấu chấm khi gõ, hiểu `200tr`, `1,5 tỷ`, `500k`; đọc giá trị bằng `num(id)` (gọi `parseMoney`).
 - **Xóa có hoàn tác**: `removeWithUndo(key, id, thông báo)`; `toast(msg, undoFn)` hiện nút Hoàn tác. `done(msg, undoFn)` cũng nhận hàm hoàn tác.
 - **Người mới**: sổ trống hiện `welcomeCard(true)` với 4 bước; các trang trống dùng `emptyCta()`.
+
+## 12. Dữ liệu mở rộng (vòng 2)
+
+`scripts/build-data.mjs` ngoài `market.js` còn ghi ba file, mỗi file trong try/catch riêng để một nguồn hỏng không làm hỏng cả lần chạy:
+
+- **`data/universe.js`** → `window.TALENTA_UNIVERSE = {updated, date, list:[[mã, tên, sàn, ngành, giá, tham chiếu, khối lượng]]}`. Danh sách mã từ VNDirect `/v4/stocks` (HOSE, HNX, UPCOM), ngành cấp 2 từ `/v4/industry_classification`, giá từ VPS `getliststockdata` (giá nghìn đồng, nhân 1000).
+  Trong app: mỗi mã có `MKT[mã]` với `lite:true`; `ensurePX(mã)` tạo mảng giá phẳng tạm thời, `loadHist(mã)` tải lịch sử thật (VNDirect `stock_prices`, dự phòng VPS `histdatafeed`), cất ở `localStorage['talenta-h:'+mã]` trong ngày, rồi đặt `MKT[mã].hist=true`. Trang `#ma` (`pageTickers`, trạng thái `TKV`) liệt kê và lọc mọi mã.
+- **`data/events.js`** → `window.TALENTA_EVENTS = {updated, list:[[mã, 'cash'|'stock', ngày GDKHQ, ngày trả, đ/cp, tỷ lệ %, ghi chú]]}`. Lấy theo từng quý (VNDirect `/v4/events`) để không chạm giới hạn dòng, tới 6 tháng sau hôm nay.
+  Trong app: `divCheck()` dò số cổ phiếu giữ ở từng tài khoản trước ngày GDKHQ (`qtyBefore`), bỏ qua khoản đã có giao dịch `cashdiv`/`stockdiv` tương ứng (trong 90 ngày sau ngày trả) hoặc nằm trong `S.divSkip`. Kết quả ở `M.div = {todo, soon}`; thẻ `divCard()` trên Danh mục; `divRecord(it)` ghi giao dịch.
+- **`data/other.js`** → `window.TALENTA_OTHER = {updated, gold:[[mã, tên, mua vào, bán ra]] (đ/chỉ, PNJ), funds:[[mã, tên, NAV, ngày, loại]] (Fmarket), crypto:[[id, ký hiệu, tên, giá VND]] (CoinGecko)}`.
+  Trong app: tài sản có `a.src = {t:'gold'|'fund'|'crypto', code}` và `a.qty`; `srcValue(a)` tính giá trị (vàng đổi đơn vị bằng `goldMul`), `refreshQuotes()` làm mới trực tiếp từ PNJ, CoinGecko, Fmarket mỗi 15 phút (Fmarket chỉ cho phép CORS từ trang GitHub Pages), `snapAuto()` lưu mỗi ngày một điểm vào `a.vals`.
+
+## 13. Biểu đồ: thước ngắm và phóng to
+
+- `crosshair(svg, W, H, pad, plotB)` vẽ đường dọc, ngang, nhãn ngày ở trục hoành và giá trị ở trục tung.
+- `ZOOM[khóa biểu đồ] = {from, to}` (ngày). `brush(...)` cho kéo chuột chọn đoạn; nhấp đúp để đặt lại. `chartTools(el)` thêm thanh +, −, Đặt lại, toàn màn hình (`openChartFull`, hộp `#chartFull`). Hàm vẽ cần gán `el._dates` để biểu đồ phóng được.
+
+## 14. Trang Giới thiệu và Hướng dẫn
+
+- Hình minh họa trong `ILL` là SVG viết tay dùng biến màu (`var(--gold)`, `var(--brand)`...) nên tự hợp nền tối. Hiệu ứng tắt khi người dùng bật giảm chuyển động.
+- Trang `#huong-dan` (`pageGuide`, mảng `GUIDE`) dùng ảnh trong `guide/`. Khi giao diện đổi, chụp lại: chạy `python3 -m http.server 8765` ở thư mục gốc rồi `node scripts/guide-shots.mjs` (cần Playwright).
