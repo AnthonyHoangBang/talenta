@@ -12,7 +12,10 @@
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-title" content="Talenta">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-<style>:root{padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}body{margin:0}img{max-width:100%}[hidden]{display:none!important}</style>
+<style>:root{padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}body{margin:0}img{max-width:100%}[hidden]{display:none!important}.chart-ph{height:340px;display:flex;align-items:center;justify-content:center;gap:10px;color:var(--muted);background:var(--surface-2);border-radius:12px;font-size:14px;text-align:center;padding:20px}
+.spin{width:16px;height:16px;border:2px solid var(--line);border-top-color:var(--accent);border-radius:50%;animation:spin .8s linear infinite;display:inline-block}
+@keyframes spin{to{transform:rotate(360deg)}}
+</style>
 <title>Talenta · Nén Bạc</title>
 <meta name="claude:viewport-fit-sides" content="cover">
 <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -473,6 +476,17 @@ details.alerts-more .alerts{margin-top:0}
 #cmdk .grp{font-size:11px;font-weight:600;letter-spacing:.08em;text-transform:uppercase;color:var(--silver);padding:10px 12px 4px;cursor:default}
 #cmdk .foot{display:flex;gap:14px;padding:8px 14px;border-top:1px solid var(--line);font-size:12px;color:var(--muted)}
 footer .row{font-size:12px}
+.tk-bar{display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap;margin-bottom:12px}
+.seg-lg button{padding:7px 14px;font-size:13px}
+.tk-filters{display:flex;gap:8px;flex-wrap:wrap}
+.tk-filters input,.tk-filters select{padding:7px 10px;border:1px solid var(--line);border-radius:8px;background:var(--surface-2);min-width:0}
+.tk-filters input{width:240px}
+.tk-row{cursor:pointer}
+.tk-nm{max-width:340px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.th-sort{background:none;border:0;padding:0;font:inherit;color:inherit;text-transform:inherit;letter-spacing:inherit;cursor:pointer}
+.th-sort.on{color:var(--accent)} .th-sort.on::after{content:" ▾"}
+.pager{display:flex;justify-content:center;align-items:center;gap:14px;margin-top:14px}
+@media (max-width:600px){.tk-filters input{width:100%}.tk-filters{width:100%}.tk-nm{max-width:150px}}
 /* Biểu đồ: thước ngắm, chọn vùng phóng to, thanh công cụ, cửa sổ lớn */
 .chart .xh-l{stroke:var(--muted);stroke-width:1;stroke-dasharray:3 3}
 .chart .xh-tag{fill:var(--ink)}
@@ -577,6 +591,9 @@ footer .row{font-size:12px}
 <dialog id="cmdk" aria-label="Tìm nhanh"><input id="cmdkIn" placeholder="Gõ tên mã, trang hoặc việc cần làm…" autocomplete="off" role="combobox" aria-controls="cmdkList" aria-expanded="true"><ul id="cmdkList" role="listbox"></ul><div class="foot"><span><span class="kbd">↑</span> <span class="kbd">↓</span> chọn</span><span><span class="kbd">Enter</span> mở</span><span><span class="kbd">Esc</span> đóng</span></div></dialog>
 
 <script src="data/market.js"></script>
+<script src="data/universe.js"></script>
+<script src="data/events.js"></script>
+<script src="data/other.js"></script>
 <script src="sync.js" defer></script>
 <script>
 "use strict";
@@ -627,8 +644,40 @@ const META = {
 const DAYS = DATA ? DATA.days.slice() : ['2026-01-02'];
 const PX = {}; if(DATA) for(const k in DATA.px) PX[k]=DATA.px[k].slice();
 const MKT = {VNINDEX:{name:'VN-Index'}};
-for(const k in META) if(PX[k]) MKT[k]={name:META[k][0], sector:META[k][1], ex:'HOSE', f:(DATA.f&&DATA.f[k])||{}};
+// Toàn bộ mã HOSE, HNX, UPCoM (data/universe.js): tên, sàn, ngành, giá đóng cửa gần nhất. Lịch sử giá của mã ngoài 20 mã chính tải khi cần.
+const UNI = window.TALENTA_UNIVERSE || null, UMAP = {};
+if(UNI) UNI.list.forEach(([c,n,ex,sec,p,r,v])=>UMAP[c]={name:n,ex,sector:sec,p,r,v});
+for(const k in META) if(PX[k]) MKT[k]={name:META[k][0], sector:META[k][1], ex:(UMAP[k]&&UMAP[k].ex)||'HOSE', f:(DATA.f&&DATA.f[k])||{}, hist:true};
 const TICKERS = Object.keys(MKT).filter(k=>k!=='VNINDEX');
+for(const c in UMAP) if(!MKT[c]) MKT[c]={name:UMAP[c].name||c, sector:UMAP[c].sector||'Khác', ex:UMAP[c].ex, f:{}, lite:true};
+const ALL = Object.keys(MKT).filter(k=>k!=='VNINDEX').sort();
+const isTk = t => !!t && t!=='VNINDEX' && !!MKT[t];
+// Mã chưa có lịch sử: tạm dùng giá đóng cửa gần nhất cho mọi ngày, rồi thay bằng lịch sử thật khi tải xong.
+function ensurePX(tk){ if(PX[tk]||!MKT[tk]) return; const u=UMAP[tk]||{}, p=u.p||u.r||0; PX[tk]=new Array(DAYS.length).fill(p); if(u.r&&p) PX[tk][DAYS.length-2]=u.r; MKT[tk].approx=true; }
+const HIST={busy:{}, fail:{}};
+async function loadHist(tk){
+  if(!MKT[tk]||MKT[tk].hist||HIST.busy[tk]||HIST.fail[tk]) return; HIST.busy[tk]=true; ensurePX(tk);
+  const key='talenta-h:'+tk; let rows=null;
+  try{ const c=JSON.parse(localStorage.getItem(key)||'null'); if(c&&c.at===vnNow().iso&&c.from===DAYS[0]) rows=c.rows; }catch(_){}
+  if(!rows){ try{ const ctl=new AbortController(), to=setTimeout(()=>ctl.abort(),12000);
+      const r=await fetch(`https://api-finfo.vndirect.com.vn/v4/stock_prices?sort=date:asc&q=code:${tk}~date:gte:${DAYS[0]}&size=1500`,{signal:ctl.signal}); clearTimeout(to);
+      const d=await r.json(); rows=(d.data||[]).map(x=>[x.date, x.adOpen, x.adHigh, x.adLow, x.adClose, Math.round((x.nmVolume||0)+(x.ptVolume||0))]);
+    }catch(_){ rows=null; }
+    if(!rows||!rows.length){ try{ const to=Math.floor(Date.now()/1000), from=Math.floor(Date.parse(DAYS[0])/1000);
+      const d=await (await fetch(`https://histdatafeed.vps.com.vn/tradingview/history?symbol=${tk}&resolution=D&from=${from}&to=${to}`)).json();
+      if(d&&d.t) rows=d.t.map((t,i)=>[new Date((t+7*3600)*1000).toISOString().slice(0,10), d.o[i], d.h[i], d.l[i], d.c[i], d.v[i]]); }catch(_){ rows=null; } }
+    if(rows&&rows.length){ try{ localStorage.setItem(key, JSON.stringify({at:vnNow().iso, from:DAYS[0], rows})); }catch(_){} } }
+  HIST.busy[tk]=false;
+  if(!rows||!rows.length){ HIST.fail[tk]=true; return; }
+  const by={}; rows.forEach(r=>by[r[0]]=r); const sc=(rows[rows.length>>1][4]||0)<1000?1000:1, first=rows[0];
+  const o=[],h=[],l=[],v=[],c=[]; let last=null;
+  DAYS.forEach(d=>{ const r=by[d]; if(r&&r[4]>0){ last=r; o.push(Math.round(r[1]*sc)); h.push(Math.round(r[2]*sc)); l.push(Math.round(r[3]*sc)); c.push(Math.round(r[4]*sc)); v.push(r[5]||0); }
+    else { const z=Math.round(((last||first)[4])*sc); o.push(z); h.push(z); l.push(z); c.push(z); v.push(0); } });
+  const lq=LIVE.quotes[tk]; if(lq&&TODAY===vnNow().iso) c[LAST]=lq.p;
+  PX[tk]=c; DATA.ohlcv=DATA.ohlcv||{}; DATA.ohlcv[tk]={o,h,l,v}; MKT[tk].hist=true; MKT[tk].approx=false;
+  const ae=document.activeElement; if(!dlg.open && !(ae&&/^(INPUT|SELECT|TEXTAREA)$/.test(ae.tagName))){ const y=scrollY; route(); scrollTo(0,y); }
+}
+const myTickers = () => [...new Set([...S.tx.map(t=>t.ticker), ...S.watch.map(w=>w.ticker), ...(S.priceAlerts||[]).map(a=>a.ticker), ...S.theses.map(t=>t.ticker)].filter(isTk))];
 let LAST = DAYS.length-1, TODAY = DAYS[LAST];
 const CLOSE_DAY = TODAY; // phiên gần nhất có giá đóng cửa trong file dữ liệu
 function idxOf(date){ let lo=0, hi=LAST; if(date<DAYS[0]) return 0; if(date>=DAYS[LAST]) return LAST;
@@ -648,7 +697,7 @@ async function pollLive(){
   if(!DATA) return;
   try{
     const ctl=new AbortController(), to=setTimeout(()=>ctl.abort(),8000);
-    const [rs,ri]=await Promise.all([fetch('https://bgapidatafeed.vps.com.vn/getliststockdata/'+TICKERS.join(','),{signal:ctl.signal}), fetch('https://bgapidatafeed.vps.com.vn/getlistindexdetail/10',{signal:ctl.signal})]);
+    const [rs,ri]=await Promise.all([fetch('https://bgapidatafeed.vps.com.vn/getliststockdata/'+[...new Set([...TICKERS,...(S?myTickers():[])])].join(','),{signal:ctl.signal}), fetch('https://bgapidatafeed.vps.com.vn/getlistindexdetail/10',{signal:ctl.signal})]);
     clearTimeout(to); if(!rs.ok) throw new Error('HTTP '+rs.status);
     const arr=await rs.json(), idx=ri.ok?await ri.json():[];
     // Chỉ ghi giá trực tiếp vào hôm nay khi đang trong ngày giao dịch mới; ngoài ra giữ giá đóng cửa trong file.
@@ -799,7 +848,7 @@ function lastReview(t){ return t.reviews && t.reviews.length ? t.reviews.reduce(
 
 let M; // kết quả tính
 function compute(){
-  ensureState();
+  ensureState(); myTickers().forEach(ensurePX);
   const txs = S.tx.map((t,i)=>({...t,_o:i})).sort((a,b)=>a.date<b.date?-1:a.date>b.date?1:a._o-b._o);
   const pos={}, acctPos={}, cashBy={}; let cash=0, netDep=0, realized=0, divInc=0, fees=0;
   ACCTS.forEach(a=>cashBy[a]=0);
@@ -1419,17 +1468,38 @@ function pageHoldings(){
     </tbody></table></div></section>`;
 }
 
+const TKV={tab:'mine', q:'', sec:'', sort:'v', page:0};
+function tkRow(c){ const u=UMAP[c]||{}, m=MKT[c], live=PX[c]&&m.hist, p_=live?px(c):(u.p||0), r=live?px(c,LAST-1):(u.r||0), ch=r?p_/r-1:0;
+  return {c, name:m.name, ex:m.ex, sec:m.sector, p:p_, ch, v:u.v||0, held:!!(M.pos[c]&&M.pos[c].qty>0), watch:S.watch.some(w=>w.ticker===c)}; }
 function pageTickers(){
-  return `<div class="page-head"><div><h1>Mã cổ phiếu</h1><p>Mở một mã để xem chỉ số, lịch sử mua bán, luận điểm và nhật ký của bạn với mã đó trên cùng một trang.</p></div>${VN_LEGEND}</div>
-  <div class="tk-grid">${TICKERS.map(tk=>{ const m=MKT[tk], p_=px(tk), c=p_/px(tk,LAST-1)-1, held=M.pos[tk]&&M.pos[tk].qty>0, w=S.watch.find(x=>x.ticker===tk);
-    const k=vnCls(tk);
-    return `<a class="tk-card" href="#ma-${tk}" style="--t:var(--${k==='ceil'?'ceil':k==='floor'?'floor':k==='up'?'up':k==='down'?'down':'ref'})"><div class="row"><b class="tk" style="font-size:17px">${tk}</b><span class="num vn-${k}" style="font-weight:600;font-size:16px">${P(p_)}</span></div>
-    <div class="row small" style="margin-top:4px"><span class="muted" style="overflow:hidden;text-overflow:ellipsis;white-space:nowrap"><i style="display:inline-block;width:8px;height:8px;border-radius:2px;background:${SECTOR_COLOR[m.sector]};margin-right:5px"></i>${esc(m.sector)} · ${m.ex}</span>${chgPill(tk)}</div>
-    <div class="chips" style="margin-top:8px">${held?'<span class="chip acc">Đang giữ</span>':''}${w?'<span class="chip">Theo dõi</span>':''}${m.f.eps>0?`<span class="chip">P/E ${(p_/m.f.eps).toLocaleString('vi-VN',{maximumFractionDigits:1})}</span>`:''}</div></a>`; }).join('')}</div>`;
+  const mine=myTickers(), cnt={mine:mine.length, HOSE:0, HNX:0, UPCOM:0}; ALL.forEach(c=>{ const e=MKT[c].ex; if(cnt[e]!=null) cnt[e]++; });
+  if(TKV.tab==='mine'&&!mine.length) TKV.tab='HOSE';
+  const q=fold(TKV.q.trim());
+  let rows=(TKV.tab==='mine'?mine:ALL.filter(c=>MKT[c].ex===TKV.tab)).map(tkRow);
+  if(q) rows=(TKV.tab==='mine'?ALL:ALL).filter(c=>fold(c+' '+MKT[c].name).includes(q)).map(tkRow);
+  if(TKV.sec) rows=rows.filter(r=>r.sec===TKV.sec);
+  const sorters={c:(a,b)=>a.c.localeCompare(b.c), up:(a,b)=>b.ch-a.ch, down:(a,b)=>a.ch-b.ch, v:(a,b)=>b.v-a.v};
+  rows.sort(sorters[TKV.sort]||sorters.v);
+  const per=50, pages=Math.max(1,Math.ceil(rows.length/per)); TKV.page=Math.min(TKV.page,pages-1); const vis=rows.slice(TKV.page*per,TKV.page*per+per);
+  const secs=[...new Set(ALL.map(c=>MKT[c].sector).filter(Boolean))].sort((a,b)=>a.localeCompare(b,'vi'));
+  const tab=(k,l)=>`<button type="button" data-act="tkv" data-k="tab" data-v="${k}" class="${TKV.tab===k&&!q?'on':''}">${l} <span class="muted">${N(cnt[k])}</span></button>`;
+  const th=(k,l,cls='')=>`<th class="${cls}"><button type="button" class="th-sort ${TKV.sort===k?'on':''}" data-act="tkv" data-k="sort" data-v="${k}">${l}</button></th>`;
+  return `<div class="page-head"><div><h1>Mã cổ phiếu</h1><p>${N(ALL.length)} mã trên HOSE, HNX và UPCoM${UNI?`, giá đóng cửa ${D(UNI.date)}`:''}. Mở một mã để xem biểu đồ, chỉ số, lịch sử mua bán, luận điểm và nhật ký của bạn.</p></div>${VN_LEGEND}</div>
+  <section class="card">
+    <div class="tk-bar"><div class="seg seg-lg" role="group" aria-label="Sàn">${mine.length?tab('mine','Của tôi'):''}${tab('HOSE','HOSE')}${tab('HNX','HNX')}${tab('UPCOM','UPCoM')}</div>
+      <div class="tk-filters"><input id="tkq" type="search" placeholder="Tìm mã hoặc tên công ty" value="${esc(TKV.q)}" autocomplete="off" aria-label="Tìm mã hoặc tên công ty">
+      <select id="tksec" aria-label="Lọc theo ngành"><option value="">Mọi ngành</option>${secs.map(x=>`<option ${TKV.sec===x?'selected':''}>${esc(x)}</option>`).join('')}</select></div></div>
+    <div class="tbl"><table class="tk-table"><thead><tr>${th('c','Mã')}<th>Công ty</th><th>Sàn</th><th class="hide-sm">Ngành</th><th class="r">Giá</th>${th('up','+/−','r')}${th('v','Khối lượng','r hide-sm')}</tr></thead><tbody>
+    ${vis.map(r=>{ const k=r.ch>0.00001?'up':r.ch<-0.00001?'down':'ref';
+      return `<tr class="tk-row" data-href="#ma-${r.c}"><td><a class="tk" href="#ma-${r.c}">${r.c}</a>${r.held?' <span class="chip acc">Đang giữ</span>':r.watch?' <span class="chip">Theo dõi</span>':''}</td><td class="tk-nm">${esc(r.name)}</td><td class="small muted">${r.ex==='UPCOM'?'UPCoM':r.ex}</td><td class="small muted hide-sm">${esc(r.sec)}</td>
+      <td class="r num vn-${k}" style="font-weight:600">${r.p?P(r.p):'–'}</td><td class="r"><span class="pill vn-${k}">${r.p?PCT(r.ch,true,2):'–'}</span></td><td class="r small hide-sm">${r.v?N(r.v):'–'}</td></tr>`; }).join('')||'<tr><td colspan="7" class="empty">Không có mã nào khớp.</td></tr>'}
+    </tbody></table></div>
+    ${pages>1?`<div class="pager"><button class="btn sm" data-act="tkv" data-k="page" data-v="${TKV.page-1}" ${TKV.page?'':'disabled'}>← Trước</button><span class="small muted">Trang ${TKV.page+1}/${pages} · ${N(rows.length)} mã</span><button class="btn sm" data-act="tkv" data-k="page" data-v="${TKV.page+1}" ${TKV.page<pages-1?'':'disabled'}>Sau →</button></div>`:''}
+  </section>`;
 }
-
 function pageTicker(tk){
-  const m=MKT[tk], f=m.f, p_=px(tk), chg=p_/px(tk,LAST-1)-1;
+  ensurePX(tk); if(!MKT[tk].hist) loadHist(tk);
+  const m=MKT[tk], f=m.f, p_=px(tk), chg=p_/px(tk,LAST-1)-1, bd=BAND[m.ex]||.07;
   const s52=PX[tk].slice(Math.max(0,LAST-250)), hi=Math.max(...s52), lo=Math.min(...s52);
   const pe=f.eps>0?p_/f.eps:(f.pe||0), pb=f.bvps>0?p_/f.bvps:(f.pb||0), sd=sigmaOf(tk);
   const h=M.holdings.find(x=>x.ticker===tk), myTx=S.tx.filter(t=>t.ticker===tk).sort((a,b)=>a.date.localeCompare(b.date));
@@ -1466,13 +1536,14 @@ function pageTicker(tk){
   notes.forEach(j=>items.push({date:j.date,k:'note',html:`<b>Nhật ký</b> <span class="chip ${moodCls(j.mood)}">${esc(j.mood)}</span><div class="quote">${esc(j.text)}</div>`}));
   items.sort((a,b)=>b.date.localeCompare(a.date)||(a.k==='thesis'?-1:1));
 
+  const loading = !m.hist ? `<div class="demo-bar" style="background:var(--surface-2);border-color:var(--line)">${ICON.info}<div class="t"><b>${HIST.fail[tk]?'Chưa tải được lịch sử giá':'Đang tải lịch sử giá '+tk+'…'}</b><span>${HIST.fail[tk]?'Nguồn giá không trả lời. Giá đang hiện là giá đóng cửa gần nhất; biểu đồ và các chỉ số rủi ro sẽ đủ khi tải lại trang.':'Talenta có sẵn lịch sử của 20 mã lớn; các mã khác tải từ nguồn công khai lúc bạn mở.'}</span></div></div>` : '';
   return `
-  <div class="page-head" style="margin-bottom:12px"><a class="btn ghost" href="#ma">← Tất cả mã</a></div>
+  <div class="page-head" style="margin-bottom:12px"><a class="btn ghost" href="#ma">← Tất cả mã</a></div>${loading}
   <section class="card" style="margin-bottom:16px"><div class="tk-head">
     <div><div class="tk-name"><h1>${tk}</h1><span class="muted">${esc(m.name)}</span></div>
       <div class="chips" style="margin-top:6px"><span class="chip">${m.ex}</span><span class="chip" style="border-color:${SECTOR_COLOR[m.sector]}">${esc(m.sector)}</span>${h?`<span class="chip acc">Đang giữ ${N(h.qty)} cp</span>`:''}${watch?`<span class="chip">Theo dõi, muốn mua dưới ${P(watch.buyBelow)}</span>`:''}</div></div>
     <div style="text-align:right"><div class="price-big vn-${vnCls(tk)}">${P(p_)} <span style="font-size:15px;vertical-align:middle">${chgPill(tk)}</span></div>
-      <div class="small muted">Tham chiếu ${P(px(tk,LAST-1))} · trần ${P(Math.floor(px(tk,LAST-1)*1.07/tick(px(tk,LAST-1)))*tick(px(tk,LAST-1)))} · sàn ${P(Math.ceil(px(tk,LAST-1)*.93/tick(px(tk,LAST-1)))*tick(px(tk,LAST-1)))}</div>
+      <div class="small muted">Tham chiếu ${P(px(tk,LAST-1))} · trần ${P(Math.floor(px(tk,LAST-1)*(1+bd)/tick(px(tk,LAST-1)))*tick(px(tk,LAST-1)))} · sàn ${P(Math.ceil(px(tk,LAST-1)*(1-bd)/tick(px(tk,LAST-1)))*tick(px(tk,LAST-1)))}</div>
       <div class="small muted">Đáy và đỉnh 52 tuần: ${P(lo)} – ${P(hi)}</div><div class="range"><i style="left:${((p_-lo)/(hi-lo||1)*100).toFixed(1)}%"></i></div></div>
   </div>
   <div class="chips" style="margin-top:14px;justify-content:flex-end"><button class="btn primary" data-act="decide" data-tk="${tk}">Ra quyết định mua mới</button>${h?`<button class="btn" data-act="sell" data-tk="${tk}">Ghi lệnh bán</button><button class="btn" data-act="review" data-tk="${tk}">Xem lại luận điểm</button>`:''}${watch?'':`<button class="btn" data-act="watch" data-tk="${tk}">Theo dõi mã này</button>`}</div></section>
@@ -1482,7 +1553,7 @@ function pageTicker(tk){
       <div class="chart-tools">${DATA&&DATA.ohlcv&&DATA.ohlcv[tk]?`<div class="seg" role="group" aria-label="Kiểu biểu đồ"><button type="button" data-act="pmode" data-v="candle" class="${state.pmode==='candle'?'on':''}">Nến</button><button type="button" data-act="pmode" data-v="line" class="${state.pmode==='line'?'on':''}">Đường</button></div>`:''}<div class="seg" role="group" aria-label="Khoảng thời gian">${['3T','6T','1N','Tất cả'].map(r=>`<button type="button" data-act="range" data-v="${r}" class="${state.range===r?'on':''}">${RANGE_LABEL[r]}</button>`).join('')}</div></div></div>
       <div class="ohlc" id="ohlcInfo"></div>
       <div class="legend"><span><i style="background:var(--up);height:8px;width:8px"></i>Mua</span><span><i style="background:var(--down);height:8px;width:8px"></i>Bán</span><span><i style="background:var(--ref);height:8px;width:8px;border-radius:50%"></i>Nhật ký (rê chuột để đọc)</span><span><i style="background:var(--warn);height:2px"></i>Cảnh báo giá</span></div>
-      <div class="chart" data-chart="price" data-h="340"></div></section>
+      ${m.hist?'<div class="chart" data-chart="price" data-h="340"></div>':`<div class="chart-ph">${HIST.fail[tk]?'Chưa có lịch sử giá cho mã này. Thử tải lại trang sau ít phút.':'<span class="spin"></span> Đang tải lịch sử giá…'}</div>`}</section>
     <section class="card c4"><div class="card-head"><h2>Vị thế của bạn</h2></div>
       ${h?`<div class="kv">
         <div><div class="k">Giá vốn</div><div class="v">${P(h.avg)}</div></div>
@@ -1846,7 +1917,8 @@ const heldPos=()=>Object.values(M.acctPos).filter(a=>a.qty>0);
 const curPos=()=>{ const v=val('f_pos'); return v?M.acctPos[v]:null; };
 const TX_TYPES={buy:'Mua',sell:'Bán',deposit:'Nạp tiền',withdraw:'Rút tiền',cashdiv:'Cổ tức tiền',stockdiv:'Cổ tức cổ phiếu'};
 const typePick=type=>`<div class="field full"><label id="ttype_l">Loại giao dịch</label><div class="type-pick" role="radiogroup" aria-labelledby="ttype_l">${Object.entries(TX_TYPES).map(([k,v])=>`<label><input type="radio" name="ttype" value="${k}" ${k===type?'checked':''}>${v}</label>`).join('')}</div><input type="hidden" id="f_type" value="${type}"></div>`;
-const tkSelect=(id,val,list=TICKERS)=>`<select id="${id}" name="${id}">${list.map(t=>`<option ${t===val?'selected':''}>${t}</option>`).join('')}</select>`;
+const tkSelect=(id,val,list)=>list?`<select id="${id}" name="${id}">${list.map(t=>`<option ${t===val?'selected':''}>${t}</option>`).join('')}</select>`
+  :`<input id="${id}" name="${id}" list="tkAll" value="${esc(val||'')}" autocomplete="off" spellcheck="false" style="text-transform:uppercase" placeholder="Ví dụ: FPT, SHS, BSR"><div class="hint" id="${id}_nm">${val&&MKT[val]?esc(MKT[val].name)+' · '+(MKT[val].ex==='UPCOM'?'UPCoM':MKT[val].ex):''}</div>`;
 function open(m, html, title, okLabel){
   mode=m; form.innerHTML=`<div class="dlg-head"><h2>${title}</h2><button type="button" class="btn ghost" data-act="close" aria-label="Đóng">Đóng</button></div><div class="dlg-body">${html}<div class="err" id="err" hidden></div></div>
   <div class="dlg-foot">${m==='buy'?'<button type="button" class="btn" data-act="save-plan">Lưu kế hoạch, chờ 24 giờ</button>':''}${m==='backup'||m==='sync'?'':`<button type="button" class="btn" data-act="close">Hủy</button><button class="btn primary" type="submit">${okLabel||'Lưu'}</button>`}</div>`;
@@ -1945,7 +2017,7 @@ function openBackup(){
     <div class="field"><label for="f_file">Hoặc chọn file sao lưu</label><input type="file" id="f_file" accept=".json,application/json,text/plain"></div>
     <div class="chips"><button type="button" class="btn" data-act="copy-json">Sao chép</button><button type="button" class="btn primary" data-act="restore">Khôi phục từ ô trên</button></div>`, 'Sao lưu và khôi phục');
 }
-function val(id){ const e=document.getElementById(id); return e?e.value.trim():''; }
+function val(id){ const e=document.getElementById(id); if(!e) return ''; const v=e.value.trim(); return id==='f_tk'?v.toUpperCase():v; }
 function num(id){ const e=document.getElementById(id); if(e&&e.classList.contains('numfmt')) return parseMoney(e.value); const v=parseFloat(val(id).replace(',','.')); return isFinite(v)?v:NaN; }
 function err(msg){ const e=$('#err'); e.textContent=msg; e.hidden=!msg; }
 function planLine(tk,price){
@@ -1979,7 +2051,9 @@ function updatePreview(){
     ${t?`<div class="muted">Kế hoạch lúc mua: cắt lỗ ${P(t.stop)}, mục tiêu ${P(t.target)}. Mình sai khi: ${esc(t.wrongIf||'chưa ghi')}</div>`:'<div class="muted">Lệnh này không có luận điểm.</div>'}`;
   }
 }
-form.addEventListener('input', e=>{ if(e.target.id==='f_tk' && mode==='buy'){ const pr=$('#f_price'); if(pr){ pr.value=fmtNum(px(e.target.value)); moneyHint(pr); } }
+form.addEventListener('input', e=>{ if(e.target.id==='f_tk' && e.target.tagName==='INPUT'){ const v=e.target.value.trim().toUpperCase(), nm=$('#f_tk_nm');
+    if(nm) nm.textContent = isTk(v) ? MKT[v].name+' · '+(MKT[v].ex==='UPCOM'?'UPCoM':MKT[v].ex) : (v.length>=3?'Không tìm thấy mã '+v:'');
+    if(isTk(v)){ ensurePX(v); loadHist(v); if(mode==='buy'||mode==='alert'){ const pr=$('#f_price'); if(pr){ pr.value=fmtNum(px(v)); moneyHint(pr); } } } }
   if(e.target.id==='f_pos'){ const P_=curPos(); $('#f_price').value=fmtNum(px(P_.ticker)); $('#f_qty').value=fmtNum(P_.qty); }
   if(e.target.classList&&e.target.classList.contains('numfmt')) fmtLive(e.target); updatePreview(); });
 form.addEventListener('focusout', e=>{ const el=e.target; if(el.classList&&el.classList.contains('numfmt')&&/[a-zà-ỹ]/i.test(el.value)){ const v=parseMoney(el.value); if(isFinite(v)){ el.value=fmtNum(v); moneyHint(el); updatePreview(); } } });
@@ -1988,6 +2062,7 @@ form.addEventListener('change', e=>{ if(e.target.name==='ttype'){ const ac=val('
   if(e.target.id==='f_file'){ const f=e.target.files[0]; if(!f) return; const r=new FileReader(); r.onload=()=>{ $('#f_json').value=r.result; toast('Đã đọc file. Bấm Khôi phục để dùng.'); }; r.readAsText(f); } });
 
 function readBuy(){
+  if(!isTk(val('f_tk'))) return err('Chọn một mã có trên HOSE, HNX hoặc UPCoM.');
   const tk=val('f_tk'), qty=num('f_qty'), price=num('f_price'), date=val('f_date')||TODAY;
   const reason=val('f_reason'), target=num('f_target'), stop=num('f_stop');
   if(!(qty>0)||!(price>0)) return err('Nhập khối lượng và giá mua lớn hơn 0.');
@@ -2000,7 +2075,7 @@ function readBuy(){
 form.addEventListener('submit', e=>{
   e.preventDefault(); if(mode==='sync') return TalentaSync.submit(); err('');
   if(mode==='import') return doImport();
-  if(mode==='alert'){ const tk=val('f_tk'), price=num('f_price'); if(!(price>0)) return err('Nhập mức giá.');
+  if(mode==='alert'){ const tk=val('f_tk'), price=num('f_price'); if(!isTk(tk)) return err('Chọn một mã có trên HOSE, HNX hoặc UPCoM.'); if(!(price>0)) return err('Nhập mức giá.');
     S.priceAlerts.push({id:uid('pa'),ticker:tk,op:val('f_op'),price:Math.round(price),note:val('f_note')});
     try{ if('Notification' in window && Notification.permission==='default') Notification.requestPermission(); }catch(_){}
     return done('Đã đặt cảnh báo giá '+tk); }
@@ -2021,12 +2096,12 @@ form.addEventListener('submit', e=>{
     else if(type==='deposit'||type==='withdraw'){ const a=num('f_amount'); if(!(a>0)) return err('Nhập số tiền lớn hơn 0.');
       if(type==='withdraw'&&a>(M.cashBy[acct]||0)) return err(`Tài khoản ${acct} chỉ có ${C(M.cashBy[acct]||0)} tiền mặt.`);
       S.tx.push({id:uid('t'),date,acct,type,amount:a,note:val('f_note')}); done(type==='deposit'?'Đã ghi nạp tiền':'Đã ghi rút tiền'); }
-    else if(type==='cashdiv'){ const a=num('f_amount'); if(!(a>0)) return err('Nhập số tiền thực nhận.');
+    else if(type==='cashdiv'){ const a=num('f_amount'); if(!isTk(val('f_tk'))) return err('Chọn mã trả cổ tức.'); if(!(a>0)) return err('Nhập số tiền thực nhận.');
       S.tx.push({id:uid('t'),date,acct,type,ticker:val('f_tk'),amount:a,note:val('f_note')}); done('Đã ghi cổ tức tiền'); }
     else if(type==='stockdiv'){ const q=num('f_qty'); if(!val('f_tk')) return err('Bạn chưa giữ mã nào.'); if(!(q>0)) return err('Nhập số cổ phiếu nhận thêm.');
       S.tx.push({id:uid('t'),date,acct,type,ticker:val('f_tk'),qty:Math.round(q),note:val('f_note')}); done('Đã ghi cổ tức cổ phiếu'); }
   } else if(mode==='tx-edit'){ const t=S.tx.find(x=>x.id===ctx.editId); if(!t) return dlg.close();
-    const ch={date:val('f_date')||t.date, acct:val('f_acct')||t.acct}; if(val('f_tk')) ch.ticker=val('f_tk');
+    const ch={date:val('f_date')||t.date, acct:val('f_acct')||t.acct}; if(val('f_tk')){ if(!isTk(val('f_tk'))) return err('Mã không có trên HOSE, HNX hoặc UPCoM.'); ch.ticker=val('f_tk'); }
     if(t.type==='buy'||t.type==='sell'||t.type==='stockdiv'){ const q=num('f_qty'); if(!(q>0)) return err('Khối lượng phải lớn hơn 0.'); ch.qty=Math.round(q); }
     if(t.type==='buy'||t.type==='sell'){ const pr=num('f_price'); if(!(pr>0)) return err('Nhập giá lớn hơn 0.'); ch.price=pr; }
     if(['deposit','withdraw','cashdiv'].includes(t.type)){ const am=num('f_amount'); if(!(am>0)) return err('Nhập số tiền lớn hơn 0.'); ch.amount=am; }
@@ -2067,6 +2142,7 @@ function removeWithUndo(key,id,msg){ const arr=S[key], i=arr.findIndex(x=>x.id==
 
 /* ============ Sự kiện chung ============ */
 document.addEventListener('click', e=>{
+  const tr=e.target.closest('tr.tk-row'); if(tr && !e.target.closest('a,button')){ location.hash=tr.dataset.href.slice(1); return; }
   const b=e.target.closest('[data-act]'); if(!b) return;
   const a=b.dataset.act, tk=b.dataset.tk;
   if(a==='close'){ e.preventDefault(); dlg.close(); }
@@ -2081,6 +2157,7 @@ document.addEventListener('click', e=>{
     ensureState(); save(); location.hash='tong-quan'; route(); scrollTo(0,0);
     toast(a==='load-demo'?'Đang xem sổ mẫu':'Sổ mới đã sẵn sàng', ()=>{ S=prev; ensureState(); }); }
   else if(a==='cmdk') openCmdk();
+  else if(a==='tkv'){ const k=b.dataset.k; if(k==='page') TKV.page=+b.dataset.v; else { TKV[k]=b.dataset.v; TKV.page=0; if(k==='tab') TKV.q=''; } route(); }
   else if(a==='cz'){ const el=b.closest('.chart'), d=+b.dataset.d; if(d===0){ delete ZOOM[el.dataset.chart]; redrawChart(el); } else zoomStep(el,d); }
   else if(a==='cfull') openChartFull(b.closest('.chart'));
   else if(a==='cf-close'){ $('#chartFull').close(); }
@@ -2121,6 +2198,7 @@ document.addEventListener('pointerdown', e=>{ const mm=$('#moreMenu'); if(mm&&!m
 document.addEventListener('input', e=>{
   const gk={g_target:'target',g_years:'years',g_monthly:'monthly'}[e.target.id];
   if(gk){ const v=+e.target.value; $('#'+e.target.id+'_v').textContent = gk==='years'? v+' năm' : C(v); }
+  if(e.target.id==='tkq'){ TKV.q=e.target.value; TKV.page=0; const pos=e.target.selectionStart; route(); const n=$('#tkq'); n.focus(); n.setSelectionRange(pos,pos); }
   if(e.target.id==='jq'){ state.jFilter.q=e.target.value; const pos=e.target.selectionStart; route(); const n=$('#jq'); n.focus(); n.setSelectionRange(pos,pos); }
 });
 document.addEventListener('change', e=>{
@@ -2133,6 +2211,7 @@ document.addEventListener('change', e=>{
   if(e.target.id==='f_acct_imp'&&IMP){ renderImport(); return; }
   const gk={g_target:'target',g_years:'years',g_monthly:'monthly'}[e.target.id];
   if(gk){ S.goal[gk]=+e.target.value; save(); const id=e.target.id, y=scrollY; route(); scrollTo(0,y); const n=$('#'+id); if(n) n.focus(); }
+  if(e.target.id==='tksec'){ TKV.sec=e.target.value; TKV.page=0; route(); }
   if(e.target.id==='jtk'){ state.jFilter.tk=e.target.value; route(); }
   if(e.target.id==='jmood'){ state.jFilter.mood=e.target.value; route(); }
   if(e.target.id==='txFilter'){ state.txFilter=e.target.value; route(); }
@@ -2144,13 +2223,13 @@ function cmdItems(){
   const acts=[['Ghi lệnh mua','buy','N'],['Ghi lệnh bán','sell',''],['Ghi nạp tiền','deposit',''],['Ghi rút tiền','withdraw',''],['Ghi cổ tức','cashdiv',''],['Thêm vàng, tiết kiệm, quỹ, crypto','asset',''],['Viết nhật ký','journal','J'],['Nhập sao kê SSI / VNDirect','import',''],['Sao lưu / khôi phục','backup','']]
     .map(([l,k,kb])=>({g:'Việc cần làm',l,kb,run:()=>{ ctx={}; k==='asset'?openAsset():k==='journal'?openJournal(''):k==='import'?openImport():k==='backup'?openBackup():openTx(k); }}));
   const pages=Object.entries(PAGE_NAMES).map(([k,l])=>({g:'Trang',l,run:()=>{ location.hash=k; }}));
-  const tks=TICKERS.map(t=>({g:'Mã cổ phiếu',l:t,sub:MKT[t].name,hint:P(px(t)),run:()=>{ location.hash='ma-'+t; }}));
+  const tks=ALL.map(t=>({g:'Mã cổ phiếu',l:t,sub:MKT[t].name+' · '+(MKT[t].ex==='UPCOM'?'UPCoM':MKT[t].ex),hint:PX[t]?P(px(t)):(UMAP[t]&&UMAP[t].p?P(UMAP[t].p):''),run:()=>{ location.hash='ma-'+t; }}));
   return [...acts,...pages,...tks];
 }
 function renderCmdk(){
   const q=fold($('#cmdkIn').value.trim()), all=cmdItems();
   CMD = !q ? all.filter(x=>x.g!=='Mã cổ phiếu').concat(all.filter(x=>x.g==='Mã cổ phiếu').slice(0,6))
-    : all.filter(x=>fold(x.l+' '+(x.sub||'')).includes(q)).sort((a,b)=>(fold(b.l).startsWith(q))-(fold(a.l).startsWith(q)));
+    : all.filter(x=>fold(x.l+' '+(x.sub||'')).includes(q)).sort((a,b)=>(fold(b.l)===q)-(fold(a.l)===q)||(fold(b.l).startsWith(q))-(fold(a.l).startsWith(q))).slice(0,40);
   cmdSel=Math.min(cmdSel,Math.max(0,CMD.length-1)); let g='';
   $('#cmdkList').innerHTML = CMD.map((x,i)=>{ const head=x.g!==g?`<li class="grp" role="presentation">${x.g}</li>`:''; g=x.g;
     return head+`<li role="option" id="cmd${i}" data-i="${i}" class="${i===cmdSel?'on':''}" aria-selected="${i===cmdSel}"><b>${esc(x.l)}</b>${x.sub?`<span class="muted small">${esc(x.sub)}</span>`:''}${x.hint?`<small>${x.hint}</small>`:x.kb?`<small><span class="kbd">${x.kb}</span></small>`:''}</li>`; }).join('') || '<li class="grp">Không tìm thấy. Talenta hiện có '+TICKERS.length+' mã.</li>';
@@ -2172,11 +2251,12 @@ document.addEventListener('keydown',e=>{
   else if(e.key==='n'||e.key==='N'){ e.preventDefault(); ctx={}; openTx('buy'); }
   else if(e.key==='j'||e.key==='J'){ e.preventDefault(); openJournal(location.hash.startsWith('#ma-')?location.hash.slice(4):''); }
 });
-$('#tkList').innerHTML=TICKERS.map(t=>`<option value="${t}">${esc(MKT[t].name)}</option>`).join('');
+$('#tkList').innerHTML=ALL.map(t=>`<option value="${t}">${esc(MKT[t].name)}</option>`).join('');
+document.body.insertAdjacentHTML('beforeend','<datalist id="tkAll">'+ALL.map(t=>`<option value="${t}">${esc(MKT[t].name)}</option>`).join('')+'</datalist>');
 $('#searchForm').addEventListener('submit', e=>{ e.preventDefault(); const v=$('#searchInput').value.trim().toUpperCase(); if(MKT[v]&&v!=='VNINDEX'){ location.hash='ma-'+v; $('#searchInput').value=''; } else toast('Hiện có '+TICKERS.length+' mã: '+TICKERS.join(', ')); });
 $('#searchInput').addEventListener('change', e=>{ const v=e.target.value.trim().toUpperCase(); if(MKT[v]&&v!=='VNINDEX'){ location.hash='ma-'+v; e.target.value=''; } });
 
-if(DATA){ load(); route(); pollLive(); }
+if(DATA){ load(); route(); pollLive(); myTickers().filter(t=>!MKT[t].hist).slice(0,25).forEach(t=>loadHist(t)); }
 else { view.innerHTML=`<section class="card"><div class="card-head"><h2>Chưa có dữ liệu giá</h2></div><p style="max-width:70ch">Talenta không tìm thấy file giá <b>data/market.js</b>. App sẽ không tự bịa ra số liệu thay thế. File này được tạo tự động mỗi ngày trên GitHub; hãy mở lại trang sau khi lần lấy giá đầu tiên chạy xong.</p></section>`; paintLive(); }
 if('serviceWorker' in navigator && location.protocol==='https:') navigator.serviceWorker.register('sw.js').catch(()=>{});
 </script>
