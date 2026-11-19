@@ -1,23 +1,27 @@
-Thu Nov 19 17:06:36 UTC 2026
+Thu Nov 19 17:31:21 UTC 2026
 === vnd_stocks (no origin)
 URL https://api-finfo.vndirect.com.vn/v4/stocks?q=type:STOCK~status:LISTED&size=2
-status=200 size=795
-{"data":[{"code":"VSA","type":"STOCK","floor":"HNX","isin":"VN000000VSA2","status":"listed","companyName":"Công ty Cổ phần Đại lý Hàng hải Việt Nam","companyNameEng":"Vietnam Ocean Shipping Agency Corporation","shortName":"Đại lý Hàng hải VN","shortNameEng":"VOSA CORP","listedDate":"2015-12-22","companyId":"659","taxCode":"0300437898","faceValue":10000.0},{"code":"SDT","type":"STOCK","floor":"UPCOM","isin":"VN000000SDT0","status":"listed","companyName":"Công ty Cổ phần Sông Đà 10 ","companyNameEng":"Song Da No 10 JSC","shortName":"CTCP Sông Đà 10","shortNameEng":"Song Da 10","listedDate":"2024-02-05","delistedDate":"2024-01-24","companyId":"1078","taxCode":"5900189357","faceValue":10000.0}],"currentPage":1,"size":2,"totalElements":1517,"totalPages":759}
+curl: (35) Recv failure: Connection reset by peer
+status=000 size=0
+
 
 === vnd_stocks_cnt (no origin)
 URL https://api-finfo.vndirect.com.vn/v4/stocks?q=type:STOCK~status:LISTED~floor:HOSE,HNX,UPCOM&fields=code,companyName,shortName,floor&size=5
-status=200 size=725
-{"data":[{"code":"VSA","companyName":"Công ty Cổ phần Đại lý Hàng hải Việt Nam","floor":"HNX","shortName":"Đại lý Hàng hải VN"},{"code":"PPP","companyName":"Công ty Cổ phần Dược phẩm Phong Phú","floor":"HNX","shortName":"Dược Phong Phú"},{"code":"PTX","companyName":"Công ty cổ phần Vận tải và Dịch vụ Petrolimex Nghệ Tĩnh","floor":"HNX","shortName":"V.tải Petro N.Tĩnh"},{"code":"TXM","companyName":"Công ty Cổ phần VICEM Thạch cao Xi măng","floor":"HNX","shortName":"Thạch cao Xi măng"},{"code":"VCS","companyName":"Công ty Cổ phần VICOSTONE","floor":"HNX","shortName":"CTCP VICOSTONE"}],"currentPage":1,"size":5,"totalElements":1517,"totalPages":304}
+curl: (35) Recv failure: Connection reset by peer
+status=000 size=0
+
 
 === vnd_events (no origin)
 URL https://api-finfo.vndirect.com.vn/v4/events?q=code:FPT~type:DIVIDEND,STOCKDIV,KINDDIV&sort=effectiveDate:desc&size=5
-status=200 size=1792
-{"data":[{"id":"125771.EN_GB","code":"FPT","group":"investorRight","type":"KINDDIV","newsId":1.0963295E7,"typeDesc":"Bonus shares","note":"Exercise rate 100:10","ratio":10.0,"numberOfShares":1.71432642E8,"disclosureDate":"2026-09-10","effectiveDate":"2026-09-21","expiredDate":"2026-09-22","locale":"EN_GB"},{"id":"125771.VN","code":"FPT","group":"investorRight","type":"KINDDIV","newsId":1.0963295E7,"typeDesc":"Cổ phiếu thưởng","note":"Tỷ lệ 100:10","ratio":10.0,"numberOfShares":1.71432642E8,"disclosureDate":"2026-09-10","effectiveDate":"2026-09-21","expiredDate":"2026-09-22","locale":"VN"},{"id":"124352.VN","code":"FPT","group":"investorRight","type":"DIVIDEND","newsId":1.0882957E7,"typeDesc":"Cổ tức bằng tiền","note":"Trả cổ tức đợt 2/2025 (1000 đ/cp)","dividend":1000.0,"ratio":10.0,"divPeriod":2.0,"divYear":2025.0,"disclosureDate":"2026-05-19","effectiveDate":"2026-05-28","expiredDate":"2026-06-10","actualDate":"2026-06-10","locale":"VN"},{"id":"124352.EN_GB","code":"FPT","group":"investorRight","type":"DIVIDEND","newsId":1.0882957E7,"typeDesc":"Cash Dividend","note":"Second Dividend payment 2025 (1000 VND/share)","dividend":1000.0,"ratio":10.0,"divPeriod":2.0,"divYear":2025.0,"disclosureDate":"2026-05-19","effectiveDate":"2026-05-28","expiredDate":"2026-06-10","actualDate":"2026-06-10","locale":"EN_GB"},{"id":"121900.VN","code":"FPT","group":"investorRight","type":"DIVIDEND","newsId":1.0770209E7,"typeDesc":"Cổ tức bằng tiền","note":"Tr�
+curl: (35) Recv failure: Connection reset by peer
+status=000 size=0
+
 
 === vnd_events_all (no origin)
 URL https://api-finfo.vndirect.com.vn/v4/events?q=type:DIVIDEND~effectiveDate:gte:2026-10-01&sort=effectiveDate:desc&size=3
-status=200 size=1124
-{"data":[{"id":"126295.EN_GB","code":"HNA","group":"investorRight","type":"DIVIDEND","newsId":1.09782E7,"typeDesc":"Cash Dividend","note":"Dividend payment 2025 (1600 VND/share)","dividend":1600.0,"ratio":16.0,"divYear":2025.0,"disclosureDate":"2026-10-22","effectiveDate":"2027-01-04","expiredDate":"2027-01-20","actualDate":"2027-01-20","locale":"EN_GB"},{"id":"126295.VN","code":"HNA","group":"investorRight","type":"DIVIDEND","newsId":1.09782E7,"typeDesc":"Cổ tức bằng tiền","note":"Trả cổ tức năm 2025 (1600 đ/cp)","dividend":1600.0,"ratio":16.0,"divYear":2025.0,"disclosureDate":"2026-10-22","effectiveDate":"2027-01-04","expiredDate":"2027-01-20","actualDate":"2027-01-20","locale":"VN"},{"id":"126308.EN_GB","code":"SAB","group":"investorRight","type":"DIVIDEND","newsId":1.0983151E7,"typeDesc":"Cash Dividend","note":"Dividend payment 2026 (3000 VND/share)","dividend":3000.0,"ratio":30.0,"divYear":2026.0,"disclosureDate":"2026-10-29","effectiveDate":"2026-12-28","expiredDate":"2027-02-02","actualDate":"2027-02-02","locale":"EN_GB"}],"currentPage":1,"size":3,"totalElements":298,"totalPages":100}
+curl: (35) Recv failure: Connection reset by peer
+status=000 size=0
+
 
 === finfo_old_events (no origin)
 URL https://finfo-api.vndirect.com.vn/v4/events?q=code:FPT~type:DIVIDEND&size=3
@@ -32,10 +36,10 @@ status=200 size=900
 
 === vnd_events_origin
 URL https://api-finfo.vndirect.com.vn/v4/events?q=code:REE&sort=effectiveDate:desc&size=3
-status=200 time=0.927415s size=1157
+status=200 time=1.925974s size=1157
 Content-Type: application/json
-Cache-Control: max-age=60
 Access-Control-Allow-Origin: *
+Cache-Control: max-age=60
 {"data":[{"id":"REEAAAS76AAeAAIlC+AA+.VN","code":"REE","group":"investorRight","type":"LISTED","newsId":1.0970442E7,"typeDesc":"GD bổ sung","note":"Số lượng 200,000 CP","numberOfShares":200000.0,"disclosureDate":"2026-10-07","effectiveDate":"2029-08-20","expiredDate":"2029-08-20","actualDate":"2029-08-20","registerStartDate":"2026-10-08","locale":"VN"},{"id":"REEAAAS76AAeAAIlC+AA+.EN_GB","code":"REE","group":"investorRight","type":"LISTED","newsId":1.0970442E7,"typeDesc":"Trading additional issuance","note":"Number of shares 200,000 shares","numberOfShares":200000.0,"disclosureDate":"2026-10-07","effectiveDate":"2029-08-20","expiredDate":"2029-08-20","actualDate":"2029-08-20","registerStartDate":"2026-10-08","locale":"EN_GB"},{"id":"REEAAAS76AAeAAIlC+AA/.VN","code":"REE","group":"investorRight","type":"LISTED","newsId":1.0970442E7,"typeDesc":"GD bổ sung","note":"Số lượng 15
 
 === vps_upcom (no origin)
@@ -49,19 +53,19 @@ status=200 size=3154
 [{"id":2100,"boardId":"G1","marketId":"STO","sequence":139884,"channel":null,"sourceMsgType":"MT","hashValue":"FPT","transId":"STO:VN000000FPT1:MT:139884","tradingSession":null,"c":50.2,"f":43.7,"r":46.95,"sym":"FPT","symCode":"VN000000FPT1","mc":"10","lastPrice":45.7,"lastVolume":30,"lot":1843770,"ot":"1.25","changePc":"2.66","avePrice":"46.24","highPrice":"47.95","lowPrice":"45.6","g1":"45.7|6180|d","g2":"45.65|22120|d","g3":"45.6|49470|d","g4":"45.75|40|d","g5":"45.8|680|d","g6":"45.85|550|d","g7":"0|0|e","mp":null,"lv":0,"matureDate":"","mkStatus":"","closePrice":"46950.0","ptVol":"0","oi":"0","oichange":"0","openPrice":"46.95","side":"","productId":"S1STOST","rightInfos":[{"contentVi":"FPT - Trả cổ tức bằng tiền tỷ lệ 10%\\n Ngày giao dịch không hưởng quyền: 27/11/2026","contentEn":"FPT - Cash dividend at a rate of 10%, ex-dividend date: 27/11/2026"}],"fBVol":"357673","fBValue":"1.646892872E8","fSVolume":"944529","fSValue":"4.367968706E8","fRoom":"44179103.30","CWUnderlying":"","CWIssuerName":"","CWType":"","CWMaturityDate":"","CWLastTradingDate":"","CWExcersisePrice":"","CWExerciseRatio":"0:0","CWListedShare":"","sType":"S","sBenefit":"0"},{"id":2100,"boardId":"G1","marketId":"STO","sequence":139816,"channel":null,"sourceMsgType":"MT","hashValue":"BSR","transId":"STO:VN000000BSR8:MT:139816","tradingSession":null,"c":25.7,"f":22.4,"r":24.05,"sym":"BSR","symCode":"VN000000BSR8","mc":"10","lastPrice":23.5,"lastVolume":80,"lot":605690,"ot":"0.55","cha
 
 === vps_hist (no origin)
-URL https://histdatafeed.vps.com.vn/tradingview/history?symbol=SHS&resolution=D&from=1794244029&to=1795108029
+URL https://histdatafeed.vps.com.vn/tradingview/history?symbol=SHS&resolution=D&from=1794245514&to=1795109514
 status=200 size=327
 {"symbol":"SHS","s":"ok","t":[1794355200,1794441600,1794528000,1794787200,1794873600,1794960000,1795046400],"c":[13.6,13.4,13.2,13,13.2,13,13.2],"o":[13.7,13.5,13.2,13.2,12.9,13.2,13],"h":[13.7,13.7,13.5,13.3,13.3,13.2,13.3],"l":[13.5,13.3,13.2,13,12.9,12.9,12.9],"v":[7339500,14607300,9548900,5493300,5972300,7991500,7903600]}
 
 === dnse_ohlc (no origin)
-URL https://services.entrade.com.vn/chart-api/v2/ohlcs/stock?from=1794244030&to=1795108030&symbol=SHS&resolution=1D
+URL https://services.entrade.com.vn/chart-api/v2/ohlcs/stock?from=1794245515&to=1795109515&symbol=SHS&resolution=1D
 status=200 size=357
 {"t":[1794276000,1794362400,1794448800,1794535200,1794794400,1794880800,1794967200,1795053600],"o":[13.3,13.7,13.5,13.2,13.2,12.9,13.2,13],"h":[13.8,13.7,13.7,13.5,13.3,13.3,13.2,13.3],"l":[13.3,13.5,13.3,13.2,13,12.9,12.9,12.9],"c":[13.7,13.6,13.4,13.2,13,13.2,13,13.2],"v":[16818800,7339500,14607300,9548900,5493300,5972300,7991500,7903600],"nextTime":0}
 
 
 === dnse_ohlc_origin
-URL https://services.entrade.com.vn/chart-api/v2/ohlcs/stock?from=1794244031&to=1795108031&symbol=SHS&resolution=1D
-status=200 time=0.532479s size=357
+URL https://services.entrade.com.vn/chart-api/v2/ohlcs/stock?from=1794245516&to=1795109516&symbol=SHS&resolution=1D
+status=200 time=0.810066s size=357
 Content-Type: application/json
 {"t":[1794276000,1794362400,1794448800,1794535200,1794794400,1794880800,1794967200,1795053600],"o":[13.3,13.7,13.5,13.2,13.2,12.9,13.2,13],"h":[13.8,13.7,13.7,13.5,13.3,13.3,13.2,13.3],"l":[13.3,13.5,13.3,13.2,13,12.9,12.9,12.9],"c":[13.7,13.6,13.4,13.2,13,13.2,13,13.2],"v":[16818800,7339500,14607300,9548900,5493300,5972300,7991500,7903600],"nextTime":0}
 
