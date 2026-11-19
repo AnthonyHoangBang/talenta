@@ -53,9 +53,17 @@ async function universe(){
   console.log('Universe', list.length, 'ma, co gia', list.filter(x=>x[4]>0).length);
 }
 // ---- Quyền cổ tức (tiền và cổ phiếu) của mọi mã từ đầu bộ dữ liệu (data/events.js)
-async function events(){ const out=[]; let page=1, total=1;
-  while((page-1)*1000<total && page<=10){ const d=await j(`https://api-finfo.vndirect.com.vn/v4/events?q=type:DIVIDEND,STOCKDIV,KINDDIV~locale:VN~effectiveDate:gte:${FROM}&sort=effectiveDate:asc&size=1000&page=${page}`);
-    if(!d||!d.data) break; total=d.totalElements||0; d.data.forEach(x=>out.push([x.code, x.type==='DIVIDEND'?'cash':'stock', x.effectiveDate||'', x.actualDate||x.expiredDate||'', +x.dividend||0, +x.ratio||0, String(x.note||'').slice(0,90)])); page++; await sleep(300); }
+async function events(){ const out=[], seen=new Set();
+  // Lấy theo từng quý để không chạm giới hạn số dòng mỗi lần hỏi, tới 6 tháng sau hôm nay (lịch chốt quyền sắp tới).
+  const end=new Date(Date.now()+183*864e5).toISOString().slice(0,10);
+  for(let s=FROM; s<end; ){ const dt=new Date(s); dt.setUTCMonth(dt.getUTCMonth()+3); const e=dt.toISOString().slice(0,10);
+    for(let page=1; page<=5; page++){ const d=await j(`https://api-finfo.vndirect.com.vn/v4/events?q=type:DIVIDEND,STOCKDIV,KINDDIV~locale:VN~effectiveDate:gte:${s}~effectiveDate:lt:${e}&sort=effectiveDate:asc&size=500&page=${page}`);
+      if(!d||!d.data||!d.data.length) break;
+      d.data.forEach(x=>{ const k=[x.code,x.type,x.effectiveDate,x.dividend,x.ratio].join('|'); if(seen.has(k)) return; seen.add(k);
+        out.push([x.code, x.type==='DIVIDEND'?'cash':'stock', x.effectiveDate||'', x.actualDate||x.expiredDate||'', +x.dividend||0, +x.ratio||0, String(x.note||'').slice(0,90)]); });
+      await sleep(250); if(d.data.length<500) break; }
+    s=e; }
+  out.sort((a,b)=>a[2].localeCompare(b[2]));
   if(!out.length) throw new Error('Không có sự kiện cổ tức');
   fs.writeFileSync('data/events.js','window.TALENTA_EVENTS='+JSON.stringify({updated:new Date().toISOString(), list:out})+';\n'); console.log('Events', out.length); }
 // ---- Giá vàng (PNJ), giá chứng chỉ quỹ mở (Fmarket), giá crypto (CoinGecko) (data/other.js)
