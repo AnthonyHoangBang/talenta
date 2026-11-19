@@ -15,6 +15,12 @@
 <style>:root{padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}body{margin:0}img{max-width:100%}[hidden]{display:none!important}.chart-ph{height:340px;display:flex;align-items:center;justify-content:center;gap:10px;color:var(--muted);background:var(--surface-2);border-radius:12px;font-size:14px;text-align:center;padding:20px}
 .spin{width:16px;height:16px;border:2px solid var(--line);border-top-color:var(--accent);border-radius:50%;animation:spin .8s linear infinite;display:inline-block}
 @keyframes spin{to{transform:rotate(360deg)}}
+.div-h{font-size:13px;color:var(--muted);font-weight:600;margin:12px 0 4px;text-transform:uppercase;letter-spacing:.04em}
+.div-row{display:grid;grid-template-columns:36px 1fr auto auto;gap:12px;align-items:center;padding:10px 0;border-top:1px solid var(--line)}
+.div-row .t{display:flex;flex-direction:column;gap:2px;min-width:0}.div-row .chips{flex-wrap:nowrap}
+.div-ic{width:36px;height:36px;border-radius:10px;display:grid;place-items:center;font-weight:700;font-size:12px;background:color-mix(in srgb,var(--up) 14%,transparent);color:var(--up)}
+.div-ic.stock{background:color-mix(in srgb,var(--accent) 14%,transparent);color:var(--accent)}
+@media (max-width:640px){.div-row{grid-template-columns:36px 1fr auto}.div-row .chips{grid-column:2/-1}}
 </style>
 <title>Talenta · Nén Bạc</title>
 <meta name="claude:viewport-fit-sides" content="cover">
@@ -748,7 +754,7 @@ const KEY='talenta-v3';
 let FEE=0.0015, TAX=0.001, DIVTAX=0.05; // lấy lại từ Cài đặt mỗi lần tính
 const DEF_SETTINGS={maxTicker:.20, maxSector:.40, reviewDays:90, riskPct:.01, fee:.0015, sellTax:.001, divTax:.05, band:.05, target:{}};
 const CLASS_KEYS=['Cổ phiếu','Tiền mặt','Vàng','Tiết kiệm','Quỹ mở','Crypto','Khác'];
-function ensureState(){ S.settings={...DEF_SETTINGS, ...(S.settings||{})}; S.settings.target=S.settings.target||{}; S.priceAlerts=S.priceAlerts||[]; S.watch=S.watch||[]; S.plans=S.plans||[]; S.assets=S.assets||[]; S.theses=S.theses||[]; S.journal=S.journal||[];
+function ensureState(){ S.settings={...DEF_SETTINGS, ...(S.settings||{})}; S.settings.target=S.settings.target||{}; S.priceAlerts=S.priceAlerts||[]; S.watch=S.watch||[]; S.plans=S.plans||[]; S.assets=S.assets||[]; S.theses=S.theses||[]; S.journal=S.journal||[]; S.divSkip=S.divSkip||[];
   if(S.demo===undefined) S.demo=!!(S.tx.some(t=>t.id==='t1'&&t.note==='Vốn ban đầu') && S.journal.some(j=>/^Mua FPT\. Đã viết luận điểm/.test(j.text||'')));
   FEE=+S.settings.fee; TAX=+S.settings.sellTax; DIVTAX=+S.settings.divTax; }
 const ACCTS=['SSI','VNDIRECT'];
@@ -899,6 +905,7 @@ function compute(){
   const other=otherAssets(), otherVal=other.reduce((s,a)=>s+a.value,0), otherCost=other.reduce((s,a)=>s+a.cost,0);
   M = {pos, acctPos, cashBy, acctVal, other, otherVal, otherCost, total:nav+otherVal, cash, netDep, realized, divInc, fees, closed, series, holdings, nav, stockVal, sectors, navPrev, firstDate, years,
        twr:last.cum, vni:last.vni, twrYr:Math.pow(1+last.cum,1/years)-1, vniYr:Math.pow(1+last.vni,1/years)-1};
+  M.div = divCheck();
   M.alerts = buildAlerts();
   M.discipline = discipline();
   return M;
@@ -910,6 +917,40 @@ function discipline(){
   const a=buys.length?withT/buys.length:1, b=sells.length?onPlan/sells.length:1, c=held.length?fresh/held.length:1;
   return {score:Math.round(100*(.4*a+.4*b+.2*c)), a, b, c, buys:buys.length, withT, sells:sells.length, onPlan, held:held.length, fresh};
 }
+
+/* ---- Cổ tức: đối chiếu lịch chia cổ tức (data/events.js) với số cổ phiếu bạn giữ trước ngày giao dịch không hưởng quyền ---- */
+const EVENTS = (window.TALENTA_EVENTS&&window.TALENTA_EVENTS.list)||[];
+function qtyBefore(acct,tk,date){ let q=0; S.tx.filter(t=>t.ticker===tk&&(t.acct||ACCTS[0])===acct&&t.date<date).sort((a,b)=>a.date.localeCompare(b.date)).forEach(t=>{
+  if(t.type==='buy') q+=t.qty; else if(t.type==='sell') q=Math.max(0,q-t.qty); else if(t.type==='stockdiv'&&q>0) q+=t.qty; }); return q; }
+function divCheck(){ const out={todo:[], soon:[]}; if(!EVENTS.length||!S.tx.length) return out;
+  const tks=new Set(S.tx.filter(t=>t.type==='buy').map(t=>t.ticker)), first=S.tx.reduce((m,t)=>t.date<m?t.date:m,'9999');
+  const today=vnNow().iso>TODAY?vnNow().iso:TODAY, plus=(d,n)=>new Date(Date.parse(d)+n*864e5).toISOString().slice(0,10);
+  for(const [tk,kind,ex,pay,dv,ratio,note] of EVENTS){ if(!tks.has(tk)||!ex||ex<=first) continue;
+    for(const acct of ACCTS){ const q=qtyBefore(acct,tk,ex); if(!(q>0)) continue;
+      const key=[tk,acct,ex,kind].join('|'); if(S.divSkip.includes(key)) continue;
+      const type=kind==='cash'?'cashdiv':'stockdiv', lim=plus(pay||ex,90);
+      if(S.tx.some(t=>t.type===type&&t.ticker===tk&&(t.acct||ACCTS[0])===acct&&t.date>=ex&&t.date<=lim)) continue;
+      const amount=kind==='cash'?Math.round(q*dv*(1-DIVTAX)):0, shares=kind==='stock'?Math.floor(q*ratio/100):0;
+      if(kind==='cash'&&!(amount>0)||kind==='stock'&&!(shares>0)) continue;
+      const it={key,tk,acct,kind,type,ex,pay:pay||ex,qty:q,dv,ratio,amount,shares,note};
+      if((pay||ex)<=today) out.todo.push(it); else out.soon.push(it); } }
+  // Mã đang giữ sắp chốt quyền (chưa tới ngày không hưởng quyền)
+  for(const [tk,kind,ex,pay,dv,ratio,note] of EVENTS){ if(ex<=today) continue; const h=M.holdings&&M.holdings.find(x=>x.ticker===tk); if(!h) continue;
+    if(out.soon.some(x=>x.tk===tk&&x.ex===ex)) continue;
+    out.soon.push({key:[tk,'*',ex,kind].join('|'),tk,acct:'',kind,ex,pay:pay||ex,qty:h.qty,dv,ratio,amount:kind==='cash'?Math.round(h.qty*dv*(1-DIVTAX)):0,shares:kind==='stock'?Math.floor(h.qty*ratio/100):0,note,future:true}); }
+  out.todo.sort((a,b)=>b.pay.localeCompare(a.pay)); out.soon.sort((a,b)=>a.ex.localeCompare(b.ex)); return out; }
+function divRecord(it){ S.tx.push(it.kind==='cash'
+    ? {id:uid('t'),date:it.pay,acct:it.acct,type:'cashdiv',ticker:it.tk,amount:it.amount,note:`${N(it.dv)} đ/cp × ${N(it.qty)} cp, đã trừ thuế ${PCT(DIVTAX,false,0)}`}
+    : {id:uid('t'),date:it.pay,acct:it.acct,type:'stockdiv',ticker:it.tk,qty:it.shares,note:`Tỷ lệ 100:${it.ratio} trên ${N(it.qty)} cp`}); }
+function divCard(){ const d=M.div; if(!d||(!d.todo.length&&!d.soon.length)) return '';
+  const line=it=>`<div class="div-row"><div class="div-ic ${it.kind}">${it.kind==='cash'?'đ':'+cp'}</div><div class="t"><b><a href="#ma-${it.tk}">${it.tk}</a> · ${it.kind==='cash'?'Cổ tức tiền '+N(it.dv)+' đ/cp':'Cổ tức cổ phiếu 100:'+it.ratio}</b>
+    <span class="small muted">${it.acct?it.acct+' · ':''}Giữ ${N(it.qty)} cp trước ngày ${D(it.ex)} · ${it.kind==='cash'?'nhận':'về tài khoản'} ${it.future?'dự kiến ':''}${D(it.pay)}</span></div>
+    <div class="r num"><b class="up">+${it.kind==='cash'?N(it.amount)+' đ':N(it.shares)+' cp'}</b></div>
+    ${it.future?'':`<div class="chips"><button class="btn sm primary" data-act="div-rec" data-k="${esc(it.key)}">Ghi</button><button class="btn sm ghost" data-act="div-skip" data-k="${esc(it.key)}" title="Không ghi khoản này (ví dụ đã bán trước khi chốt quyền)">Bỏ qua</button></div>`}</div>`;
+  return `<section class="card" style="margin-bottom:16px" id="divCard"><div class="card-head"><h2>Cổ tức theo lịch chia</h2>${d.todo.length>1?`<button class="btn sm primary" data-act="div-all">Ghi cả ${d.todo.length} khoản</button>`:''}</div>
+    <p class="small muted" style="margin:0 0 10px">Talenta đối chiếu lịch chia cổ tức của các sàn với số cổ phiếu bạn giữ trước ngày giao dịch không hưởng quyền, để giá vốn và tiền mặt khớp với app chứng khoán. Tiền đã trừ thuế ${PCT(DIVTAX,false,0)}.</p>
+    ${d.todo.length?`<h3 class="div-h">Đã trả, bạn chưa ghi (${d.todo.length})</h3>${d.todo.slice(0,5).map(line).join('')}${d.todo.length>5?`<details class="alerts-more"><summary>Xem thêm ${d.todo.length-5} khoản cũ hơn</summary>${d.todo.slice(5).map(line).join('')}</details>`:''}`:''}
+    ${d.soon.length?`<h3 class="div-h">Sắp nhận</h3>${d.soon.slice(0,8).map(line).join('')}`:''}</section>`; }
 function buildAlerts(){
   const A=[], st=S.settings;
   for(const h of M.holdings){
@@ -926,6 +967,8 @@ function buildAlerts(){
     if(hit) A.push({lv:'crit', tk:a.ticker, t:`${a.ticker} ${P(p_)} đã ${a.op==='above'?'vượt lên':'xuống dưới'} ${P(a.price)}`, d:`Cảnh báo giá bạn đặt.${a.note?' Ghi chú: '+a.note:''}`}); }
   rebalance().filter(x=>x.off).forEach(x=>A.push({lv:'warn', t:`${x.k} đang ${x.diff>0?'cao':'thấp'} hơn mục tiêu ${PCT(Math.abs(x.diff),false)}`, d:`Hiện ${PCT(x.w,false)}, mục tiêu ${PCT(x.t,false,0)}. Để về mục tiêu cần ${x.diff>0?'bớt':'thêm'} khoảng ${C(Math.abs(x.amt))}.`, href:'#cai-dat'}));
   for(const w of S.watch){ const p_=px(w.ticker); if(p_<=w.buyBelow) A.push({lv:'info', tk:w.ticker, t:`${w.ticker} đã về vùng giá bạn muốn mua (${P(p_)} ≤ ${P(w.buyBelow)})`, d:w.note}); }
+  if(M.div&&M.div.todo.length) A.push({lv:'info', t:`${M.div.todo.length} khoản cổ tức đã trả nhưng chưa ghi`, d:M.div.todo.slice(0,4).map(x=>`${x.tk} ${x.kind==='cash'?C(x.amount):'+'+N(x.shares)+' cp'}`).join(', ')+'. Bấm để ghi một lần cho khớp với tài khoản.', href:'#danh-muc'});
+  const ex7=M.div?M.div.soon.filter(x=>days(TODAY,x.ex)<=7&&x.ex>TODAY):[]; ex7.forEach(x=>A.push({lv:'info', tk:x.tk, t:`${x.tk} chốt quyền cổ tức ngày ${D(x.ex)}`, d:`${x.kind==='cash'?N(x.dv)+' đ/cp, khoảng '+C(x.amount)+' sau thuế':'Tỷ lệ 100:'+x.ratio+', khoảng '+N(x.shares)+' cp'}. Giữ qua ngày ${D(x.ex)} mới có quyền.`}));
   const rank={crit:0,warn:1,info:2}; A.sort((a,b)=>rank[a.lv]-rank[b.lv]);
   return A;
 }
@@ -1454,6 +1497,7 @@ function pageHoldings(){
     ${stat('Lãi/lỗ đã chốt', (M.realized>=0?'+':'')+C(M.realized), `${M.closed.length} lệnh bán`, cls(M.realized))}
     ${stat('Cổ tức tiền đã nhận', C(M.divInc), `Sau thuế 5% · đã trả phí và thuế ${C(M.fees)}`)}
   </div>
+  ${divCard()}
   <section class="card"><div class="tbl"><table>
     <thead><tr><th>Mã</th><th class="r">Khối lượng</th><th class="r">Giá vốn</th><th class="r">Giá</th><th class="r">Hôm nay</th><th class="r">Giá trị</th><th class="r">Lãi/lỗ</th><th class="r">Tỷ trọng</th><th>Kế hoạch (cắt lỗ → mục tiêu)</th><th></th></tr></thead>
     <tbody>${M.holdings.map(h=>{ const t=h.thesis; let plan='<span class="chip warn">Chưa có luận điểm</span>';
@@ -2157,6 +2201,10 @@ document.addEventListener('click', e=>{
     ensureState(); save(); location.hash='tong-quan'; route(); scrollTo(0,0);
     toast(a==='load-demo'?'Đang xem sổ mẫu':'Sổ mới đã sẵn sàng', ()=>{ S=prev; ensureState(); }); }
   else if(a==='cmdk') openCmdk();
+  else if(a==='div-rec'||a==='div-skip'){ const it=M.div.todo.find(x=>x.key===b.dataset.k); if(!it) return; const n0=S.tx.length;
+    if(a==='div-rec'){ divRecord(it); const id=S.tx[S.tx.length-1].id; save(); route(); toast(`Đã ghi cổ tức ${it.tk}`, ()=>{ S.tx=S.tx.filter(t=>t.id!==id); save(); route(); }); }
+    else { S.divSkip.push(it.key); save(); route(); toast(`Đã bỏ qua cổ tức ${it.tk}`, ()=>{ S.divSkip=S.divSkip.filter(k=>k!==it.key); save(); route(); }); } }
+  else if(a==='div-all'){ const ids=[]; M.div.todo.forEach(it=>{ divRecord(it); ids.push(S.tx[S.tx.length-1].id); }); save(); route(); toast(`Đã ghi ${ids.length} khoản cổ tức`, ()=>{ S.tx=S.tx.filter(t=>!ids.includes(t.id)); save(); route(); }); }
   else if(a==='tkv'){ const k=b.dataset.k; if(k==='page') TKV.page=+b.dataset.v; else { TKV[k]=b.dataset.v; TKV.page=0; if(k==='tab') TKV.q=''; } route(); }
   else if(a==='cz'){ const el=b.closest('.chart'), d=+b.dataset.d; if(d===0){ delete ZOOM[el.dataset.chart]; redrawChart(el); } else zoomStep(el,d); }
   else if(a==='cfull') openChartFull(b.closest('.chart'));
