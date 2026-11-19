@@ -1,238 +1,115 @@
-Thu Nov 19 17:03:25 UTC 2026
-=== vnd_stocks
-URL https://api-finfo.vndirect.com.vn/v4/stocks?q=type:STOCK~status:LISTED&fields=code,companyName,companyNameEng,shortName,floor,industryName,listedDate&size=3
-curl: (35) Recv failure: Connection reset by peer
-status=000 time=0.673355s size=0
+Thu Nov 19 17:06:36 UTC 2026
+=== vnd_stocks (no origin)
+URL https://api-finfo.vndirect.com.vn/v4/stocks?q=type:STOCK~status:LISTED&size=2
+status=200 size=795
+{"data":[{"code":"VSA","type":"STOCK","floor":"HNX","isin":"VN000000VSA2","status":"listed","companyName":"Công ty Cổ phần Đại lý Hàng hải Việt Nam","companyNameEng":"Vietnam Ocean Shipping Agency Corporation","shortName":"Đại lý Hàng hải VN","shortNameEng":"VOSA CORP","listedDate":"2015-12-22","companyId":"659","taxCode":"0300437898","faceValue":10000.0},{"code":"SDT","type":"STOCK","floor":"UPCOM","isin":"VN000000SDT0","status":"listed","companyName":"Công ty Cổ phần Sông Đà 10 ","companyNameEng":"Song Da No 10 JSC","shortName":"CTCP Sông Đà 10","shortNameEng":"Song Da 10","listedDate":"2024-02-05","delistedDate":"2024-01-24","companyId":"1078","taxCode":"5900189357","faceValue":10000.0}],"currentPage":1,"size":2,"totalElements":1517,"totalPages":759}
+
+=== vnd_stocks_cnt (no origin)
+URL https://api-finfo.vndirect.com.vn/v4/stocks?q=type:STOCK~status:LISTED~floor:HOSE,HNX,UPCOM&fields=code,companyName,shortName,floor&size=5
+status=200 size=725
+{"data":[{"code":"VSA","companyName":"Công ty Cổ phần Đại lý Hàng hải Việt Nam","floor":"HNX","shortName":"Đại lý Hàng hải VN"},{"code":"PPP","companyName":"Công ty Cổ phần Dược phẩm Phong Phú","floor":"HNX","shortName":"Dược Phong Phú"},{"code":"PTX","companyName":"Công ty cổ phần Vận tải và Dịch vụ Petrolimex Nghệ Tĩnh","floor":"HNX","shortName":"V.tải Petro N.Tĩnh"},{"code":"TXM","companyName":"Công ty Cổ phần VICEM Thạch cao Xi măng","floor":"HNX","shortName":"Thạch cao Xi măng"},{"code":"VCS","companyName":"Công ty Cổ phần VICOSTONE","floor":"HNX","shortName":"CTCP VICOSTONE"}],"currentPage":1,"size":5,"totalElements":1517,"totalPages":304}
+
+=== vnd_events (no origin)
+URL https://api-finfo.vndirect.com.vn/v4/events?q=code:FPT~type:DIVIDEND,STOCKDIV,KINDDIV&sort=effectiveDate:desc&size=5
+status=200 size=1792
+{"data":[{"id":"125771.EN_GB","code":"FPT","group":"investorRight","type":"KINDDIV","newsId":1.0963295E7,"typeDesc":"Bonus shares","note":"Exercise rate 100:10","ratio":10.0,"numberOfShares":1.71432642E8,"disclosureDate":"2026-09-10","effectiveDate":"2026-09-21","expiredDate":"2026-09-22","locale":"EN_GB"},{"id":"125771.VN","code":"FPT","group":"investorRight","type":"KINDDIV","newsId":1.0963295E7,"typeDesc":"Cổ phiếu thưởng","note":"Tỷ lệ 100:10","ratio":10.0,"numberOfShares":1.71432642E8,"disclosureDate":"2026-09-10","effectiveDate":"2026-09-21","expiredDate":"2026-09-22","locale":"VN"},{"id":"124352.VN","code":"FPT","group":"investorRight","type":"DIVIDEND","newsId":1.0882957E7,"typeDesc":"Cổ tức bằng tiền","note":"Trả cổ tức đợt 2/2025 (1000 đ/cp)","dividend":1000.0,"ratio":10.0,"divPeriod":2.0,"divYear":2025.0,"disclosureDate":"2026-05-19","effectiveDate":"2026-05-28","expiredDate":"2026-06-10","actualDate":"2026-06-10","locale":"VN"},{"id":"124352.EN_GB","code":"FPT","group":"investorRight","type":"DIVIDEND","newsId":1.0882957E7,"typeDesc":"Cash Dividend","note":"Second Dividend payment 2025 (1000 VND/share)","dividend":1000.0,"ratio":10.0,"divPeriod":2.0,"divYear":2025.0,"disclosureDate":"2026-05-19","effectiveDate":"2026-05-28","expiredDate":"2026-06-10","actualDate":"2026-06-10","locale":"EN_GB"},{"id":"121900.VN","code":"FPT","group":"investorRight","type":"DIVIDEND","newsId":1.0770209E7,"typeDesc":"Cổ tức bằng tiền","note":"Tr�
+
+=== vnd_events_all (no origin)
+URL https://api-finfo.vndirect.com.vn/v4/events?q=type:DIVIDEND~effectiveDate:gte:2026-10-01&sort=effectiveDate:desc&size=3
+status=200 size=1124
+{"data":[{"id":"126295.EN_GB","code":"HNA","group":"investorRight","type":"DIVIDEND","newsId":1.09782E7,"typeDesc":"Cash Dividend","note":"Dividend payment 2025 (1600 VND/share)","dividend":1600.0,"ratio":16.0,"divYear":2025.0,"disclosureDate":"2026-10-22","effectiveDate":"2027-01-04","expiredDate":"2027-01-20","actualDate":"2027-01-20","locale":"EN_GB"},{"id":"126295.VN","code":"HNA","group":"investorRight","type":"DIVIDEND","newsId":1.09782E7,"typeDesc":"Cổ tức bằng tiền","note":"Trả cổ tức năm 2025 (1600 đ/cp)","dividend":1600.0,"ratio":16.0,"divYear":2025.0,"disclosureDate":"2026-10-22","effectiveDate":"2027-01-04","expiredDate":"2027-01-20","actualDate":"2027-01-20","locale":"VN"},{"id":"126308.EN_GB","code":"SAB","group":"investorRight","type":"DIVIDEND","newsId":1.0983151E7,"typeDesc":"Cash Dividend","note":"Dividend payment 2026 (3000 VND/share)","dividend":3000.0,"ratio":30.0,"divYear":2026.0,"disclosureDate":"2026-10-29","effectiveDate":"2026-12-28","expiredDate":"2027-02-02","actualDate":"2027-02-02","locale":"EN_GB"}],"currentPage":1,"size":3,"totalElements":298,"totalPages":100}
+
+=== finfo_old_events (no origin)
+URL https://finfo-api.vndirect.com.vn/v4/events?q=code:FPT~type:DIVIDEND&size=3
+curl: (28) Connection timed out after 25002 milliseconds
+status=000 size=0
 
 
-=== vnd_stocks_count
-URL https://api-finfo.vndirect.com.vn/v4/stocks?q=type:STOCK~status:LISTED~floor:HOSE,HNX,UPCOM&size=1
-curl: (35) Recv failure: Connection reset by peer
-status=000 time=0.417058s size=0
+=== vnd_prices_upcom (no origin)
+URL https://api-finfo.vndirect.com.vn/v4/stock_prices?sort=date:desc&q=code:BSR&size=2
+status=200 size=900
+{"data":[{"code":"BSR","date":"2026-11-19","time":"15:11:06","floor":"HOSE","type":"STOCK","basicPrice":24.05,"ceilingPrice":25.7,"floorPrice":22.4,"open":24.05,"high":24.3,"low":23.5,"close":23.5,"average":23.771,"adOpen":24.05,"adHigh":24.3,"adLow":23.5,"adClose":23.5,"adAverage":23.771,"nmVolume":6056900.0,"nmValue":1.43977095E11,"ptVolume":0.0,"ptValue":0.0,"change":-0.55,"adChange":-0.55,"pctChange":-2.2869},{"code":"BSR","date":"2026-11-18","time":"15:11:06","floor":"HOSE","type":"STOCK","basicPrice":24.25,"ceilingPrice":25.9,"floorPrice":22.6,"open":24.45,"high":24.6,"low":23.9,"close":24.05,"average":24.207,"adOpen":24.45,"adHigh":24.6,"adLow":23.9,"adClose":24.05,"adAverage":24.207,"nmVolume":7467900.0,"nmValue":1.80772495E11,"ptVolume":255000.0,"ptValue":6.2475E9,"change":-0.2,"adChange":-0.2,"pctChange":-0.8247}],"currentPage":1,"size":2,"totalElements":2172,"totalPages":1086}
 
-
-=== vnd_prices_bulk_day
-URL https://api-finfo.vndirect.com.vn/v4/stock_prices?sort=date:desc&q=date:gte:2026-11-12&size=3
-curl: (35) Recv failure: Connection reset by peer
-status=000 time=0.408287s size=0
-
-
-=== vnd_prices_floor
-URL https://api-finfo.vndirect.com.vn/v4/stock_prices?sort=date:desc&q=floor:UPCOM~date:gte:2026-11-12&size=2
-curl: (35) Recv failure: Connection reset by peer
-status=000 time=0.413788s size=0
-
-
-=== vnd_events_div
-URL https://api-finfo.vndirect.com.vn/v4/events?q=code:FPT~type:DIVIDEND,STOCKDIV&sort=effectiveDate:desc&size=4
-curl: (35) Recv failure: Connection reset by peer
-status=000 time=0.422295s size=0
-
-
-=== vnd_events_any
-URL https://api-finfo.vndirect.com.vn/v4/events?q=code:REE&sort=effectiveDate:desc&size=4
-curl: (35) Recv failure: Connection reset by peer
-status=000 time=0.414522s size=0
-
-
-=== vnd_rights
-URL https://api-finfo.vndirect.com.vn/v4/rights?q=code:FPT&size=3
-curl: (35) Recv failure: Connection reset by peer
-status=000 time=0.410576s size=0
-
-
-=== vnd_industry
-URL https://api-finfo.vndirect.com.vn/v4/industry_classification?q=industryLevel:1&size=3
-status=200 time=1.143505s size=16170
+=== vnd_events_origin
+URL https://api-finfo.vndirect.com.vn/v4/events?q=code:REE&sort=effectiveDate:desc&size=3
+status=200 time=0.927415s size=1157
 Content-Type: application/json
+Cache-Control: max-age=60
 Access-Control-Allow-Origin: *
-Cache-Control: max-age=300
-{"data":[{"industryCode":"0001","industryLevel":"1","englishName":"OIL & GAS ","vietnameseName":"Dầu Khí","totalCount":27.0,"codeList":"BSR,MTS,PVD,PVY,POV,PCN,PVC,PLX,OIL,PND,PVS,POS,POB,PAT,PVB,PVO,PPY,PTV,PTX,PEQ,PSN,TDG,DMS,PLE,PCG,TLP,PSH","taxCodeList":"t0305795054,t0600393680,t3500806844,t0100108102,t0102631910,t3700146458,t5700100707,t0100150577,t0100150873,t4400114094,t0103100084,t5300656602,t3500850392 ,t3000413193,t3500818790,t0600759399,t0100107370,t4300378569,t0302495126,t6300177249,t0102349865,t1000808141,t0305447723,t2801448559,t2400345718,t2900428497,t0101466968"},{"industryCode":"1000","industryLevel":"1","englishName":"BASIC MATERIALS ","vietnameseName":"Vật liệu cơ bản","totalCount":184.0,"codeList":"HAI,TDN,KMT,TRC,PLC,SQC,CAP,KTB,HSI,TLH,CMI,DTL,HVT,BKC,VAF,KSQ,CNC,KHD,CSV,DPS,KSV,MSR,GVT,MEL,LMC,AFC,HSV,BCA,DPD,CLI,MZG,VLS,HLC,HMC,HAP,HGM,CPC,BMJ,KSA,ACM,P
+{"data":[{"id":"REEAAAS76AAeAAIlC+AA+.VN","code":"REE","group":"investorRight","type":"LISTED","newsId":1.0970442E7,"typeDesc":"GD bổ sung","note":"Số lượng 200,000 CP","numberOfShares":200000.0,"disclosureDate":"2026-10-07","effectiveDate":"2029-08-20","expiredDate":"2029-08-20","actualDate":"2029-08-20","registerStartDate":"2026-10-08","locale":"VN"},{"id":"REEAAAS76AAeAAIlC+AA+.EN_GB","code":"REE","group":"investorRight","type":"LISTED","newsId":1.0970442E7,"typeDesc":"Trading additional issuance","note":"Number of shares 200,000 shares","numberOfShares":200000.0,"disclosureDate":"2026-10-07","effectiveDate":"2029-08-20","expiredDate":"2029-08-20","actualDate":"2029-08-20","registerStartDate":"2026-10-08","locale":"EN_GB"},{"id":"REEAAAS76AAeAAIlC+AA/.VN","code":"REE","group":"investorRight","type":"LISTED","newsId":1.0970442E7,"typeDesc":"GD bổ sung","note":"Số lượng 15
 
-=== vps_all_hose
-URL https://bgapidatafeed.vps.com.vn/getlistckindex/hose
-status=200 time=1.062378s size=2461
-content-type: text/html; charset=utf-8
-access-control-allow-origin: *
-["AAA","AAM","AAN","AAT","ABR","ABS","ABT","ACB","ACC","ACG","ACL","ADG","ADP","ADS","AFX","AGG","AGR","ANT","ANV","APG","APH","ASG","ASM","ASP","AST","BAF","BCE","BCM","BFC","BHN","BIC","BID","BKG","BMC","BMI","BMP","BRC","BSI","BSR","BTP","BTT","BVB","BVH","BWE","C32","C47","CCC","CCI","CCL","CDC","CHP","CIG","CII","CKG","CLC","CLL","CLW","CMG","CMV","CMX","CNG","COM","CRC","CRE","CRV","CSM","CSV","CTD","CTF","CTG","CTI","CTR","CTS","CVT","D2D","DAH","DAT","DBC","DBD","DBT","DC4","DCL","DCM","DGC","DGW","DHA","DHC","DHG","DHM","DIG","DLG","DMC","DMX","DPG","DPM","DPR","DQC","DRC","DRH","DRL","DSC","DSE","DSH","DSN","DTA","DTL","DTT","DVP","DVV","DXG","DXS","DXV","ECO","EIB","ELC","EVE","EVF","EVG","FCM","FCN","FDC","FIR","FIT","FMC","FPT","FRT","FTS","GAS","GDA","GDT","GEE","GEG","GEL","GEX","GHC","GIL","GMD","GMH","GSP","GTA","GVR","HAG","HAH","HAP","HAR","HAS","HAX","HCD","HCM","HDB"
+=== vps_upcom (no origin)
+URL https://bgapidatafeed.vps.com.vn/getlistckindex/upcom
+status=200 size=4849
+["A32","AAH","AAS","AAV","ABB","ABC","ABI","ABW","ACE","ACM","ACS","ACV","AG1","AGF","AGM","AGP","AGX","AIC","AIG","ALC","ALV","AMP","AMS","ANI","APC","APF","APL","APP","APT","ART","ATA","ATG","AVC","AVG","BAL","BBH","BBM","BBT","BCA","BCB","BCP","BCV","BDG","BDT","BDW","BEL","BGE","BGW","BHA","BHC","BHG","BHH","BHI","BHK","BHP","BIG","BIO","BLF","BLI","BLN","BLT","BMD","BMF","BMG","BMK","BMS","BMV","BNW","BOT","BQB","BQP","BRR","BRS","BSA","BSD","BSG","BSH","BSL","BSP","BSQ","BT1","BT6","BTB","BTD","BTG","BTH","BTN","BTU","BTV","BVG","BVL","BVN","BWA","BWS","C22","C4G","C92","CAD","CAT","CBI","CBS","CC1","CCA","CCM","CCP","CCS","CCT","CCV","CDG","CDO","CDP","CDR","CEN","CFM","CFV","CGV","CH5","CHC","CHS","CI5","CID","CIP","CK8","CKA","CKD","CLI","CLX","CMD","CMF","CMI","CMK","CMM","CMN","CMP","CMT","CMW","CNA","CNC","CNN","CNT","CPA","CPH","CPI","CQN","CQT","CSI","CT3","CT6","CTW","CTX","CVN","DAC","DAS","DBM","DC1","DCF","DCG","DCH","DCR","DCS","DCT","DCV","DDB","DDG","DDH","DDM","DDN","DDV","DFC","DFF","DGT","DHB","DHD","DHN","DIC","DID","DKC","DKG","DLD","DLR","DLT","DM7","DMN","DNA","DND","DNE","DNH","DNL","DNM","DNN","DNT","DNW","DOC","DOP","DP1","DP2","DPC","DPH","DPP","DRG","DRI","DSD","DSG","DSP","DTC","DTH","DTI","DTP","DTR","DUS","DVC","DVG","DVN","DVW","DWC","DWS","DXL","E12","E29","EFI","EGL","EIC","EIN","EME","EMG","EMS","F88","FBC","FCC","FCS","FGL","FHN","FHS","FIC","FOC","FOX","FRC","FRM","FSO","FT1","FTI","FTM","G20","G36","GCB","GCF","GDH","GER","GGG","GH3"
 
-=== vps_all_hnx
-URL https://bgapidatafeed.vps.com.vn/getlistckindex/hnx
-status=200 time=1.030933s size=1795
-content-type: text/html; charset=utf-8
-access-control-allow-origin: *
-["ADC","ALT","AMC","AME","AMV","API","APS","ARM","ATS","BAB","BAX","BBS","BCC","BCF","BED","BKC","BNA","BPC","BTS","BTW","BVS","BXH","C69","CAG","CAN","CAP","CAR","CCR","CDN","CEO","CET","CIA","CJC","CKV","CLH","CLM","CMC","CMS","CPC","CSC","CST","CTB","CTP","CTT","CX8","D11","DAD","DAE","DC2","DHP","DHT","DIH","DL1","DNC","DNP","DP3","DS3","DST","DTD","DTG","DTK","DVM","DXP","EBS","ECI","EID","EVS","FID","GDW","GIC","GKM","GLT","GMA","GMX","HAD","HAT","HBS","HCC","HCT","HDA","HEV","HGM","HHC","HJS","HKT","HLC","HLD","HMH","HMR","HOM","HTC","HUT","HVT","ICG","IDC","IDJ","IDV","INC","INN","IPA","ITQ","IVS","KDM","KHS","KKC","KMT","KSD","KSF","KST","KSV","KTS","L14","L18","L40","LAS","LBE","LCD","LDP","LHC","LIG","MAC","MAS","MBG","MBS","MCC","MCF","MCO","MDC","MED","MEL","MIC","MKV","MST","MVB","NAG","NAP","NBC","NBP","NBW","NDN","NDX","NET","NFC","NHC","NRC","NSH","NST","NTH","NTP","NVB"
+=== vps_quote (no origin)
+URL https://bgapidatafeed.vps.com.vn/getliststockdata/FPT,BSR,SHS
+status=200 size=3154
+[{"id":2100,"boardId":"G1","marketId":"STO","sequence":139884,"channel":null,"sourceMsgType":"MT","hashValue":"FPT","transId":"STO:VN000000FPT1:MT:139884","tradingSession":null,"c":50.2,"f":43.7,"r":46.95,"sym":"FPT","symCode":"VN000000FPT1","mc":"10","lastPrice":45.7,"lastVolume":30,"lot":1843770,"ot":"1.25","changePc":"2.66","avePrice":"46.24","highPrice":"47.95","lowPrice":"45.6","g1":"45.7|6180|d","g2":"45.65|22120|d","g3":"45.6|49470|d","g4":"45.75|40|d","g5":"45.8|680|d","g6":"45.85|550|d","g7":"0|0|e","mp":null,"lv":0,"matureDate":"","mkStatus":"","closePrice":"46950.0","ptVol":"0","oi":"0","oichange":"0","openPrice":"46.95","side":"","productId":"S1STOST","rightInfos":[{"contentVi":"FPT - Trả cổ tức bằng tiền tỷ lệ 10%\\n Ngày giao dịch không hưởng quyền: 27/11/2026","contentEn":"FPT - Cash dividend at a rate of 10%, ex-dividend date: 27/11/2026"}],"fBVol":"357673","fBValue":"1.646892872E8","fSVolume":"944529","fSValue":"4.367968706E8","fRoom":"44179103.30","CWUnderlying":"","CWIssuerName":"","CWType":"","CWMaturityDate":"","CWLastTradingDate":"","CWExcersisePrice":"","CWExerciseRatio":"0:0","CWListedShare":"","sType":"S","sBenefit":"0"},{"id":2100,"boardId":"G1","marketId":"STO","sequence":139816,"channel":null,"sourceMsgType":"MT","hashValue":"BSR","transId":"STO:VN000000BSR8:MT:139816","tradingSession":null,"c":25.7,"f":22.4,"r":24.05,"sym":"BSR","symCode":"VN000000BSR8","mc":"10","lastPrice":23.5,"lastVolume":80,"lot":605690,"ot":"0.55","cha
 
-=== vps_index_hnx
-URL https://bgapidatafeed.vps.com.vn/getlistindexdetail/02,03,10,11
-status=200 time=1.034260s size=1243
-content-type: application/json; charset=utf-8
-access-control-allow-origin: *
-[{"id":1101,"boardId":"","marketId":"","sequence":2390,"channel":"","sourceMsgType":"M1","hashValue":"02","transId":"STX:M1:2390","tradingSession":"","mc":"02","vol":53593956,"value":645069.73,"time":"15:05:10","status":"E","accVol":0,"ot":"3.79|1.56%|645069.730|48|84|50","cIndex":238.94,"oIndex":242.73},{"id":1101,"boardId":"","marketId":"","sequence":2390,"channel":"","sourceMsgType":"M1","hashValue":"03","transId":"UPX:M1:2390","tradingSession":"","mc":"03","vol":21423131,"value":285384.112,"time":"15:05:10","status":"E","accVol":0,"ot":"0.76|0.63%|285384.112|76|112|72","cIndex":120.36,"oIndex":121.12},{"id":1101,"boardId":"","marketId":"","sequence":33287,"channel":"","sourceMsgType":"M1","hashValue":"10","transId":"STO:M1:33287","tradingSession":"","mc":"10","vol":652868677,"value":15008735.561,"time":"15:05:05","status":"E","accVol":0,"ot":"13.39|0.79%|15008735.561|107|207|65","cIn
+=== vps_hist (no origin)
+URL https://histdatafeed.vps.com.vn/tradingview/history?symbol=SHS&resolution=D&from=1794244029&to=1795108029
+status=200 size=327
+{"symbol":"SHS","s":"ok","t":[1794355200,1794441600,1794528000,1794787200,1794873600,1794960000,1795046400],"c":[13.6,13.4,13.2,13,13.2,13,13.2],"o":[13.7,13.5,13.2,13.2,12.9,13.2,13],"h":[13.7,13.7,13.5,13.3,13.3,13.2,13.3],"l":[13.5,13.3,13.2,13,12.9,12.9,12.9],"v":[7339500,14607300,9548900,5493300,5972300,7991500,7903600]}
 
-=== sjc
-URL https://sjc.com.vn/GoldPrice/Services/PriceService.ashx
-status=403 time=0.445855s size=5660
-content-type: text/html; charset=UTF-8
-cache-control: private, max-age=0, no-store, no-cache, must-revalidate, post-check=0, pre-check=0
+=== dnse_ohlc (no origin)
+URL https://services.entrade.com.vn/chart-api/v2/ohlcs/stock?from=1794244030&to=1795108030&symbol=SHS&resolution=1D
+status=200 size=357
+{"t":[1794276000,1794362400,1794448800,1794535200,1794794400,1794880800,1794967200,1795053600],"o":[13.3,13.7,13.5,13.2,13.2,12.9,13.2,13],"h":[13.8,13.7,13.7,13.5,13.3,13.3,13.2,13.3],"l":[13.3,13.5,13.3,13.2,13,12.9,12.9,12.9],"c":[13.7,13.6,13.4,13.2,13,13.2,13,13.2],"v":[16818800,7339500,14607300,9548900,5493300,5972300,7991500,7903600],"nextTime":0}
+
+
+=== dnse_ohlc_origin
+URL https://services.entrade.com.vn/chart-api/v2/ohlcs/stock?from=1794244031&to=1795108031&symbol=SHS&resolution=1D
+status=200 time=0.532479s size=357
+Content-Type: application/json
+{"t":[1794276000,1794362400,1794448800,1794535200,1794794400,1794880800,1794967200,1795053600],"o":[13.3,13.7,13.5,13.2,13.2,12.9,13.2,13],"h":[13.8,13.7,13.7,13.5,13.3,13.3,13.2,13.3],"l":[13.3,13.5,13.3,13.2,13,12.9,12.9,12.9],"c":[13.7,13.6,13.4,13.2,13,13.2,13,13.2],"v":[16818800,7339500,14607300,9548900,5493300,5972300,7991500,7903600],"nextTime":0}
+
+
+=== cafef_div (no origin)
+URL https://s.cafef.vn/Ajax/Events_RelatedNews_New.aspx?symbol=FPT&floorID=0&configID=6&PageIndex=1&PageSize=5&Type=2
+status=301 size=0
+
+
+=== vietstock_div (no origin)
+URL https://finance.vietstock.vn/data/eventstypedata?code=FPT&eventTypeID=1&page=1&pageSize=5
+status=404 size=504477
+
 <!DOCTYPE html>
-<!--[if lt IE 7]> <html class="no-js ie6 oldie" lang="en-US"> <![endif]-->
-<!--[if IE 7]>    <html class="no-js ie7 oldie" lang="en-US"> <![endif]-->
-<!--[if IE 8]>    <html class="no-js ie8 oldie" lang="en-US"> <![endif]-->
-<!--[if gt IE 8]><!--> <html class="no-js" lang="en-US"> <!--<![endif]-->
+<html lang="vi-VN">
 <head>
-<title>Attention Required! | Cloudflare</title>
-<meta charset="UTF-8" />
-<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
-<meta http-equiv="X-UA-Compatible" content="IE=Edge" />
-<meta name="robots" content="noindex, nofollow" />
-<meta name="viewport" content="width=device-width,initial-scale=1" />
-<link rel="stylesheet" id="cf_styles-css" href="/cdn-cgi/styles/cf.errors.css" />
-<!--[if lt IE 9]><link rel="stylesheet" id='cf_styles-ie-css' href="/cdn-cgi/styles/cf.errors.ie.css" /><![endif]-->
-<style>body{margin:0;padding:0}</style>
+    <script>
+        document.documentElement.className = localStorage.getItem("darkModetheme") === "dark"
+            ? "theme-dark"
+            : "theme-light";
+        var _globalIsDarkMode = localStorage.getItem("darkModetheme") == "dark" ? true : false;
+    </script>
+    <script async type="application/javascript" src="//anymind360.com/js/407/ats.js"></script>
 
+<title>VietstockFinance – Dữ liệu tài chính và công cụ đầu tư chứng khoán</title>
+<meta charset="utf-8" />
+<meta content="IE=edge" http-equiv="X-UA-Compatible" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<link rel="shortcut icon" href="//image.vietstock.vn/common/favicon.ico" type="image/x-icon" />
+<link rel="manifest" href="/manifest.json">
+<link rel="canonical" href="https://finance.vietstock.vn/data/eventstypedata" />
+<link href="/RSS" title="VietstockFinance - RSS" type="application/rss+xml" rel="alternate" />
+<meta name="keywords" content="Tài chính,chứng khoán,cổ phiếu,thông tin,Việt Nam,doanh nghiệp,nền kinh tế,ngành,index ngành,thị trường chứng khoán,doanh nghiệp niêm yết,công ty đại chúng,trực tuyến,stock, quote, share, HoSE, HNX, Hastc, UPCoM, blue chip, OTC" />
+<meta name="description" content="Dữ liệu toàn diện nền kinh tế, thông tin mọi góc độ doanh nghiệp và các công cụ phân tích đầu tư chứng khoán" />
+<meta na
 
-<!--[if gte IE 10
+=== kbs_div (no origin)
+URL https://kbbuddywts.kbsec.com.vn/iis-server/investment/stock/FPT/events?l=1&p=1&s=5
+status=200 size=138
+{"st":"err","msg":["type must be one of the following values: tr, is, ob, card, index, win, vn, trading-result"],"code":1,"errorCode":500}
 
-=== btmc
-URL http://api.btmc.vn/api/BTMCAPI/getpricebtmc?key=3kd8ub1llcg9t45hnoh8hmn7t5kc2v
-curl: (28) Connection timed out after 25000 milliseconds
-status=000 time=25.000834s size=0
+=== ssi_fc (no origin)
+URL https://fc-data.ssi.com.vn/api/v2/Market/Securities?market=HOSE&pageIndex=1&pageSize=2
+status=200 size=55
+{"message":"Missing Authorization header","status":401}
 
-
-=== pnj
-URL https://edge-api.pnj.io/ecom-frontend/v1/get-gold-price?zone=00
-status=200 time=0.705906s size=1985
-content-type: application/json
-access-control-allow-origin: *
-{"data":[{"masp":"SJC","tensp":"Vàng miếng SJC 999.9","giaban":13620,"giamua":13320},{"masp":"N24K","tensp":"Nhẫn Trơn PNJ 999.9","giaban":13340,"giamua":12920},{"masp":"KB","tensp":"Vàng Kim Bảo 999.9","giaban":13340,"giamua":12920},{"masp":"TL","tensp":"Vàng Phúc Lộc Tài 999.9","giaban":13340,"giamua":12920},{"masp":"PNJ","tensp":"Vàng PNJ - Phượng Hoàng","giaban":13340,"giamua":12920},{"masp":"24K","tensp":"Vàng nữ trang 999.9","giaban":13325,"giamua":12746},{"masp":"999","tensp":"Vàng nữ trang 999","giaban":13312,"giamua":12733},{"masp":"9920","tensp":"Vàng nữ trang 9920","giaban":13218,"giamua":12598},{"masp":"99","tensp":"Vàng nữ trang 99","giaban":13192,"giamua":12572},{"masp":"22K","tensp":"Vàng 916 (22K)","giaban":12206,"giamua":11586},{"masp":"75","tensp":"Vàng 750 (18K)","giaban":9994,"giamua":9374},{"masp":"68","tensp":"Vàng 680 (16.3K)","gia
-
-=== doji
-URL http://giavang.doji.vn/api/giavang/?api_key=258fbd2a72ce8481089d88c678e9fe4f
-status=503 time=7.820901s size=2452
-Content-Type: text/html; charset=UTF-8
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
-  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
-<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en" dir="ltr">
-  <head>
-    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-<link rel="shortcut icon" href="/misc/favicon.ico" type="image/x-icon" />
-    <title>Site off-line | Drupal</title>
-    <link type="text/css" rel="stylesheet" media="all" href="/modules/system/defaults.css?0" />
-<link type="text/css" rel="stylesheet" media="all" href="/modules/system/system.css?0" />
-<link type="text/css" rel="stylesheet" media="all" href="/modules/system/system-menus.css?0" />
-<link type="text/css" rel="stylesheet" media="all" href="/modules/system/maintenance.css?0" />
-<link type="text/css" rel="stylesheet" media="all" href="/themes/garland/style.css?0" />
-<link type="text/css" rel="stylesheet" media=
-
-=== mihong
-URL https://www.mihong.vn/api/v1/gold/prices/current
-status=200 time=1.386014s size=1195
-content-type: text/html
-cache-control: max-age=300, must-revalidate
-<!doctype html>
-<html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-
-    <!-- Favicons -->
-    <link rel="icon" type="image/x-icon" href="/assets/images/icons/favicon.ico" />
-    <link rel="icon" type="image/png" sizes="16x16" href="/assets/images/icons/favicon-16x16.png" />
-    <link rel="icon" type="image/png" sizes="32x32" href="/assets/images/icons/favicon-32x32.png" />
-    <link rel="apple-touch-icon" sizes="180x180" href="/assets/images/icons/apple-touch-icon.png" />
-
-    <!-- Optional: SVG favicon for modern browsers -->
-    <!-- <link rel="icon" type="image/svg+xml" href="/assets/images/icons/favicon.svg" /> -->
-
-    <!-- PWA Manifest -->
-    <link rel="manifest" href="/manifest.json" />
-
-    <!-- Meta tags for better SEO and mobile -->
-    <meta name="theme-color" content="#007bff" />
-    <meta name="description" content="Vàng Mi Hồng" />
-
-    <meta name="viewport" content
-
-=== giavang_org
-URL https://giavang.org/
-status=200 time=1.394266s size=58598
-content-type: text/html; charset=UTF-8
-<!doctype html>
-<html lang="vi">
-    <head prefix="og: http://ogp.me/ns# fb: http://ogp.me/ns/fb# article: http://ogp.me/ns/article#">
-    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-    <title>Giá vàng hôm nay 20/11 - Biểu đồ Giá vàng SJC - Vàng miếng 9999 - Vàng nhẫn 1 chỉ - Giavang.org</title>
-    <meta name="description" content="Bảng giá vàng SJC 1 lượng trên cả nước ngày hôm nay. So sánh giá vàng 9999 bán ra, mua vào với giá rẻ nhất, tốt nhất. Tại Hà Nội, Tp HCM, Đà Nẵng, Cần Thơ, Vĩnh Yên, Ninh Bình, Huế, Buôn Ma Thuột, Nha Trang, Bình Phước, Cà Mau, Biên Hòa, Miền Tây, Quảng Ngãi, Đà Lạt, Long Xuyên. Bang gia vang hom nay, giá vàng 24k, giá vàng hôm nay, giá vàng 9999, gia
-
-=== webgia
-URL https://webgia.com/gia-vang/sjc/
-status=200 time=5.345450s size=109769
-Content-Type: text/html; charset=UTF-8
-<!DOCTYPE html>
-<html lang="vi">
-<head prefix="og: http://ogp.me/ns# fb: http://ogp.me/ns/fb# article: http://ogp.me/ns/article#">
-<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
-<!--[if IE]><meta http-equiv='X-UA-Compatible' content='IE=edge,chrome=1'><![endif]-->
-<meta name="viewport" content="width=device-width,minimum-scale=1,initial-scale=1">
-<title>Giá vàng SJC hôm nay - Vàng Bạc Đá Quý Sài Gòn - Web giá</title>
-<meta name="description" content="Giá vàng SJC mới nhất hôm nay. Gia vang SJC, Giaá vàng SJC 1 lượng, vàng nhẫn SJC 9999, vàng 5 phân, 1 chỉ, 2 chỉ, 5 chỉ, vàng nữ trang 9999, vàng nữ trang 75, nữ trang 58.3, nữ trang 41.7. Giá vàng SJC tại Tp Hồ Chí Minh (Sài gòn), Hà Nội (HN), Đà Nẵng, Nha Trang, Cà Mau, Buôn Ma Thuột, Bình Phước, Huế, Biên Hòa, SJC Miền Tây, Quãng Ngãi, Đ
-
-=== coingecko
-URL https://api.coingecko.com/api/v3/simple/price?ids=bitcoin,ethereum&vs_currencies=vnd,usd
-status=200 time=0.251676s size=84
-content-type: application/json; charset=utf-8
-access-control-allow-origin: *
-cache-control: max-age=30, public, must-revalidate, s-maxage=60
-{"bitcoin":{"vnd":1612122579,"usd":62591},"ethereum":{"vnd":45422973,"usd":1763.55}}
-
-=== binance
-URL https://api.binance.com/api/v3/ticker/price?symbol=BTCUSDT
-status=451 time=0.147795s size=224
-content-type: application/json
-{
-  "code": 0,
-  "msg": "Service unavailable from a restricted location according to 'b. Eligibility' in https://www.binance.com/en/terms. Please contact customer service if you believe you received this message in error."
-}
-
-=== binance_vision
-URL https://data-api.binance.vision/api/v3/ticker/price?symbol=BTCUSDT
-status=200 time=0.591123s size=45
-content-type: application/json;charset=UTF-8
-cache-control: no-cache, no-store, must-revalidate
-access-control-allow-origin: *
-{"symbol":"BTCUSDT","price":"62397.88000000"}
-
-=== fmarket_filter
-URL https://api.fmarket.vn/res/products/filter
-status=200 time=1.213268s size=13151
-content-type: application/json;charset=UTF-8
-access-control-allow-origin: https://anthonyhoangbang.github.io
-cache-control: no-cache, no-store, max-age=0, must-revalidate
-{"status":200,"code":200,"time":1795107857044,"message":"Thành công","target":null,"data":{"page":1,"pageSize":3,"total":73,"rows":[{"id":13,"name":"QUỸ ĐẦU TƯ TRÁI PHIẾU BẢO VIỆT ","shortName":"BVBF","code":"BVBF","subCode":null,"tradeCode":"BVBFN001","sipCode":"BVBFS002","price":10000.000000,"nav":23980.000000,"lastYearNav":21773.000000,"buyMin":null,"buyMax":null,"buyMinValue":null,"buyMaxValue":null,"buyAmountMultiple":null,"sellMin":5,"sellMinValue":null,"transferSellMin":null,"isOnlySellMinNotSellAll":false,"holdingMin":0,"instock":null,"holdingVolume":394122.880000,"issueVolume":null,"issueValue":null,"firstIssueAt":1463677200000,"approveAt":1596772727489,"endIssueAt":2540739600000,"maturityAt":null,"website":"https://baovietfund.com.vn/san-pham/BVBF","websiteURL":"https://baovietfund.com.vn/san-pham/BVBF","customField":"","customValue":"","expectedReturn":0.000000,
-
-=== vcb_fx
-URL https://portal.vietcombank.com.vn/Usercontrols/TVPortal.TyGia/pXML.aspx
-status=200 time=0.601815s size=2565
-content-type: text/xml; charset=utf-8
-access-control-allow-origin: https://vcbdigibank.vietcombank.com.vn
-cache-control: public, max-age=437
-<!--For reference only. Only one request every 5 minutes!-->
-<ExrateList>
-  <DateTime>11/19/2026 11:56:33 PM</DateTime>
-  <Exrate CurrencyCode="AUD" CurrencyName="AUSTRALIAN DOLLAR   " Buy="16,793.14" Transfer="16,962.77" Sell="17,506.58" />
-  <Exrate CurrencyCode="CAD" CurrencyName="CANADIAN DOLLAR     " Buy="17,508.20" Transfer="17,685.05" Sell="18,252.01" />
-  <Exrate CurrencyCode="CHF" CurrencyName="SWISS FRANC         " Buy="29,752.53" Transfer="30,053.06" Sell="31,016.52" />
-  <Exrate CurrencyCode="CNY" CurrencyName="YUAN RENMINBI       " Buy="3,764.98" Transfer="3,803.01" Sell="3,924.93" />
-  <Exrate CurrencyCode="DKK" CurrencyName="DANISH KRONE        " Buy="-" Transfer="3,708.47" Sell="3,850.39" />
-  <Exrate CurrencyCode="EUR" CurrencyName="EURO                " Buy="27,511.85" Transfer="27,789.75" Sell="28,963.23" />
-  <Exrate CurrencyCode="GBP" CurrencyName="POUND STE
-
-=== er_api
-URL https://open.er-api.com/v6/latest/USD
-status=200 time=0.386658s size=2975
-content-type: application/json
-access-control-allow-origin: *
-cache-control: public, max-age=3600
-{"result":"success","provider":"https://www.exchangerate-api.com","documentation":"https://www.exchangerate-api.com/docs/free","terms_of_use":"https://www.exchangerate-api.com/terms","time_last_update_unix":1795046551,"time_last_update_utc":"Thu, 19 Nov 2026 00:02:31 +0000","time_next_update_unix":1795134461,"time_next_update_utc":"Fri, 20 Nov 2026 00:27:41 +0000","time_eol_unix":0,"base_code":"USD","rates":{"USD":1,"AED":3.6725,"AFN":65.846057,"ALL":82.185726,"AMD":360.483211,"ANG":1.79,"AOA":929.808545,"ARS":1558.2427,"AUD":1.488406,"AWG":1.79,"AZN":1.699248,"BAM":1.782241,"BBD":2,"BDT":124.568422,"BGN":1.782241,"BHD":0.376,"BIF":3004.331531,"BMD":1,"BND":1.289379,"BOB":11.696505,"BRL":5.809843,"BSD":1,"BTN":93.519263,"BWP":14.310289,"BYN":2.999442,"BZD":2,"CAD":1.43216,"CDF":2311.79122,"CHF":0.843046,"CLF":0.025134,"CLP":993.467816,"CNH":6.668017,"CNY":6.680778,"COP":3308.13231,"CRC":
+=== vndi_company (no origin)
+URL https://api-finfo.vndirect.com.vn/v4/company_profiles?q=code:SHS&size=1
+status=200 size=1627
+{"data":[{"code":"SHS","floor":"HNX","logo":"https://www.vndirect.com.vn/vndirect-resource/nextcom/attachment/LOGO/SHS.jpg","vnName":"Chứng khoán SG HN","enName":"Saigon - Hanoi Securities JSC","foundDate":"2007-11-15","taxCode":"0102524651","registrationCode":"0102524651","vnAddress":"Số 43 Phố Lý Thường Kiệt, Cửa Nam, Hà Nội, VIỆT NAM","enAddress":"Ha Noi, VIETNAM","phone":"+84 (24) 38181888","fax":"+84 (24) 38181688","website":"https://www.shs.com.vn","email":"contact@shs.com.vn","employees":392.0,"branches":2.0,"vnSummary":"Công ty Cổ phần Chứng khoán Sài Gòn - Hà Nội (SHS) được thành lập vào năm 2007. Công ty được cấp phép hoạt động tất cả các nghiệp vụ đối với một công ty chứng khoán trên Thị trường chứng khoán Việt Nam. Các lĩnh vực hoạt động chính của Công ty bao gồm: Môi giới chứng khoán; Đầu tư; Tư vấn Đầu tư; Tư vấn Tài chính Doanh nghiệp và bảo lãnh phát hành, lưu ký Chứng khoán. Năm 2025, Doanh thu nghiệp vụ môi giới chứng khoán có giá trị bằng 360,43 tỷ đồng, tăng 51.46% so với cùng kỳ. Nợ vay ký quỹ/Vốn chủ sở hữu ở mức 70.03%, tăng 33.65%. Lợi nhuận trước thuế có giá trị bằng 1.649,37 tỷ đồng, tăng 33.09%. Tỷ lệ sinh lời trên vốn chủ sở hữu (ROE) ở mức 11.28%, tăng 1.82%. SHS được niêm yết trên Sở Giao dịch Chứng khoán 
 
