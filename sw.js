@@ -1,6 +1,6 @@
 // Talenta: cho phép mở app khi mất mạng. Luôn thử lấy bản mới trên mạng trước, mất mạng thì dùng bản đã cất.
-const CACHE = 'talenta-v6';
-const CORE = ['./', 'index.html', 'data/market.js', 'logo.svg', 'manifest.webmanifest', 'icons/icon-192.png', 'icons/icon-512.png', 'sync.js'];
+const CACHE = 'talenta-v7';
+const CORE = ['./', 'index.html', 'data/market.js', 'data/universe.js', 'data/events.js', 'data/other.js', 'logo.svg', 'manifest.webmanifest', 'icons/icon-192.png', 'icons/icon-512.png', 'sync.js'];
 self.addEventListener('install', e => { e.waitUntil(caches.open(CACHE).then(c => c.addAll(CORE)).then(() => self.skipWaiting())); });
 self.addEventListener('activate', e => { e.waitUntil(caches.keys().then(ks => Promise.all(ks.filter(k => k !== CACHE).map(k => caches.delete(k)))).then(() => self.clients.claim())); });
 self.addEventListener('fetch', e => {

@@ -759,10 +759,41 @@ function ensureState(){ S.settings={...DEF_SETTINGS, ...(S.settings||{})}; S.set
   FEE=+S.settings.fee; TAX=+S.settings.sellTax; DIVTAX=+S.settings.divTax; }
 const ACCTS=['SSI','VNDIRECT'];
 const KINDS=['Vàng','Tiết kiệm','Quỹ mở','Crypto','Khác'];
+
+/* ---- Giá tự động cho vàng (PNJ), chứng chỉ quỹ (NAV Fmarket), crypto (CoinGecko): lấy từ data/other.js, rồi làm mới trực tiếp khi mạng cho phép ---- */
+const OTHER=window.TALENTA_OTHER||{gold:[],funds:[],crypto:[]};
+const QUOTE={at:(OTHER.updated||'').slice(0,10)||TODAY, gold:{}, fund:{}, crypto:{}, live:{}};
+OTHER.gold.forEach(([c,n,b,se])=>QUOTE.gold[c]={name:n,p:b,sell:se,date:QUOTE.at});
+OTHER.funds.forEach(([c,n,nav,d,t])=>QUOTE.fund[c]={name:n,p:nav,date:d||QUOTE.at,type:t});
+OTHER.crypto.forEach(([id,sym,n,p])=>QUOTE.crypto[id]={name:n,sym,p,date:QUOTE.at});
+const SRC_KIND={'Vàng':'gold','Quỹ mở':'fund','Crypto':'crypto'}, SRC_NAME={gold:'giá mua vào PNJ',fund:'NAV Fmarket',crypto:'CoinGecko'};
+// Giá vàng niêm yết theo chỉ; đổi theo đơn vị bạn ghi.
+const goldMul=u=>{ u=fold(String(u||'chỉ')).toLowerCase(); return /luong|cay/.test(u)?10:/gram|^g$|gam/.test(u)?1/3.75:/kg/.test(u)?1000/3.75:1; };
+function srcQuote(a){ if(!a.src) return null; const q=(QUOTE[a.src.t]||{})[a.src.code]; return q&&q.p>0?q:null; }
+function srcValue(a){ const q=srcQuote(a); if(!q||!(a.qty>0)) return null; return {value:Math.round(a.qty*q.p*(a.src.t==='gold'?goldMul(a.unit):1)), date:q.date, live:!!QUOTE.live[a.src.t]}; }
+async function refreshQuotes(){
+  const used=t=>(S.assets||[]).filter(a=>a.src&&a.src.t===t), tm=ms=>{ const c=new AbortController(); setTimeout(()=>c.abort(),ms); return c.signal; }, iso=vnNow().iso; let ch=false;
+  if(used('gold').length) try{ const d=await (await fetch('https://edge-api.pnj.io/ecom-frontend/v1/get-gold-price?zone=00',{signal:tm(8000)})).json();
+    (d.data||[]).forEach(x=>{ if(+x.giamua>0) QUOTE.gold[x.masp]={name:x.tensp,p:Math.round(+x.giamua*1000),sell:Math.round(+x.giaban*1000),date:iso}; }); QUOTE.live.gold=true; ch=true; }catch(_){}
+  const cs=used('crypto').map(a=>a.src.code); if(cs.length) try{ const d=await (await fetch('https://api.coingecko.com/api/v3/simple/price?vs_currencies=vnd&ids='+[...new Set(cs)].join(','),{signal:tm(8000)})).json();
+    for(const id in d) if(d[id].vnd>0){ QUOTE.crypto[id]={...(QUOTE.crypto[id]||{name:id}),p:Math.round(d[id].vnd),date:iso}; } QUOTE.live.crypto=true; ch=true; }catch(_){}
+  if(used('fund').length) try{ const r=await fetch('https://api.fmarket.vn/res/products/filter',{method:'POST',headers:{'content-type':'application/json'},signal:tm(10000),body:JSON.stringify({types:['NEW_FUND','TRADING_FUND'],issuerIds:[],sortOrder:'DESC',sortField:'navTo6Months',page:1,pageSize:200,isIpo:false,fundAssetTypes:[],bondRemainPeriods:[],searchField:'',isBuyByReward:false,thirdAppIds:[]})});
+    const d=await r.json(); ((d.data&&d.data.rows)||[]).forEach(x=>{ const c=x.code||x.shortName; if(+x.nav>0) QUOTE.fund[c]={...(QUOTE.fund[c]||{}),name:String(x.name||'').trim(),p:Math.round(+x.nav),date:(x.productNavChange&&x.productNavChange.updateAt)?new Date(x.productNavChange.updateAt+7*3600e3).toISOString().slice(0,10):iso}; }); QUOTE.live.fund=true; ch=true; }catch(_){}
+  if(snapAuto()||ch){ const ae=document.activeElement; if(!dlg.open&&!(ae&&/^(INPUT|SELECT|TEXTAREA)$/.test(ae.tagName))){ const y=scrollY; route(); scrollTo(0,y); } } }
+// Lưu giá trị mỗi ngày một lần vào lịch sử của tài sản, để biểu đồ tổng tài sản có đủ điểm.
+function snapAuto(){ let ch=false; (S.assets||[]).forEach(a=>{ const v=srcValue(a); if(!v) return; a.vals=a.vals||[];
+  const last=[...a.vals].sort((x,y)=>x.date.localeCompare(y.date)).pop();
+  if(!last||last.date<v.date){ a.vals.push({date:v.date,value:v.value,auto:true}); ch=true; } else if(last.date===v.date&&last.value!==v.value&&last.auto){ last.value=v.value; ch=true; } });
+  if(ch) save(); return ch; }
+function srcOptions(kind,cur){ const t=SRC_KIND[kind]; if(!t) return '';
+  const list=Object.entries(QUOTE[t]).map(([c,q])=>[c,q]);
+  if(t==='fund') list.sort((a,b)=>a[0].localeCompare(b[0])); 
+  return `<option value="">Tự nhập giá trị</option>`+list.map(([c,q])=>`<option value="${esc(c)}" ${cur===c?'selected':''}>${esc(t==='crypto'?q.sym+' · '+q.name:t==='fund'?c+' · '+q.name.replace(/^QUỸ ĐẦU TƯ /i,''):q.name)} · ${N(q.p)} đ${t==='gold'?'/chỉ':''}</option>`).join(''); }
 function otherAssets(){ return (S.assets||[]).map(a=>{ let value, vdate;
   if(a.kind==='Tiết kiệm' && a.rate){ const d=Math.max(0,days(a.date,TODAY)); value=a.cost*(1+a.rate/100*d/365); vdate=TODAY; }
-  else { const v=[...(a.vals||[])].sort((x,y)=>x.date.localeCompare(y.date)).pop(); value=v?v.value:a.cost; vdate=v?v.date:a.date; }
-  return {...a, value, vdate, pnl:value-a.cost, pnlPct:a.cost?value/a.cost-1:0}; }); }
+  else { const sv=srcValue(a), v=[...(a.vals||[])].sort((x,y)=>x.date.localeCompare(y.date)).pop();
+    if(sv&&(!v||v.date<=sv.date)){ value=sv.value; vdate=sv.date; } else { value=v?v.value:a.cost; vdate=v?v.date:a.date; } }
+  return {...a, value, vdate, auto:!!srcQuote(a), pnl:value-a.cost, pnlPct:a.cost?value/a.cost-1:0}; }); }
 let S;
 function load(){ try{ const raw=localStorage.getItem(KEY); if(raw){ S=JSON.parse(raw); ensureState(); return; } }catch(e){} S=seed(); ensureState(); save(); }
 function save(){ S.updatedAt=Date.now(); try{ localStorage.setItem(KEY, JSON.stringify(S)); }catch(e){} if(typeof TalentaSync!=='undefined') TalentaSync.changed(); }
@@ -838,10 +869,10 @@ function seed(){
     {ticker:'DGC', buyBelow:snap(px('DGC')*.92), note:'Xem lại sau báo cáo quý 4.'}
   ];
   const assets=[
-    {id:'a1',kind:'Vàng',name:'Vàng nhẫn 9999, 5 chỉ',date:'2025-03-10',cost:45e6,vals:[{date:'2025-03-10',value:45e6},{date:'2025-10-15',value:68e6},{date:'2026-11-10',value:78e6}],note:'Giữ dài hạn, không bán theo giá.'},
+    {id:'a1',kind:'Vàng',name:'Nhẫn trơn PNJ 999.9',qty:6,unit:'chỉ',src:{t:'gold',code:'N24K'},date:'2025-03-10',cost:54e6,vals:[{date:'2025-03-10',value:54e6},{date:'2025-10-15',value:72e6},{date:'2026-11-10',value:78e6}],note:'Giữ dài hạn, không bán theo giá.'},
     {id:'a2',kind:'Tiết kiệm',name:'Sổ tiết kiệm 12 tháng',date:'2026-02-15',cost:200e6,rate:4.6,note:'Quỹ dự phòng 6 tháng chi tiêu. Đáo hạn 15/02/2027.'},
-    {id:'a3',kind:'Quỹ mở',name:'Chứng chỉ quỹ cổ phiếu',date:'2025-09-01',cost:30e6,vals:[{date:'2025-09-01',value:30e6},{date:'2026-11-07',value:33.6e6}],note:'Góp đều 2,5 triệu mỗi tháng.'},
-    {id:'a4',kind:'Crypto',name:'Bitcoin',date:'2025-05-01',cost:20e6,vals:[{date:'2025-05-01',value:20e6},{date:'2026-11-11',value:17.5e6}],note:'Tối đa 5% tổng tài sản.'}
+    {id:'a3',kind:'Quỹ mở',name:'SSISCA · Lợi thế cạnh tranh bền vững SSI',qty:841,unit:'CCQ',src:{t:'fund',code:'SSISCA'},date:'2025-09-01',cost:30e6,vals:[{date:'2025-09-01',value:30e6},{date:'2026-11-07',value:33.6e6}],note:'Góp đều 2,5 triệu mỗi tháng.'},
+    {id:'a4',kind:'Crypto',name:'Bitcoin',qty:0.011,unit:'BTC',src:{t:'crypto',code:'bitcoin'},date:'2025-05-01',cost:20e6,vals:[{date:'2025-05-01',value:20e6},{date:'2026-11-11',value:17.5e6}],note:'Tối đa 5% tổng tài sản.'}
   ];
   return {v:3, demo:true, tx, theses, journal, watch, assets, plans:[], goal:{target:2e9,years:5,monthly:10e6}, settings:{...DEF_SETTINGS, target:{'Cổ phiếu':.45,'Tiền mặt':.05,'Vàng':.10,'Tiết kiệm':.30,'Quỹ mở':.07,'Crypto':.03}},
     priceAlerts:[{id:'pa1',ticker:'FPT',op:'above',price:snap(px('FPT')*1.08),note:'Chạm vùng cản, cân nhắc chốt một phần'},{id:'pa2',ticker:'VNM',op:'below',price:snap(px('VNM')*.95),note:'Vùng giá muốn mua'}]};
@@ -1698,7 +1729,7 @@ function pageTx(){
 function pageAssets(){
   const list=M.other;
   if(!list.length) return `<div class="page-head"><div><h1>Tài sản khác</h1><p>Vàng, tiết kiệm, quỹ mở, crypto: những gì không nằm trong tài khoản chứng khoán.</p></div></div><section class="card">${emptyCta('coin','Chưa có tài sản nào ngoài chứng khoán','Thêm vàng, sổ tiết kiệm, chứng chỉ quỹ hay crypto để Tổng quan cho thấy toàn bộ tài sản và phân bổ của bạn. Sổ tiết kiệm tự tính lãi mỗi ngày.','<button class="btn primary" data-act="new-asset">+ Thêm tài sản</button>')}</section>`;
-  return `<div class="page-head"><div><h1>Tài sản khác</h1><p>Vàng, tiết kiệm, quỹ mở, crypto. Sổ tiết kiệm tự tính lãi theo lãi suất. Các tài sản khác bạn cập nhật giá trị khi muốn, ví dụ mỗi tháng một lần.</p></div><button class="btn primary" data-act="new-asset">+ Thêm tài sản</button></div>
+  return `<div class="page-head"><div><h1>Tài sản khác</h1><p>Vàng, tiết kiệm, quỹ mở, crypto. Sổ tiết kiệm tự tính lãi theo lãi suất. Vàng, quỹ mở và crypto có thể lấy giá tự động mỗi ngày (vàng theo giá mua vào của PNJ, quỹ theo NAV trên Fmarket, crypto theo CoinGecko). Tài sản khác bạn tự cập nhật giá trị.</p></div><button class="btn primary" data-act="new-asset">+ Thêm tài sản</button></div>
   <div class="stats">
     ${stat('Tổng tài sản khác', C(M.otherVal), PCT(M.otherVal/M.total,false)+' tổng tài sản')}
     ${stat('Vốn đã bỏ vào', C(M.otherCost), '')}
@@ -1709,8 +1740,8 @@ function pageAssets(){
   <section class="card"><div class="tbl"><table><thead><tr><th>Loại</th><th>Tài sản</th><th>Từ ngày</th><th class="r">Vốn</th><th class="r">Giá trị</th><th class="r">Lãi/lỗ</th><th>Cập nhật</th><th></th></tr></thead><tbody>
   ${list.map(a=>`<tr><td><span class="chip" style="background:color-mix(in srgb,${ASSET_COLOR[a.kind]} 16%,var(--surface));border-color:transparent;color:var(--ink)"><i style="display:inline-block;width:8px;height:8px;border-radius:50%;background:${ASSET_COLOR[a.kind]};margin-right:5px"></i>${esc(a.kind)}</span></td><td><b>${esc(a.name)}</b>${a.qty?` <span class="small muted">· ${a.qty.toLocaleString('vi-VN')} ${esc(a.unit||'')}</span>`:''}${a.rate?`<div class="small muted">Lãi suất ${a.rate.toLocaleString('vi-VN')}%/năm${a.term?` · kỳ hạn ${a.term} tháng · đáo hạn ${D(addMonths(a.date,a.term))}`:''}</div>`:''}<div class="small muted">${esc(a.note||'')}</div></td>
     <td class="nowrap">${D(a.date)}</td><td class="r">${C(a.cost)}</td><td class="r">${C(a.value)}</td><td class="r ${cls(a.pnl)}">${a.pnl>=0?'+':''}${C(a.pnl)}<div class="small">${PCT(a.pnlPct)}</div></td>
-    <td class="small muted nowrap">${a.rate?'Tự tính':D(a.vdate)}</td>
-    <td class="nowrap"><div class="row-acts" style="opacity:1">${a.rate?'':`<button class="btn sm" data-act="asset-val" data-id="${a.id}">Cập nhật giá trị</button>`}${rowBtn('edit-asset',a.id,'Sửa')}${rowBtn('del-asset',a.id,'Xóa')}</div></td></tr>`).join('')}
+    <td class="small muted nowrap">${a.rate?'Tự tính':a.auto?`<span class="chip up" title="Giá trị tính theo ${SRC_NAME[a.src.t]}">Tự động</span><div>${D(a.vdate)}</div>`:D(a.vdate)}</td>
+    <td class="nowrap"><div class="row-acts" style="opacity:1">${a.rate||a.auto?'':`<button class="btn sm" data-act="asset-val" data-id="${a.id}">Cập nhật giá trị</button>`}${rowBtn('edit-asset',a.id,'Sửa')}${rowBtn('del-asset',a.id,'Xóa')}</div></td></tr>`).join('')}
   </tbody></table></div></section>`;
 }
 const ASSET_KIND={
@@ -1724,11 +1755,12 @@ function openAsset(id){
   const NR='Vàng,Quỹ mở,Crypto,Khác', hid=ks=>ks.split(',').includes(k)?'':'hidden';
   const pick=`<div class="field full"><label id="akind_l">Loại tài sản</label><div class="kind-pick" role="radiogroup" aria-labelledby="akind_l">${KINDS.map(x=>`<label><input type="radio" name="akind" value="${x}" ${x===k?'checked':''}><i style="background:${ASSET_COLOR[x]}"></i>${x}</label>`).join('')}</div><input type="hidden" id="f_kind" value="${k}"></div>`;
   open('asset', `<div class="fields">${pick}
+    <div class="field full" data-kinds="Vàng,Quỹ mở,Crypto" ${hid('Vàng,Quỹ mở,Crypto')}><label for="f_src">Lấy giá tự động</label><select id="f_src">${srcOptions(k,a&&a.src?a.src.code:'')}</select><div class="hint" id="f_src_h">Chọn loại vàng, mã quỹ hoặc đồng crypto, rồi nhập số lượng. Talenta tự tính giá trị theo giá mới nhất mỗi ngày.</div></div>
     ${fld('f_name','Tên',`<input id="f_name" placeholder="${ASSET_KIND[k].name}" value="${esc(a?a.name:'')}">`,'full')}
     <div class="field" data-kinds="${NR}" ${hid(NR)}><label for="f_aqty">Số lượng <span style="font-weight:400">(không bắt buộc)</span></label><div style="display:flex;gap:6px">${numIn('f_aqty',a&&a.qty,'qty').replace('class="numfmt qty"','class="numfmt qty" style="flex:1;min-width:0"')}<input id="f_unit" style="width:90px" placeholder="${ASSET_KIND[k].unit||'đơn vị'}" value="${esc(a?(a.unit||''):ASSET_KIND[k].unit)}" aria-label="Đơn vị"></div></div>
     ${fld('f_date','Ngày mua hoặc gửi',`<input type="date" id="f_date" value="${a?a.date:TODAY}">`)}
     ${fld('f_cost','Số tiền đã bỏ vào (đồng)',numIn('f_cost',a&&a.cost,'money','Ví dụ: 50tr hoặc 50.000.000'))}
-    <div class="field" data-kinds="${NR}" ${hid(NR)}><label for="f_value">Giá trị hiện tại (đồng)</label>${numIn('f_value',a&&!a.rate?a.value:null,'money','Bỏ trống nếu bằng số vốn')}</div>
+    <div class="field" data-kinds="${NR}" ${hid(NR)} id="f_value_w"><label for="f_value">Giá trị hiện tại (đồng)</label>${numIn('f_value',a&&!a.rate?a.value:null,'money','Bỏ trống nếu bằng số vốn')}</div>
     <div class="field" data-kinds="Tiết kiệm" ${hid('Tiết kiệm')}><label for="f_rate">Lãi suất (%/năm)</label><input type="text" inputmode="decimal" id="f_rate" placeholder="Ví dụ: 4,6" value="${a&&a.rate?String(a.rate).replace('.',','):''}"></div>
     <div class="field" data-kinds="Tiết kiệm" ${hid('Tiết kiệm')}><label for="f_term">Kỳ hạn</label><select id="f_term">${[['','Không kỳ hạn'],[1,'1 tháng'],[3,'3 tháng'],[6,'6 tháng'],[9,'9 tháng'],[12,'12 tháng'],[18,'18 tháng'],[24,'24 tháng'],[36,'36 tháng']].map(([v,l])=>`<option value="${v}" ${a&&String(a.term||'')===String(v)?'selected':(!a&&v===12?'selected':'')}>${l}</option>`).join('')}</select></div>
     ${fld('f_note','Ghi chú',`<input id="f_note" value="${esc(a?(a.note||''):'')}" placeholder="Ví dụ: quỹ dự phòng, không bán theo giá">`,'full')}</div>`, a?'Sửa tài sản':'Thêm tài sản', a?'Lưu thay đổi':'Thêm tài sản');
@@ -2102,7 +2134,8 @@ form.addEventListener('input', e=>{ if(e.target.id==='f_tk' && e.target.tagName=
   if(e.target.classList&&e.target.classList.contains('numfmt')) fmtLive(e.target); updatePreview(); });
 form.addEventListener('focusout', e=>{ const el=e.target; if(el.classList&&el.classList.contains('numfmt')&&/[a-zà-ỹ]/i.test(el.value)){ const v=parseMoney(el.value); if(isFinite(v)){ el.value=fmtNum(v); moneyHint(el); updatePreview(); } } });
 form.addEventListener('change', e=>{ if(e.target.name==='ttype'){ const ac=val('f_acct')||undefined, tk=val('f_tk')||(curPos()&&curPos().ticker)||undefined; ctx={acct:ac}; openTx(e.target.value, tk); const r=form.querySelector('input[name=ttype]:checked'); if(r) r.focus(); }
-  if(e.target.name==='akind'){ const k=e.target.value, old=val('f_kind'); $('#f_kind').value=k; form.querySelectorAll('[data-kinds]').forEach(el=>el.hidden=!el.dataset.kinds.split(',').includes(k)); const ph=ASSET_KIND[k]; $('#f_name').placeholder=ph.name; const u=$('#f_unit'); if(u){ u.placeholder=ph.unit||'đơn vị'; if(!u.value||u.value===ASSET_KIND[old].unit) u.value=ph.unit; } }
+  if(e.target.name==='akind'){ const k=e.target.value, old=val('f_kind'); $('#f_kind').value=k; form.querySelectorAll('[data-kinds]').forEach(el=>el.hidden=!el.dataset.kinds.split(',').includes(k)); const ph=ASSET_KIND[k]; $('#f_name').placeholder=ph.name; const u=$('#f_unit'); if(u){ u.placeholder=ph.unit||'đơn vị'; if(!u.value||u.value===ASSET_KIND[old].unit) u.value=ph.unit; } const sr=$('#f_src'); if(sr) sr.innerHTML=srcOptions(k,''); }
+  if(e.target.id==='f_src'){ const k=val('f_kind'), t=SRC_KIND[k], q=t&&QUOTE[t][e.target.value]; if(q){ const nm=$('#f_name'); if(!nm.value) nm.value=t==='crypto'?q.name:t==='fund'?e.target.value+' · '+q.name.replace(/^QUỸ ĐẦU TƯ /i,''):q.name; const u=$('#f_unit'); if(u&&t==='crypto') u.value=q.sym; if(u&&t==='fund') u.value='CCQ'; if(u&&t==='gold'&&!u.value) u.value='chỉ'; } }
   if(e.target.id==='f_file'){ const f=e.target.files[0]; if(!f) return; const r=new FileReader(); r.onload=()=>{ $('#f_json').value=r.result; toast('Đã đọc file. Bấm Khôi phục để dùng.'); }; r.readAsText(f); } });
 
 function readBuy(){
@@ -2163,7 +2196,9 @@ form.addEventListener('submit', e=>{
     if(kind==='Tiết kiệm'&&!(rate>0)) return err('Nhập lãi suất của sổ tiết kiệm, ví dụ 4,6.');
     const old=ctx.editId?S.assets.find(x=>x.id===ctx.editId):null;
     const a=old||{id:uid('a')}; Object.assign(a,{kind,name:val('f_name'),date,cost,note:val('f_note')});
-    delete a.qty; delete a.unit; delete a.term;
+    delete a.qty; delete a.unit; delete a.term; delete a.src;
+    const sc=SRC_KIND[kind]&&val('f_src'); if(sc&&!(q>0)) return err('Nhập số lượng để Talenta tự tính giá trị theo giá '+SRC_NAME[SRC_KIND[kind]]+'.');
+    if(sc) a.src={t:SRC_KIND[kind],code:sc};
     if(kind!=='Tiết kiệm' && q>0){ a.qty=q; a.unit=val('f_unit'); }
     if(kind==='Tiết kiệm'){ a.rate=rate; const tm=+val('f_term'); if(tm>0) a.term=tm; }
     else { delete a.rate; a.vals=(a.vals&&a.vals.length)?a.vals:[{date,value:cost}];
@@ -2304,7 +2339,7 @@ document.body.insertAdjacentHTML('beforeend','<datalist id="tkAll">'+ALL.map(t=>
 $('#searchForm').addEventListener('submit', e=>{ e.preventDefault(); const v=$('#searchInput').value.trim().toUpperCase(); if(MKT[v]&&v!=='VNINDEX'){ location.hash='ma-'+v; $('#searchInput').value=''; } else toast('Hiện có '+TICKERS.length+' mã: '+TICKERS.join(', ')); });
 $('#searchInput').addEventListener('change', e=>{ const v=e.target.value.trim().toUpperCase(); if(MKT[v]&&v!=='VNINDEX'){ location.hash='ma-'+v; e.target.value=''; } });
 
-if(DATA){ load(); route(); pollLive(); myTickers().filter(t=>!MKT[t].hist).slice(0,25).forEach(t=>loadHist(t)); }
+if(DATA){ load(); snapAuto(); route(); pollLive(); refreshQuotes(); setInterval(refreshQuotes, 15*60e3); myTickers().filter(t=>!MKT[t].hist).slice(0,25).forEach(t=>loadHist(t)); }
 else { view.innerHTML=`<section class="card"><div class="card-head"><h2>Chưa có dữ liệu giá</h2></div><p style="max-width:70ch">Talenta không tìm thấy file giá <b>data/market.js</b>. App sẽ không tự bịa ra số liệu thay thế. File này được tạo tự động mỗi ngày trên GitHub; hãy mở lại trang sau khi lần lấy giá đầu tiên chạy xong.</p></section>`; paintLive(); }
 if('serviceWorker' in navigator && location.protocol==='https:') navigator.serviceWorker.register('sw.js').catch(()=>{});
 </script>
