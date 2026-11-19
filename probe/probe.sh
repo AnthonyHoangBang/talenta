@@ -8,28 +8,24 @@ probe(){ name=$1; url=$2; shift 2
   grep -iE "^(access-control-allow-origin|content-type|cache-control|age):" /tmp/h.txt >> $OUT 2>/dev/null
   head -c 900 /tmp/b.txt >> $OUT 2>/dev/null; echo >> $OUT; echo >> $OUT; rm -f /tmp/h.txt /tmp/b.txt; }
 date -u >> $OUT
-T=$(date -u +%F); Y=$(date -u -d '-7 day' +%F)
-probe vnd_stocks "https://api-finfo.vndirect.com.vn/v4/stocks?q=type:STOCK~status:LISTED&fields=code,companyName,companyNameEng,shortName,floor,industryName,listedDate&size=3"
-probe vnd_stocks_count "https://api-finfo.vndirect.com.vn/v4/stocks?q=type:STOCK~status:LISTED~floor:HOSE,HNX,UPCOM&size=1"
-probe vnd_prices_bulk_day "https://api-finfo.vndirect.com.vn/v4/stock_prices?sort=date:desc&q=date:gte:$Y&size=3"
-probe vnd_prices_floor "https://api-finfo.vndirect.com.vn/v4/stock_prices?sort=date:desc&q=floor:UPCOM~date:gte:$Y&size=2"
-probe vnd_events_div "https://api-finfo.vndirect.com.vn/v4/events?q=code:FPT~type:DIVIDEND,STOCKDIV&sort=effectiveDate:desc&size=4"
-probe vnd_events_any "https://api-finfo.vndirect.com.vn/v4/events?q=code:REE&sort=effectiveDate:desc&size=4"
-probe vnd_rights "https://api-finfo.vndirect.com.vn/v4/rights?q=code:FPT&size=3"
-probe vnd_industry "https://api-finfo.vndirect.com.vn/v4/industry_classification?q=industryLevel:1&size=3"
-probe vps_all_hose "https://bgapidatafeed.vps.com.vn/getlistckindex/hose"
-probe vps_all_hnx "https://bgapidatafeed.vps.com.vn/getlistckindex/hnx"
-probe vps_index_hnx "https://bgapidatafeed.vps.com.vn/getlistindexdetail/02,03,10,11"
-probe sjc "https://sjc.com.vn/GoldPrice/Services/PriceService.ashx" -X POST
-probe btmc "http://api.btmc.vn/api/BTMCAPI/getpricebtmc?key=3kd8ub1llcg9t45hnoh8hmn7t5kc2v"
-probe pnj "https://edge-api.pnj.io/ecom-frontend/v1/get-gold-price?zone=00"
-probe doji "http://giavang.doji.vn/api/giavang/?api_key=258fbd2a72ce8481089d88c678e9fe4f"
-probe mihong "https://www.mihong.vn/api/v1/gold/prices/current"
-probe giavang_org "https://giavang.org/"
-probe webgia "https://webgia.com/gia-vang/sjc/"
-probe coingecko "https://api.coingecko.com/api/v3/simple/price?ids=bitcoin,ethereum&vs_currencies=vnd,usd"
-probe binance "https://api.binance.com/api/v3/ticker/price?symbol=BTCUSDT"
-probe binance_vision "https://data-api.binance.vision/api/v3/ticker/price?symbol=BTCUSDT"
-probe fmarket_filter "https://api.fmarket.vn/res/products/filter" -X POST -H "Content-Type: application/json" --data '{"types":["NEW_FUND","TRADING_FUND"],"issuerIds":[],"sortOrder":"DESC","sortField":"navTo6Months","page":1,"pageSize":3,"isIpo":false,"fundAssetTypes":[],"bondRemainPeriods":[],"searchField":"","isBuyByReward":false,"thirdAppIds":[]}'
-probe vcb_fx "https://portal.vietcombank.com.vn/Usercontrols/TVPortal.TyGia/pXML.aspx"
-probe er_api "https://open.er-api.com/v6/latest/USD"
+probe2(){ name=$1; url=$2; shift 2
+  echo "=== $name (no origin)" >> $OUT; echo "URL $url" >> $OUT
+  curl -sS -m 25 -A "Mozilla/5.0" -H "Accept: application/json" "$@" -o /tmp/b.txt -w "status=%{http_code} size=%{size_download}\n" "$url" >> $OUT 2>&1
+  head -c 1500 /tmp/b.txt >> $OUT 2>/dev/null; echo >> $OUT; echo >> $OUT; rm -f /tmp/b.txt; }
+probe2 vnd_stocks "https://api-finfo.vndirect.com.vn/v4/stocks?q=type:STOCK~status:LISTED&size=2"
+probe2 vnd_stocks_cnt "https://api-finfo.vndirect.com.vn/v4/stocks?q=type:STOCK~status:LISTED~floor:HOSE,HNX,UPCOM&fields=code,companyName,shortName,floor&size=5"
+probe2 vnd_events "https://api-finfo.vndirect.com.vn/v4/events?q=code:FPT~type:DIVIDEND,STOCKDIV,KINDDIV&sort=effectiveDate:desc&size=5"
+probe2 vnd_events_all "https://api-finfo.vndirect.com.vn/v4/events?q=type:DIVIDEND~effectiveDate:gte:2026-10-01&sort=effectiveDate:desc&size=3"
+probe2 finfo_old_events "https://finfo-api.vndirect.com.vn/v4/events?q=code:FPT~type:DIVIDEND&size=3"
+probe2 vnd_prices_upcom "https://api-finfo.vndirect.com.vn/v4/stock_prices?sort=date:desc&q=code:BSR&size=2"
+probe vnd_events_origin "https://api-finfo.vndirect.com.vn/v4/events?q=code:REE&sort=effectiveDate:desc&size=3"
+probe2 vps_upcom "https://bgapidatafeed.vps.com.vn/getlistckindex/upcom"
+probe2 vps_quote "https://bgapidatafeed.vps.com.vn/getliststockdata/FPT,BSR,SHS"
+probe2 vps_hist "https://histdatafeed.vps.com.vn/tradingview/history?symbol=SHS&resolution=D&from=$(( $(date +%s)-86400*10 ))&to=$(date +%s)"
+probe2 dnse_ohlc "https://services.entrade.com.vn/chart-api/v2/ohlcs/stock?from=$(( $(date +%s)-86400*10 ))&to=$(date +%s)&symbol=SHS&resolution=1D"
+probe dnse_ohlc_origin "https://services.entrade.com.vn/chart-api/v2/ohlcs/stock?from=$(( $(date +%s)-86400*10 ))&to=$(date +%s)&symbol=SHS&resolution=1D"
+probe2 cafef_div "https://s.cafef.vn/Ajax/Events_RelatedNews_New.aspx?symbol=FPT&floorID=0&configID=6&PageIndex=1&PageSize=5&Type=2"
+probe2 vietstock_div "https://finance.vietstock.vn/data/eventstypedata?code=FPT&eventTypeID=1&page=1&pageSize=5"
+probe2 kbs_div "https://kbbuddywts.kbsec.com.vn/iis-server/investment/stock/FPT/events?l=1&p=1&s=5"
+probe2 ssi_fc "https://fc-data.ssi.com.vn/api/v2/Market/Securities?market=HOSE&pageIndex=1&pageSize=2"
+probe2 vndi_company "https://api-finfo.vndirect.com.vn/v4/company_profiles?q=code:SHS&size=1"
