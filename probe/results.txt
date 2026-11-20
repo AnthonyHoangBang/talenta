@@ -1,119 +1,68 @@
-Thu Nov 19 17:31:21 UTC 2026
-=== vnd_stocks (no origin)
-URL https://api-finfo.vndirect.com.vn/v4/stocks?q=type:STOCK~status:LISTED&size=2
+Fri Nov 20 02:39:44 UTC 2026
+=== vps_idx10
+URL https://bgapidatafeed.vps.com.vn/getlistindexdetail/10
+status=200 size=313
+access-control-allow-origin: *
+[{"id":1101,"boardId":"","marketId":"","sequence":3338,"channel":"","sourceMsgType":"M1","hashValue":"10","transId":"STO:M1:3338","tradingSession":"","mc":"10","vol":66174848,"value":1286783.998,"time":"09:39:40","status":"O","accVol":0,"ot":"13.41|0.79%|1286783.998|45|222|32","cIndex":1676.21,"oIndex":1689.62}]
+
+=== vps_idx_multi
+URL https://bgapidatafeed.vps.com.vn/getlistindexdetail/10,11,02,03
+status=200 size=1222
+access-control-allow-origin: *
+[{"id":1101,"boardId":"","marketId":"","sequence":3346,"channel":"","sourceMsgType":"M1","hashValue":"10","transId":"STO:M1:3346","tradingSession":"","mc":"10","vol":66313827,"value":1289619.378,"time":"09:39:45","status":"O","accVol":0,"ot":"13.45|0.80%|1289619.378|45|220|34","cIndex":1676.17,"oIndex":1689.62},{"id":1101,"boardId":"","marketId":"","sequence":3341,"channel":"","sourceMsgType":"M1","hashValue":"11","transId":"STO:M1:3341","tradingSession":"","mc":"11","vol":29121731,"value":753847.743,"time":"09:39:45","status":"O","accVol":0,"ot":"16.30|0.91%|753847.743|2|24|4","cIndex":1772.21,"oIndex":1788.51},{"id":1101,"boardId":"","marketId":"","sequence":239,"channel":"","sourceMsgType":"M1","hashValue":"02","transId":"STX:M1:239","tradingSession":"","mc":"02","vol":7250158,"value":92490.541,"time":"09:39:40","status":"O","accVol":0,"ot":"4.89|2.05%|92490.541|19|62|24","cIndex":234.05,"oIndex":238.94},{"id":1101,"boardId":"","marketId":"","sequence":239,"channel":"","sourceMsgType":"M1","hashValue":"03","transId":"UPX:M1:239","tradingSession":"","mc":"03","vol":5116053,"value":41518.543,"time":"09:39:40","status":"O","accVol":0,"ot":"0.67|0.56%|41518.543|54|66|62","cIndex":119.69,"oIndex":120.36}]
+
+=== vps_idx_02
+URL https://bgapidatafeed.vps.com.vn/getlistindexdetail/02
+status=200 size=302
+access-control-allow-origin: *
+[{"id":1101,"boardId":"","marketId":"","sequence":239,"channel":"","sourceMsgType":"M1","hashValue":"02","transId":"STX:M1:239","tradingSession":"","mc":"02","vol":7250158,"value":92490.541,"time":"09:39:40","status":"O","accVol":0,"ot":"4.89|2.05%|92490.541|19|62|24","cIndex":234.05,"oIndex":238.94}]
+
+=== dnse_VNINDEX
+URL https://services.entrade.com.vn/chart-api/v2/ohlcs/index?from=1794451184&to=1795142384&symbol=VNINDEX&resolution=1D
+status=200 size=313
+{"t":[1794535200,1794794400,1794880800,1794967200,1795053600],"o":[1727.31,1733.71,1733.58,1723.04,1700],"h":[1737.36,1753.01,1735.04,1723.04,1702.16],"l":[1724.03,1733.71,1717.16,1701.04,1683.43],"c":[1734.93,1736.89,1726.72,1703.01,1689.62],"v":[642645888,518846528,623864448,755203008,642165184],"nextTime":0}
+
+
+=== dnse_VN30
+URL https://services.entrade.com.vn/chart-api/v2/ohlcs/index?from=1794451184&to=1795142384&symbol=VN30&resolution=1D
+status=200 size=316
+{"t":[1794535200,1794794400,1794880800,1794967200,1795053600],"o":[1833.32,1844.25,1840.07,1833.27,1804.49],"h":[1847.54,1860.22,1843.75,1833.27,1808.95],"l":[1831.36,1844.25,1827.67,1803.09,1784.89],"c":[1844.91,1844.25,1837.13,1806.54,1788.51],"v":[268313344,214902912,257513136,308382464,304027840],"nextTime":0}
+
+
+=== dnse_HNXINDEX
+URL https://services.entrade.com.vn/chart-api/v2/ohlcs/index?from=1794451184&to=1795142384&symbol=HNXINDEX&resolution=1D
+status=400 size=63
+{"status":400,"code":"BAD_REQUEST","message":"invalid symbol"}
+
+
+=== dnse_HNX
+URL https://services.entrade.com.vn/chart-api/v2/ohlcs/index?from=1794451184&to=1795142384&symbol=HNX&resolution=1D
+status=200 size=288
+{"t":[1794535200,1794794400,1794880800,1794967200,1795053600],"o":[256.32,254.71,254.37,248.41,241.96],"h":[256.74,259.35,254.75,248.6,246.11],"l":[254.17,253.38,248.46,242.55,237.8],"c":[254.98,254.91,248.6,242.73,238.94],"v":[79089328,38803256,42587776,54038756,52730256],"nextTime":0}
+
+
+=== dnse_UPCOMINDEX
+URL https://services.entrade.com.vn/chart-api/v2/ohlcs/index?from=1794451184&to=1795142384&symbol=UPCOMINDEX&resolution=1D
+status=400 size=63
+{"status":400,"code":"BAD_REQUEST","message":"invalid symbol"}
+
+
+=== dnse_UPCOM
+URL https://services.entrade.com.vn/chart-api/v2/ohlcs/index?from=1794451184&to=1795142384&symbol=UPCOM&resolution=1D
+status=200 size=289
+{"t":[1794535200,1794794400,1794880800,1794967200,1795053600],"o":[121.21,121.38,122.16,122.38,120.93],"h":[121.81,122.48,123.05,122.67,121.13],"l":[120.62,120.88,121.53,120.11,120.2],"c":[121.39,122.13,122.5,121.12,120.36],"v":[24703192,14006826,28312078,26863016,21423132],"nextTime":0}
+
+
+=== dnse_HNX30
+URL https://services.entrade.com.vn/chart-api/v2/ohlcs/index?from=1794451184&to=1795142384&symbol=HNX30&resolution=1D
+status=200 size=286
+{"t":[1794535200,1794794400,1794880800,1794967200,1795053600],"o":[436.34,432.72,428.44,426.38,420.92],"h":[437.34,434.6,429.48,426.67,422.73],"l":[433.85,428.48,424.5,419.82,416.5],"c":[433.93,430.15,427.8,422.46,421.8],"v":[69433952,28006764,32552880,41169152,39319204],"nextTime":0}
+
+
+=== vnd_ratio_multi
+URL https://api-finfo.vndirect.com.vn/v4/ratios/latest?filter=ratioCode:PRICE_TO_EARNINGS&where=code:SHS,BSR&order=reportDate&fields=code,ratioCode,value,reportDate
 curl: (35) Recv failure: Connection reset by peer
 status=000 size=0
+{"t":[1794535200,1794794400,1794880800,1794967200,1795053600],"o":[436.34,432.72,428.44,426.38,420.92],"h":[437.34,434.6,429.48,426.67,422.73],"l":[433.85,428.48,424.5,419.82,416.5],"c":[433.93,430.15,427.8,422.46,421.8],"v":[69433952,28006764,32552880,41169152,39319204],"nextTime":0}
 
-
-=== vnd_stocks_cnt (no origin)
-URL https://api-finfo.vndirect.com.vn/v4/stocks?q=type:STOCK~status:LISTED~floor:HOSE,HNX,UPCOM&fields=code,companyName,shortName,floor&size=5
-curl: (35) Recv failure: Connection reset by peer
-status=000 size=0
-
-
-=== vnd_events (no origin)
-URL https://api-finfo.vndirect.com.vn/v4/events?q=code:FPT~type:DIVIDEND,STOCKDIV,KINDDIV&sort=effectiveDate:desc&size=5
-curl: (35) Recv failure: Connection reset by peer
-status=000 size=0
-
-
-=== vnd_events_all (no origin)
-URL https://api-finfo.vndirect.com.vn/v4/events?q=type:DIVIDEND~effectiveDate:gte:2026-10-01&sort=effectiveDate:desc&size=3
-curl: (35) Recv failure: Connection reset by peer
-status=000 size=0
-
-
-=== finfo_old_events (no origin)
-URL https://finfo-api.vndirect.com.vn/v4/events?q=code:FPT~type:DIVIDEND&size=3
-curl: (28) Connection timed out after 25002 milliseconds
-status=000 size=0
-
-
-=== vnd_prices_upcom (no origin)
-URL https://api-finfo.vndirect.com.vn/v4/stock_prices?sort=date:desc&q=code:BSR&size=2
-status=200 size=900
-{"data":[{"code":"BSR","date":"2026-11-19","time":"15:11:06","floor":"HOSE","type":"STOCK","basicPrice":24.05,"ceilingPrice":25.7,"floorPrice":22.4,"open":24.05,"high":24.3,"low":23.5,"close":23.5,"average":23.771,"adOpen":24.05,"adHigh":24.3,"adLow":23.5,"adClose":23.5,"adAverage":23.771,"nmVolume":6056900.0,"nmValue":1.43977095E11,"ptVolume":0.0,"ptValue":0.0,"change":-0.55,"adChange":-0.55,"pctChange":-2.2869},{"code":"BSR","date":"2026-11-18","time":"15:11:06","floor":"HOSE","type":"STOCK","basicPrice":24.25,"ceilingPrice":25.9,"floorPrice":22.6,"open":24.45,"high":24.6,"low":23.9,"close":24.05,"average":24.207,"adOpen":24.45,"adHigh":24.6,"adLow":23.9,"adClose":24.05,"adAverage":24.207,"nmVolume":7467900.0,"nmValue":1.80772495E11,"ptVolume":255000.0,"ptValue":6.2475E9,"change":-0.2,"adChange":-0.2,"pctChange":-0.8247}],"currentPage":1,"size":2,"totalElements":2172,"totalPages":1086}
-
-=== vnd_events_origin
-URL https://api-finfo.vndirect.com.vn/v4/events?q=code:REE&sort=effectiveDate:desc&size=3
-status=200 time=1.925974s size=1157
-Content-Type: application/json
-Access-Control-Allow-Origin: *
-Cache-Control: max-age=60
-{"data":[{"id":"REEAAAS76AAeAAIlC+AA+.VN","code":"REE","group":"investorRight","type":"LISTED","newsId":1.0970442E7,"typeDesc":"GD bổ sung","note":"Số lượng 200,000 CP","numberOfShares":200000.0,"disclosureDate":"2026-10-07","effectiveDate":"2029-08-20","expiredDate":"2029-08-20","actualDate":"2029-08-20","registerStartDate":"2026-10-08","locale":"VN"},{"id":"REEAAAS76AAeAAIlC+AA+.EN_GB","code":"REE","group":"investorRight","type":"LISTED","newsId":1.0970442E7,"typeDesc":"Trading additional issuance","note":"Number of shares 200,000 shares","numberOfShares":200000.0,"disclosureDate":"2026-10-07","effectiveDate":"2029-08-20","expiredDate":"2029-08-20","actualDate":"2029-08-20","registerStartDate":"2026-10-08","locale":"EN_GB"},{"id":"REEAAAS76AAeAAIlC+AA/.VN","code":"REE","group":"investorRight","type":"LISTED","newsId":1.0970442E7,"typeDesc":"GD bổ sung","note":"Số lượng 15
-
-=== vps_upcom (no origin)
-URL https://bgapidatafeed.vps.com.vn/getlistckindex/upcom
-status=200 size=4849
-["A32","AAH","AAS","AAV","ABB","ABC","ABI","ABW","ACE","ACM","ACS","ACV","AG1","AGF","AGM","AGP","AGX","AIC","AIG","ALC","ALV","AMP","AMS","ANI","APC","APF","APL","APP","APT","ART","ATA","ATG","AVC","AVG","BAL","BBH","BBM","BBT","BCA","BCB","BCP","BCV","BDG","BDT","BDW","BEL","BGE","BGW","BHA","BHC","BHG","BHH","BHI","BHK","BHP","BIG","BIO","BLF","BLI","BLN","BLT","BMD","BMF","BMG","BMK","BMS","BMV","BNW","BOT","BQB","BQP","BRR","BRS","BSA","BSD","BSG","BSH","BSL","BSP","BSQ","BT1","BT6","BTB","BTD","BTG","BTH","BTN","BTU","BTV","BVG","BVL","BVN","BWA","BWS","C22","C4G","C92","CAD","CAT","CBI","CBS","CC1","CCA","CCM","CCP","CCS","CCT","CCV","CDG","CDO","CDP","CDR","CEN","CFM","CFV","CGV","CH5","CHC","CHS","CI5","CID","CIP","CK8","CKA","CKD","CLI","CLX","CMD","CMF","CMI","CMK","CMM","CMN","CMP","CMT","CMW","CNA","CNC","CNN","CNT","CPA","CPH","CPI","CQN","CQT","CSI","CT3","CT6","CTW","CTX","CVN","DAC","DAS","DBM","DC1","DCF","DCG","DCH","DCR","DCS","DCT","DCV","DDB","DDG","DDH","DDM","DDN","DDV","DFC","DFF","DGT","DHB","DHD","DHN","DIC","DID","DKC","DKG","DLD","DLR","DLT","DM7","DMN","DNA","DND","DNE","DNH","DNL","DNM","DNN","DNT","DNW","DOC","DOP","DP1","DP2","DPC","DPH","DPP","DRG","DRI","DSD","DSG","DSP","DTC","DTH","DTI","DTP","DTR","DUS","DVC","DVG","DVN","DVW","DWC","DWS","DXL","E12","E29","EFI","EGL","EIC","EIN","EME","EMG","EMS","F88","FBC","FCC","FCS","FGL","FHN","FHS","FIC","FOC","FOX","FRC","FRM","FSO","FT1","FTI","FTM","G20","G36","GCB","GCF","GDH","GER","GGG","GH3"
-
-=== vps_quote (no origin)
-URL https://bgapidatafeed.vps.com.vn/getliststockdata/FPT,BSR,SHS
-status=200 size=3154
-[{"id":2100,"boardId":"G1","marketId":"STO","sequence":139884,"channel":null,"sourceMsgType":"MT","hashValue":"FPT","transId":"STO:VN000000FPT1:MT:139884","tradingSession":null,"c":50.2,"f":43.7,"r":46.95,"sym":"FPT","symCode":"VN000000FPT1","mc":"10","lastPrice":45.7,"lastVolume":30,"lot":1843770,"ot":"1.25","changePc":"2.66","avePrice":"46.24","highPrice":"47.95","lowPrice":"45.6","g1":"45.7|6180|d","g2":"45.65|22120|d","g3":"45.6|49470|d","g4":"45.75|40|d","g5":"45.8|680|d","g6":"45.85|550|d","g7":"0|0|e","mp":null,"lv":0,"matureDate":"","mkStatus":"","closePrice":"46950.0","ptVol":"0","oi":"0","oichange":"0","openPrice":"46.95","side":"","productId":"S1STOST","rightInfos":[{"contentVi":"FPT - Trả cổ tức bằng tiền tỷ lệ 10%\\n Ngày giao dịch không hưởng quyền: 27/11/2026","contentEn":"FPT - Cash dividend at a rate of 10%, ex-dividend date: 27/11/2026"}],"fBVol":"357673","fBValue":"1.646892872E8","fSVolume":"944529","fSValue":"4.367968706E8","fRoom":"44179103.30","CWUnderlying":"","CWIssuerName":"","CWType":"","CWMaturityDate":"","CWLastTradingDate":"","CWExcersisePrice":"","CWExerciseRatio":"0:0","CWListedShare":"","sType":"S","sBenefit":"0"},{"id":2100,"boardId":"G1","marketId":"STO","sequence":139816,"channel":null,"sourceMsgType":"MT","hashValue":"BSR","transId":"STO:VN000000BSR8:MT:139816","tradingSession":null,"c":25.7,"f":22.4,"r":24.05,"sym":"BSR","symCode":"VN000000BSR8","mc":"10","lastPrice":23.5,"lastVolume":80,"lot":605690,"ot":"0.55","cha
-
-=== vps_hist (no origin)
-URL https://histdatafeed.vps.com.vn/tradingview/history?symbol=SHS&resolution=D&from=1794245514&to=1795109514
-status=200 size=327
-{"symbol":"SHS","s":"ok","t":[1794355200,1794441600,1794528000,1794787200,1794873600,1794960000,1795046400],"c":[13.6,13.4,13.2,13,13.2,13,13.2],"o":[13.7,13.5,13.2,13.2,12.9,13.2,13],"h":[13.7,13.7,13.5,13.3,13.3,13.2,13.3],"l":[13.5,13.3,13.2,13,12.9,12.9,12.9],"v":[7339500,14607300,9548900,5493300,5972300,7991500,7903600]}
-
-=== dnse_ohlc (no origin)
-URL https://services.entrade.com.vn/chart-api/v2/ohlcs/stock?from=1794245515&to=1795109515&symbol=SHS&resolution=1D
-status=200 size=357
-{"t":[1794276000,1794362400,1794448800,1794535200,1794794400,1794880800,1794967200,1795053600],"o":[13.3,13.7,13.5,13.2,13.2,12.9,13.2,13],"h":[13.8,13.7,13.7,13.5,13.3,13.3,13.2,13.3],"l":[13.3,13.5,13.3,13.2,13,12.9,12.9,12.9],"c":[13.7,13.6,13.4,13.2,13,13.2,13,13.2],"v":[16818800,7339500,14607300,9548900,5493300,5972300,7991500,7903600],"nextTime":0}
-
-
-=== dnse_ohlc_origin
-URL https://services.entrade.com.vn/chart-api/v2/ohlcs/stock?from=1794245516&to=1795109516&symbol=SHS&resolution=1D
-status=200 time=0.810066s size=357
-Content-Type: application/json
-{"t":[1794276000,1794362400,1794448800,1794535200,1794794400,1794880800,1794967200,1795053600],"o":[13.3,13.7,13.5,13.2,13.2,12.9,13.2,13],"h":[13.8,13.7,13.7,13.5,13.3,13.3,13.2,13.3],"l":[13.3,13.5,13.3,13.2,13,12.9,12.9,12.9],"c":[13.7,13.6,13.4,13.2,13,13.2,13,13.2],"v":[16818800,7339500,14607300,9548900,5493300,5972300,7991500,7903600],"nextTime":0}
-
-
-=== cafef_div (no origin)
-URL https://s.cafef.vn/Ajax/Events_RelatedNews_New.aspx?symbol=FPT&floorID=0&configID=6&PageIndex=1&PageSize=5&Type=2
-status=301 size=0
-
-
-=== vietstock_div (no origin)
-URL https://finance.vietstock.vn/data/eventstypedata?code=FPT&eventTypeID=1&page=1&pageSize=5
-status=404 size=504477
-
-<!DOCTYPE html>
-<html lang="vi-VN">
-<head>
-    <script>
-        document.documentElement.className = localStorage.getItem("darkModetheme") === "dark"
-            ? "theme-dark"
-            : "theme-light";
-        var _globalIsDarkMode = localStorage.getItem("darkModetheme") == "dark" ? true : false;
-    </script>
-    <script async type="application/javascript" src="//anymind360.com/js/407/ats.js"></script>
-
-<title>VietstockFinance – Dữ liệu tài chính và công cụ đầu tư chứng khoán</title>
-<meta charset="utf-8" />
-<meta content="IE=edge" http-equiv="X-UA-Compatible" />
-<meta name="viewport" content="width=device-width, initial-scale=1.0" />
-<link rel="shortcut icon" href="//image.vietstock.vn/common/favicon.ico" type="image/x-icon" />
-<link rel="manifest" href="/manifest.json">
-<link rel="canonical" href="https://finance.vietstock.vn/data/eventstypedata" />
-<link href="/RSS" title="VietstockFinance - RSS" type="application/rss+xml" rel="alternate" />
-<meta name="keywords" content="Tài chính,chứng khoán,cổ phiếu,thông tin,Việt Nam,doanh nghiệp,nền kinh tế,ngành,index ngành,thị trường chứng khoán,doanh nghiệp niêm yết,công ty đại chúng,trực tuyến,stock, quote, share, HoSE, HNX, Hastc, UPCoM, blue chip, OTC" />
-<meta name="description" content="Dữ liệu toàn diện nền kinh tế, thông tin mọi góc độ doanh nghiệp và các công cụ phân tích đầu tư chứng khoán" />
-<meta na
-
-=== kbs_div (no origin)
-URL https://kbbuddywts.kbsec.com.vn/iis-server/investment/stock/FPT/events?l=1&p=1&s=5
-status=200 size=138
-{"st":"err","msg":["type must be one of the following values: tr, is, ob, card, index, win, vn, trading-result"],"code":1,"errorCode":500}
-
-=== ssi_fc (no origin)
-URL https://fc-data.ssi.com.vn/api/v2/Market/Securities?market=HOSE&pageIndex=1&pageSize=2
-status=200 size=55
-{"message":"Missing Authorization header","status":401}
-
-=== vndi_company (no origin)
-URL https://api-finfo.vndirect.com.vn/v4/company_profiles?q=code:SHS&size=1
-status=200 size=1627
-{"data":[{"code":"SHS","floor":"HNX","logo":"https://www.vndirect.com.vn/vndirect-resource/nextcom/attachment/LOGO/SHS.jpg","vnName":"Chứng khoán SG HN","enName":"Saigon - Hanoi Securities JSC","foundDate":"2007-11-15","taxCode":"0102524651","registrationCode":"0102524651","vnAddress":"Số 43 Phố Lý Thường Kiệt, Cửa Nam, Hà Nội, VIỆT NAM","enAddress":"Ha Noi, VIETNAM","phone":"+84 (24) 38181888","fax":"+84 (24) 38181688","website":"https://www.shs.com.vn","email":"contact@shs.com.vn","employees":392.0,"branches":2.0,"vnSummary":"Công ty Cổ phần Chứng khoán Sài Gòn - Hà Nội (SHS) được thành lập vào năm 2007. Công ty được cấp phép hoạt động tất cả các nghiệp vụ đối với một công ty chứng khoán trên Thị trường chứng khoán Việt Nam. Các lĩnh vực hoạt động chính của Công ty bao gồm: Môi giới chứng khoán; Đầu tư; Tư vấn Đầu tư; Tư vấn Tài chính Doanh nghiệp và bảo lãnh phát hành, lưu ký Chứng khoán. Năm 2025, Doanh thu nghiệp vụ môi giới chứng khoán có giá trị bằng 360,43 tỷ đồng, tăng 51.46% so với cùng kỳ. Nợ vay ký quỹ/Vốn chủ sở hữu ở mức 70.03%, tăng 33.65%. Lợi nhuận trước thuế có giá trị bằng 1.649,37 tỷ đồng, tăng 33.09%. Tỷ lệ sinh lời trên vốn chủ sở hữu (ROE) ở mức 11.28%, tăng 1.82%. SHS được niêm yết trên Sở Giao dịch Chứng khoán 
 
