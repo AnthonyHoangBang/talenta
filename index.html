@@ -711,6 +711,10 @@ const META = {
   VND:['CTCP Chứng khoán VNDIRECT','Chứng khoán'], GAS:['Tổng Công ty Khí Việt Nam','Dầu khí'], PNJ:['CTCP Vàng bạc Đá quý Phú Nhuận','Bán lẻ'], VPB:['Ngân hàng TMCP Việt Nam Thịnh Vượng','Ngân hàng'] };
 const DAYS = DATA ? DATA.days.slice() : ['2026-01-02'];
 const PX = {}; if(DATA) for(const k in DATA.px) PX[k]=DATA.px[k].slice();
+// Chỉ số thị trường cho dải giá trên cùng: VN-Index luôn có, VN30, HNX-Index, UPCoM-Index có khi file dữ liệu đã lấy được.
+const IX_NAME={VNINDEX:'VN-Index',VN30:'VN30',HNXINDEX:'HNX-Index',UPCOMINDEX:'UPCoM-Index'};
+if(DATA&&DATA.ix) for(const k in DATA.ix) if(IX_NAME[k]&&DATA.ix[k].length===DATA.days.length) PX[k]=DATA.ix[k].slice();
+const IXS=Object.keys(IX_NAME).filter(k=>PX[k]); const isIx=t=>!!IX_NAME[t];
 const MKT = {VNINDEX:{name:'VN-Index'}};
 // Toàn bộ mã HOSE, HNX, UPCoM (data/universe.js): tên, sàn, ngành, giá đóng cửa gần nhất. Lịch sử giá của mã ngoài 20 mã chính tải khi cần.
 const UNI = window.TALENTA_UNIVERSE || null, UMAP = {};
@@ -789,14 +793,15 @@ async function pollLive(){
   if(!DATA) return;
   try{
     const ctl=new AbortController(), to=setTimeout(()=>ctl.abort(),8000);
-    const [rs,ri]=await Promise.all([fetch('https://bgapidatafeed.vps.com.vn/getliststockdata/'+[...new Set([...TICKERS,...(S?myTickers():[])])].join(','),{signal:ctl.signal}), fetch('https://bgapidatafeed.vps.com.vn/getlistindexdetail/10',{signal:ctl.signal})]);
+    const [rs,ri]=await Promise.all([fetch('https://bgapidatafeed.vps.com.vn/getliststockdata/'+[...new Set([...TICKERS,...(S?myTickers():[])])].join(','),{signal:ctl.signal}), fetch('https://bgapidatafeed.vps.com.vn/getlistindexdetail/10,11,02,03',{signal:ctl.signal})]);
     clearTimeout(to); if(!rs.ok) throw new Error('HTTP '+rs.status);
     const arr=await rs.json(), idx=ri.ok?await ri.json():[];
     // Chỉ ghi giá trực tiếp vào hôm nay khi đang trong ngày giao dịch mới; ngoài ra giữ giá đóng cửa trong file.
     const fresh = ensureToday() || TODAY===vnNow().iso; let changed=false;
     arr.forEach(q=>{ const p=Math.round(+q.lastPrice*1000); if(!PX[q.sym]||!(p>0)) return; LIVE.quotes[q.sym]={p, ref:Math.round(+q.r*1000), ceil:Math.round(+q.c*1000), floor:Math.round(+q.f*1000), vol:+q.lot*10};
       if(fresh && PX[q.sym][LAST]!==p){ PX[q.sym][LAST]=p; changed=true; } });
-    if(idx[0]&&+idx[0].cIndex>0){ LIVE.quotes.VNINDEX={p:+idx[0].cIndex, time:idx[0].time}; if(fresh && PX.VNINDEX[LAST]!==+idx[0].cIndex){ PX.VNINDEX[LAST]=+idx[0].cIndex; changed=true; } }
+    const IXMC={'10':'VNINDEX','11':'VN30','02':'HNXINDEX','03':'UPCOMINDEX'};
+    (Array.isArray(idx)?idx:[]).forEach(x=>{ const k=IXMC[x.mc], v=+x.cIndex; if(!k||!PX[k]||!(v>0)) return; LIVE.quotes[k]={p:v, time:x.time}; if(fresh && PX[k][LAST]!==v){ PX[k][LAST]=v; changed=true; } });
     LIVE.state='ok'; LIVE.fails=0; LIVE.at=vnNow().hms; onLive(changed);
   }catch(e){ LIVE.fails++; if(LIVE.fails>=2||LIVE.state==='idle') LIVE.state='fail'; onLive(false); }
   setTimeout(pollLive, LIVE.state==='fail' ? 60000 : marketOpen() ? 3000 : 60000);
@@ -818,8 +823,8 @@ function paintLive(){
   pill.className='live-pill '+T[0]; pill.textContent=T[1]; pill.title=T[2];
   const hw=$('#heroWhen'); if(hw) hw.textContent = m==='live'?'giá trực tiếp lúc '+LIVE.at : m==='today'?'giá hôm nay lúc '+LIVE.at : close;
   const dn=$('#dataNote'); if(dn) dn.textContent = DATA ? `Giá đóng cửa và chỉ số doanh nghiệp là số thật, lấy từ ${DATA.source||'VNDirect và DNSE'}, cập nhật ${D(DATA.updated.slice(0,10))}. Giá trong phiên lấy từ ${LIVE.src}. Đây là các nguồn công khai, không chính thức, chỉ nên dùng cho cá nhân.` : 'Chưa có dữ liệu giá.';
-  const st=$('#strip'); if(st && DATA){ st.innerHTML=['VNINDEX',...TICKERS].map(t=>{ const v=px(t), c=v/px(t,LAST-1)-1, k=t==='VNINDEX'?cls(c):vnCls(t), fl=stripPrev[t]!=null&&stripPrev[t]!==v; stripPrev[t]=v;
-    return `<a ${t==='VNINDEX'?'':`href="#ma-${t}"`} class="${fl?'flash':''}"><b>${t==='VNINDEX'?'VN-Index':t}</b>${t==='VNINDEX'?v.toLocaleString('vi-VN',{minimumFractionDigits:2,maximumFractionDigits:2}):P(v)}<span style="color:var(--${k})">${PCT(c,true,2)}</span></a>`; }).join(''); }
+  const st=$('#strip'); if(st && DATA){ st.innerHTML=[...IXS,...TICKERS].map(t=>{ const v=px(t), c=v/px(t,LAST-1)-1, k=isIx(t)?cls(c):vnCls(t), fl=stripPrev[t]!=null&&stripPrev[t]!==v; stripPrev[t]=v;
+    return `<a ${isIx(t)?'':`href="#ma-${t}"`} class="${fl?'flash':''}"><b>${isIx(t)?IX_NAME[t]:t}</b>${isIx(t)?v.toLocaleString('vi-VN',{minimumFractionDigits:2,maximumFractionDigits:2}):P(v)}<span style="color:var(--${k})">${PCT(c,true,2)}</span></a>`; }).join(''); }
 }
 function onLive(changed){
   paintLive(); if(!changed) return; checkPriceAlerts();
