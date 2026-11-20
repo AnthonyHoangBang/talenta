@@ -745,6 +745,30 @@ async function loadHist(tk){
   PX[tk]=c; DATA.ohlcv=DATA.ohlcv||{}; DATA.ohlcv[tk]={o,h,l,v}; MKT[tk].hist=true; MKT[tk].approx=false;
   const ae=document.activeElement; if(!dlg.open && !(ae&&/^(INPUT|SELECT|TEXTAREA)$/.test(ae.tagName))){ const y=scrollY; route(); scrollTo(0,y); }
 }
+// Chỉ số doanh nghiệp (P/E, P/B, ROE, EPS) và lợi nhuận quý của mã ngoài 20 mã chính: hỏi VNDirect lúc mở mã, cất lại trong ngày.
+const FUND={busy:{}, fail:{}, done:{}};
+async function vndJson(url){ const ctl=new AbortController(), to=setTimeout(()=>ctl.abort(),12000);
+  try{ const r=await fetch(url,{signal:ctl.signal}); return r.ok?await r.json():null; }catch(_){ return null; } finally{ clearTimeout(to); } }
+async function loadFund(tk){
+  const m=MKT[tk]; if(!m||FUND.done[tk]||FUND.busy[tk]||FUND.fail[tk]) return; if(m.f&&m.f.date&&DATA.qp&&DATA.qp[tk]){ FUND.done[tk]=true; return; }
+  FUND.busy[tk]=true; const key='talenta-f:'+tk; let got=null;
+  try{ const c=JSON.parse(localStorage.getItem(key)||'null'); if(c&&c.at===vnNow().iso) got=c; }catch(_){}
+  if(!got){ got={at:vnNow().iso, f:{}, qp:null};
+    const B='https://api-finfo.vndirect.com.vn/v4/';
+    const [r, mo]=await Promise.all([vndJson(`${B}ratios/latest?filter=ratioCode:PRICE_TO_EARNINGS,PRICE_TO_BOOK,ROAE_TR_AVG5Q,EPS_TR,BVPS_CR&where=code:${tk}&order=reportDate&fields=ratioCode,value,reportDate`),
+      vndJson(`${B}financial_models?sort=displayOrder:asc&q=codeList:${tk}~modelType:2,90,102,412&size=400`)]);
+    if(r&&r.data) r.data.forEach(x=>{ const k={PRICE_TO_EARNINGS:'pe',PRICE_TO_BOOK:'pb',ROAE_TR_AVG5Q:'roe',EPS_TR:'eps',BVPS_CR:'bvps'}[x.ratioCode]; if(k&&x.value!=null){ got.f[k]=x.value; if(!got.f.date||x.reportDate>got.f.date) got.f.date=x.reportDate; } });
+    if(mo&&mo.data){ const items=mo.data.map(x=>({code:x.itemCode, name:String(x.itemVnName||x.itemName||x.vnName||'')}));
+      const pick=items.filter(x=>/lợi nhuận sau thuế/i.test(x.name) && !/chưa phân phối|thiểu số|không kiểm soát/i.test(x.name)), it=pick.find(x=>/công ty mẹ|của cổ đông/i.test(x.name))||pick[0];
+      if(it){ const st=await vndJson(`${B}financial_statements?q=code:${tk}~reportType:QUARTER~modelType:2,90,102,412~itemCode:${it.code}~fiscalDate:gte:2022-01-01&sort=fiscalDate:asc&size=60`);
+        if(st&&st.data&&st.data.length){ const q={}; st.data.forEach(x=>q[x.fiscalDate]=x.numericValue); const ks=Object.keys(q).sort().slice(-12); got.qp={item:it.name, q:ks.map(k=>[k, +(q[k]/1e9).toFixed(1)])}; } } }
+    if(got.f.date||got.qp){ try{ localStorage.setItem(key, JSON.stringify(got)); }catch(_){} } }
+  FUND.busy[tk]=false;
+  if(!got.f.date&&!got.qp){ FUND.fail[tk]=true; rerenderTicker(tk); return; }
+  FUND.done[tk]=true; if(got.f.date) m.f=got.f; if(got.qp){ DATA.qp=DATA.qp||{}; DATA.qp[tk]=got.qp; }
+  rerenderTicker(tk);
+}
+function rerenderTicker(tk){ if(location.hash!=='#ma-'+tk) return; const ae=document.activeElement; if(dlg.open || (ae&&/^(INPUT|SELECT|TEXTAREA)$/.test(ae.tagName))) return; const y=scrollY; route(); scrollTo(0,y); }
 const myTickers = () => [...new Set([...S.tx.map(t=>t.ticker), ...S.watch.map(w=>w.ticker), ...(S.priceAlerts||[]).map(a=>a.ticker), ...S.theses.map(t=>t.ticker)].filter(isTk))];
 let LAST = DAYS.length-1, TODAY = DAYS[LAST];
 const CLOSE_DAY = TODAY; // phiên gần nhất có giá đóng cửa trong file dữ liệu
@@ -1733,7 +1757,7 @@ function pageTickers(){
   </section>`;
 }
 function pageTicker(tk){
-  ensurePX(tk); if(!MKT[tk].hist) loadHist(tk);
+  ensurePX(tk); if(!MKT[tk].hist) loadHist(tk); loadFund(tk);
   const m=MKT[tk], f=m.f, p_=px(tk), chg=p_/px(tk,LAST-1)-1, bd=BAND[m.ex]||.07;
   const s52=PX[tk].slice(Math.max(0,LAST-250)), hi=Math.max(...s52), lo=Math.min(...s52);
   const pe=f.eps>0?p_/f.eps:(f.pe||0), pb=f.bvps>0?p_/f.bvps:(f.pb||0), sd=sigmaOf(tk);
@@ -1804,7 +1828,7 @@ function pageTicker(tk){
       <p style="margin:10px 0 0;max-width:75ch">Một ngày bình thường, ${tk} dao động khoảng <b>${PCT(sd/Math.sqrt(250),false)}</b>, tức quanh ${P(p_*sd/Math.sqrt(250))} đ. Sau 1 năm, 9 trên 10 khả năng giá nằm trong khoảng <b>${P(snap(coneAt(p_,sd,1,Z.p5)))}</b> đến <b>${P(snap(coneAt(p_,sd,1,Z.p95)))}</b>.
       ${cur&&h&&cur.stop<p_&&p_<cur.target?` Với cắt lỗ ${P(cur.stop)} và mục tiêu ${P(cur.target)} bạn đã đặt, khả năng chạm mục tiêu trước là khoảng <b>${PCT(hitFirst(p_,cur.stop,cur.target,sd),false,0)}</b> nếu bạn không có lợi thế gì riêng về mã này.`:''}</p>
       <div class="small muted" style="margin-top:6px">Tính từ mức lên xuống thật của ${tk} trong 250 phiên gần nhất, không giả định mã sẽ tăng hay giảm. Đây không phải dự báo giá.</div></section>
-    <section class="card c5"><div class="card-head"><h2>Mã này đắt hay rẻ</h2><span class="small">${f.date?'Lợi nhuận 4 quý đến '+D(f.date):'Chưa có chỉ số'}</span></div>
+    <section class="card c5"><div class="card-head"><h2>Mã này đắt hay rẻ</h2><span class="small">${f.date?'Lợi nhuận 4 quý đến '+D(f.date):FUND.busy[tk]?'<span class="spin"></span> Đang tải chỉ số…':FUND.fail[tk]?'Nguồn chỉ số chưa trả lời, thử tải lại trang sau':'Đang tải chỉ số…'}</span></div>
       <div class="kv">
         <div><div class="k">P/E</div><div class="v">${pe?pe.toLocaleString('vi-VN',{maximumFractionDigits:1}):'–'}</div><div class="c">số năm lợi nhuận để hoàn vốn</div></div>
         <div><div class="k">P/B</div><div class="v">${pb?pb.toLocaleString('vi-VN',{maximumFractionDigits:2}):'–'}</div><div class="c">giá so với vốn chủ</div></div>
