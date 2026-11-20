@@ -36,7 +36,14 @@ for(const s of T){ let m=await vnd(s), src='VNDirect'; if(!m){ m=await entrade('
   const q=await quarters(s); if(q) qp[s]=q; await sleep(300); }
 console.log('Co nen va khoi luong:', Object.keys(ohlcv).length, 'ma; co loi nhuan quy:', Object.keys(qp).length, 'ma', qp.FPT?JSON.stringify(qp.FPT):'');
 if(Object.keys(px).length<15) throw new Error('Thiếu quá nhiều mã, giữ file cũ');
-const out={updated:new Date().toISOString(), source:'VNDirect và DNSE', days, px, f, via, ohlcv, qp};
+// Các chỉ số thị trường khác cho dải giá trên cùng (DNSE). Thiếu chỉ số nào thì bỏ qua chỉ số đó.
+const ix={};
+for(const [k,alts] of [['VN30',['VN30']],['HNXINDEX',['HNXINDEX','HNX']],['UPCOMINDEX',['UPCOMINDEX','UPCOM']]]){
+  let m=null; for(const a of alts){ m=await entrade('index',a); if(m) break; } if(!m){ console.error('Không lấy được '+k); continue; }
+  let last=null; const first=days.map(d=>m[d]).find(x=>x>0); if(!first) continue;
+  ix[k]=days.map(d=>{ if(m[d]>0) last=m[d]; return +(last??first).toFixed(2); }); }
+console.log('Chi so thi truong:', Object.keys(ix).join(','));
+const out={updated:new Date().toISOString(), source:'VNDirect và DNSE', days, px, f, via, ohlcv, qp, ix};
 // ---- Toàn bộ mã trên HOSE, HNX, UPCoM: tên, sàn, ngành, giá đóng cửa gần nhất (data/universe.js)
 async function universe(){
   const st=await j('https://api-finfo.vndirect.com.vn/v4/stocks?q=type:STOCK~status:LISTED~floor:HOSE,HNX,UPCOM&fields=code,companyName,shortName,floor&size=3000');

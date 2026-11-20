@@ -711,6 +711,10 @@ const META = {
   VND:['CTCP Chứng khoán VNDIRECT','Chứng khoán'], GAS:['Tổng Công ty Khí Việt Nam','Dầu khí'], PNJ:['CTCP Vàng bạc Đá quý Phú Nhuận','Bán lẻ'], VPB:['Ngân hàng TMCP Việt Nam Thịnh Vượng','Ngân hàng'] };
 const DAYS = DATA ? DATA.days.slice() : ['2026-01-02'];
 const PX = {}; if(DATA) for(const k in DATA.px) PX[k]=DATA.px[k].slice();
+// Chỉ số thị trường cho dải giá trên cùng: VN-Index luôn có, VN30, HNX-Index, UPCoM-Index có khi file dữ liệu đã lấy được.
+const IX_NAME={VNINDEX:'VN-Index',VN30:'VN30',HNXINDEX:'HNX-Index',UPCOMINDEX:'UPCoM-Index'};
+if(DATA&&DATA.ix) for(const k in DATA.ix) if(IX_NAME[k]&&DATA.ix[k].length===DATA.days.length) PX[k]=DATA.ix[k].slice();
+const IXS=Object.keys(IX_NAME).filter(k=>PX[k]); const isIx=t=>!!IX_NAME[t];
 const MKT = {VNINDEX:{name:'VN-Index'}};
 // Toàn bộ mã HOSE, HNX, UPCoM (data/universe.js): tên, sàn, ngành, giá đóng cửa gần nhất. Lịch sử giá của mã ngoài 20 mã chính tải khi cần.
 const UNI = window.TALENTA_UNIVERSE || null, UMAP = {};
@@ -745,6 +749,30 @@ async function loadHist(tk){
   PX[tk]=c; DATA.ohlcv=DATA.ohlcv||{}; DATA.ohlcv[tk]={o,h,l,v}; MKT[tk].hist=true; MKT[tk].approx=false;
   const ae=document.activeElement; if(!dlg.open && !(ae&&/^(INPUT|SELECT|TEXTAREA)$/.test(ae.tagName))){ const y=scrollY; route(); scrollTo(0,y); }
 }
+// Chỉ số doanh nghiệp (P/E, P/B, ROE, EPS) và lợi nhuận quý của mã ngoài 20 mã chính: hỏi VNDirect lúc mở mã, cất lại trong ngày.
+const FUND={busy:{}, fail:{}, done:{}};
+async function vndJson(url){ const ctl=new AbortController(), to=setTimeout(()=>ctl.abort(),12000);
+  try{ const r=await fetch(url,{signal:ctl.signal}); return r.ok?await r.json():null; }catch(_){ return null; } finally{ clearTimeout(to); } }
+async function loadFund(tk){
+  const m=MKT[tk]; if(!m||FUND.done[tk]||FUND.busy[tk]||FUND.fail[tk]) return; if(m.f&&m.f.date&&DATA.qp&&DATA.qp[tk]){ FUND.done[tk]=true; return; }
+  FUND.busy[tk]=true; const key='talenta-f:'+tk; let got=null;
+  try{ const c=JSON.parse(localStorage.getItem(key)||'null'); if(c&&c.at===vnNow().iso) got=c; }catch(_){}
+  if(!got){ got={at:vnNow().iso, f:{}, qp:null};
+    const B='https://api-finfo.vndirect.com.vn/v4/';
+    const [r, mo]=await Promise.all([vndJson(`${B}ratios/latest?filter=ratioCode:PRICE_TO_EARNINGS,PRICE_TO_BOOK,ROAE_TR_AVG5Q,EPS_TR,BVPS_CR&where=code:${tk}&order=reportDate&fields=ratioCode,value,reportDate`),
+      vndJson(`${B}financial_models?sort=displayOrder:asc&q=codeList:${tk}~modelType:2,90,102,412&size=400`)]);
+    if(r&&r.data) r.data.forEach(x=>{ const k={PRICE_TO_EARNINGS:'pe',PRICE_TO_BOOK:'pb',ROAE_TR_AVG5Q:'roe',EPS_TR:'eps',BVPS_CR:'bvps'}[x.ratioCode]; if(k&&x.value!=null){ got.f[k]=x.value; if(!got.f.date||x.reportDate>got.f.date) got.f.date=x.reportDate; } });
+    if(mo&&mo.data){ const items=mo.data.map(x=>({code:x.itemCode, name:String(x.itemVnName||x.itemName||x.vnName||'')}));
+      const pick=items.filter(x=>/lợi nhuận sau thuế/i.test(x.name) && !/chưa phân phối|thiểu số|không kiểm soát/i.test(x.name)), it=pick.find(x=>/công ty mẹ|của cổ đông/i.test(x.name))||pick[0];
+      if(it){ const st=await vndJson(`${B}financial_statements?q=code:${tk}~reportType:QUARTER~modelType:2,90,102,412~itemCode:${it.code}~fiscalDate:gte:2022-01-01&sort=fiscalDate:asc&size=60`);
+        if(st&&st.data&&st.data.length){ const q={}; st.data.forEach(x=>q[x.fiscalDate]=x.numericValue); const ks=Object.keys(q).sort().slice(-12); got.qp={item:it.name, q:ks.map(k=>[k, +(q[k]/1e9).toFixed(1)])}; } } }
+    if(got.f.date||got.qp){ try{ localStorage.setItem(key, JSON.stringify(got)); }catch(_){} } }
+  FUND.busy[tk]=false;
+  if(!got.f.date&&!got.qp){ FUND.fail[tk]=true; rerenderTicker(tk); return; }
+  FUND.done[tk]=true; if(got.f.date) m.f=got.f; if(got.qp){ DATA.qp=DATA.qp||{}; DATA.qp[tk]=got.qp; }
+  rerenderTicker(tk);
+}
+function rerenderTicker(tk){ if(location.hash!=='#ma-'+tk) return; const ae=document.activeElement; if(dlg.open || (ae&&/^(INPUT|SELECT|TEXTAREA)$/.test(ae.tagName))) return; const y=scrollY; route(); scrollTo(0,y); }
 const myTickers = () => [...new Set([...S.tx.map(t=>t.ticker), ...S.watch.map(w=>w.ticker), ...(S.priceAlerts||[]).map(a=>a.ticker), ...S.theses.map(t=>t.ticker)].filter(isTk))];
 let LAST = DAYS.length-1, TODAY = DAYS[LAST];
 const CLOSE_DAY = TODAY; // phiên gần nhất có giá đóng cửa trong file dữ liệu
@@ -765,14 +793,15 @@ async function pollLive(){
   if(!DATA) return;
   try{
     const ctl=new AbortController(), to=setTimeout(()=>ctl.abort(),8000);
-    const [rs,ri]=await Promise.all([fetch('https://bgapidatafeed.vps.com.vn/getliststockdata/'+[...new Set([...TICKERS,...(S?myTickers():[])])].join(','),{signal:ctl.signal}), fetch('https://bgapidatafeed.vps.com.vn/getlistindexdetail/10',{signal:ctl.signal})]);
+    const [rs,ri]=await Promise.all([fetch('https://bgapidatafeed.vps.com.vn/getliststockdata/'+[...new Set([...TICKERS,...(S?myTickers():[])])].join(','),{signal:ctl.signal}), fetch('https://bgapidatafeed.vps.com.vn/getlistindexdetail/10,11,02,03',{signal:ctl.signal})]);
     clearTimeout(to); if(!rs.ok) throw new Error('HTTP '+rs.status);
     const arr=await rs.json(), idx=ri.ok?await ri.json():[];
     // Chỉ ghi giá trực tiếp vào hôm nay khi đang trong ngày giao dịch mới; ngoài ra giữ giá đóng cửa trong file.
     const fresh = ensureToday() || TODAY===vnNow().iso; let changed=false;
     arr.forEach(q=>{ const p=Math.round(+q.lastPrice*1000); if(!PX[q.sym]||!(p>0)) return; LIVE.quotes[q.sym]={p, ref:Math.round(+q.r*1000), ceil:Math.round(+q.c*1000), floor:Math.round(+q.f*1000), vol:+q.lot*10};
       if(fresh && PX[q.sym][LAST]!==p){ PX[q.sym][LAST]=p; changed=true; } });
-    if(idx[0]&&+idx[0].cIndex>0){ LIVE.quotes.VNINDEX={p:+idx[0].cIndex, time:idx[0].time}; if(fresh && PX.VNINDEX[LAST]!==+idx[0].cIndex){ PX.VNINDEX[LAST]=+idx[0].cIndex; changed=true; } }
+    const IXMC={'10':'VNINDEX','11':'VN30','02':'HNXINDEX','03':'UPCOMINDEX'};
+    (Array.isArray(idx)?idx:[]).forEach(x=>{ const k=IXMC[x.mc], v=+x.cIndex; if(!k||!PX[k]||!(v>0)) return; LIVE.quotes[k]={p:v, time:x.time}; if(fresh && PX[k][LAST]!==v){ PX[k][LAST]=v; changed=true; } });
     LIVE.state='ok'; LIVE.fails=0; LIVE.at=vnNow().hms; onLive(changed);
   }catch(e){ LIVE.fails++; if(LIVE.fails>=2||LIVE.state==='idle') LIVE.state='fail'; onLive(false); }
   setTimeout(pollLive, LIVE.state==='fail' ? 60000 : marketOpen() ? 3000 : 60000);
@@ -794,8 +823,8 @@ function paintLive(){
   pill.className='live-pill '+T[0]; pill.textContent=T[1]; pill.title=T[2];
   const hw=$('#heroWhen'); if(hw) hw.textContent = m==='live'?'giá trực tiếp lúc '+LIVE.at : m==='today'?'giá hôm nay lúc '+LIVE.at : close;
   const dn=$('#dataNote'); if(dn) dn.textContent = DATA ? `Giá đóng cửa và chỉ số doanh nghiệp là số thật, lấy từ ${DATA.source||'VNDirect và DNSE'}, cập nhật ${D(DATA.updated.slice(0,10))}. Giá trong phiên lấy từ ${LIVE.src}. Đây là các nguồn công khai, không chính thức, chỉ nên dùng cho cá nhân.` : 'Chưa có dữ liệu giá.';
-  const st=$('#strip'); if(st && DATA){ st.innerHTML=['VNINDEX',...TICKERS].map(t=>{ const v=px(t), c=v/px(t,LAST-1)-1, k=t==='VNINDEX'?cls(c):vnCls(t), fl=stripPrev[t]!=null&&stripPrev[t]!==v; stripPrev[t]=v;
-    return `<a ${t==='VNINDEX'?'':`href="#ma-${t}"`} class="${fl?'flash':''}"><b>${t==='VNINDEX'?'VN-Index':t}</b>${t==='VNINDEX'?v.toLocaleString('vi-VN',{minimumFractionDigits:2,maximumFractionDigits:2}):P(v)}<span style="color:var(--${k})">${PCT(c,true,2)}</span></a>`; }).join(''); }
+  const st=$('#strip'); if(st && DATA){ st.innerHTML=[...IXS,...TICKERS].map(t=>{ const v=px(t), c=v/px(t,LAST-1)-1, k=isIx(t)?cls(c):vnCls(t), fl=stripPrev[t]!=null&&stripPrev[t]!==v; stripPrev[t]=v;
+    return `<a ${isIx(t)?'':`href="#ma-${t}"`} class="${fl?'flash':''}"><b>${isIx(t)?IX_NAME[t]:t}</b>${isIx(t)?v.toLocaleString('vi-VN',{minimumFractionDigits:2,maximumFractionDigits:2}):P(v)}<span style="color:var(--${k})">${PCT(c,true,2)}</span></a>`; }).join(''); }
 }
 function onLive(changed){
   paintLive(); if(!changed) return; checkPriceAlerts();
@@ -1733,7 +1762,7 @@ function pageTickers(){
   </section>`;
 }
 function pageTicker(tk){
-  ensurePX(tk); if(!MKT[tk].hist) loadHist(tk);
+  ensurePX(tk); if(!MKT[tk].hist) loadHist(tk); loadFund(tk);
   const m=MKT[tk], f=m.f, p_=px(tk), chg=p_/px(tk,LAST-1)-1, bd=BAND[m.ex]||.07;
   const s52=PX[tk].slice(Math.max(0,LAST-250)), hi=Math.max(...s52), lo=Math.min(...s52);
   const pe=f.eps>0?p_/f.eps:(f.pe||0), pb=f.bvps>0?p_/f.bvps:(f.pb||0), sd=sigmaOf(tk);
@@ -1804,7 +1833,7 @@ function pageTicker(tk){
       <p style="margin:10px 0 0;max-width:75ch">Một ngày bình thường, ${tk} dao động khoảng <b>${PCT(sd/Math.sqrt(250),false)}</b>, tức quanh ${P(p_*sd/Math.sqrt(250))} đ. Sau 1 năm, 9 trên 10 khả năng giá nằm trong khoảng <b>${P(snap(coneAt(p_,sd,1,Z.p5)))}</b> đến <b>${P(snap(coneAt(p_,sd,1,Z.p95)))}</b>.
       ${cur&&h&&cur.stop<p_&&p_<cur.target?` Với cắt lỗ ${P(cur.stop)} và mục tiêu ${P(cur.target)} bạn đã đặt, khả năng chạm mục tiêu trước là khoảng <b>${PCT(hitFirst(p_,cur.stop,cur.target,sd),false,0)}</b> nếu bạn không có lợi thế gì riêng về mã này.`:''}</p>
       <div class="small muted" style="margin-top:6px">Tính từ mức lên xuống thật của ${tk} trong 250 phiên gần nhất, không giả định mã sẽ tăng hay giảm. Đây không phải dự báo giá.</div></section>
-    <section class="card c5"><div class="card-head"><h2>Mã này đắt hay rẻ</h2><span class="small">${f.date?'Lợi nhuận 4 quý đến '+D(f.date):'Chưa có chỉ số'}</span></div>
+    <section class="card c5"><div class="card-head"><h2>Mã này đắt hay rẻ</h2><span class="small">${f.date?'Lợi nhuận 4 quý đến '+D(f.date):FUND.busy[tk]?'<span class="spin"></span> Đang tải chỉ số…':FUND.fail[tk]?'Nguồn chỉ số chưa trả lời, thử tải lại trang sau':'Đang tải chỉ số…'}</span></div>
       <div class="kv">
         <div><div class="k">P/E</div><div class="v">${pe?pe.toLocaleString('vi-VN',{maximumFractionDigits:1}):'–'}</div><div class="c">số năm lợi nhuận để hoàn vốn</div></div>
         <div><div class="k">P/B</div><div class="v">${pb?pb.toLocaleString('vi-VN',{maximumFractionDigits:2}):'–'}</div><div class="c">giá so với vốn chủ</div></div>
