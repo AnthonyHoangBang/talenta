@@ -1,60 +1,60 @@
-Fri Nov 20 02:39:44 UTC 2026
+Fri Nov 20 02:45:24 UTC 2026
 === vps_idx10
 URL https://bgapidatafeed.vps.com.vn/getlistindexdetail/10
 status=200 size=313
 access-control-allow-origin: *
-[{"id":1101,"boardId":"","marketId":"","sequence":3338,"channel":"","sourceMsgType":"M1","hashValue":"10","transId":"STO:M1:3338","tradingSession":"","mc":"10","vol":66174848,"value":1286783.998,"time":"09:39:40","status":"O","accVol":0,"ot":"13.41|0.79%|1286783.998|45|222|32","cIndex":1676.21,"oIndex":1689.62}]
+[{"id":1101,"boardId":"","marketId":"","sequence":3815,"channel":"","sourceMsgType":"M1","hashValue":"10","transId":"STO:M1:3815","tradingSession":"","mc":"10","vol":78459507,"value":1521024.415,"time":"09:45:20","status":"O","accVol":0,"ot":"13.98|0.83%|1521024.415|49|221|34","cIndex":1675.64,"oIndex":1689.62}]
 
 === vps_idx_multi
 URL https://bgapidatafeed.vps.com.vn/getlistindexdetail/10,11,02,03
-status=200 size=1222
+status=200 size=1223
 access-control-allow-origin: *
-[{"id":1101,"boardId":"","marketId":"","sequence":3346,"channel":"","sourceMsgType":"M1","hashValue":"10","transId":"STO:M1:3346","tradingSession":"","mc":"10","vol":66313827,"value":1289619.378,"time":"09:39:45","status":"O","accVol":0,"ot":"13.45|0.80%|1289619.378|45|220|34","cIndex":1676.17,"oIndex":1689.62},{"id":1101,"boardId":"","marketId":"","sequence":3341,"channel":"","sourceMsgType":"M1","hashValue":"11","transId":"STO:M1:3341","tradingSession":"","mc":"11","vol":29121731,"value":753847.743,"time":"09:39:45","status":"O","accVol":0,"ot":"16.30|0.91%|753847.743|2|24|4","cIndex":1772.21,"oIndex":1788.51},{"id":1101,"boardId":"","marketId":"","sequence":239,"channel":"","sourceMsgType":"M1","hashValue":"02","transId":"STX:M1:239","tradingSession":"","mc":"02","vol":7250158,"value":92490.541,"time":"09:39:40","status":"O","accVol":0,"ot":"4.89|2.05%|92490.541|19|62|24","cIndex":234.05,"oIndex":238.94},{"id":1101,"boardId":"","marketId":"","sequence":239,"channel":"","sourceMsgType":"M1","hashValue":"03","transId":"UPX:M1:239","tradingSession":"","mc":"03","vol":5116053,"value":41518.543,"time":"09:39:40","status":"O","accVol":0,"ot":"0.67|0.56%|41518.543|54|66|62","cIndex":119.69,"oIndex":120.36}]
+[{"id":1101,"boardId":"","marketId":"","sequence":3822,"channel":"","sourceMsgType":"M1","hashValue":"10","transId":"STO:M1:3822","tradingSession":"","mc":"10","vol":78615144,"value":1525930.96,"time":"09:45:25","status":"O","accVol":0,"ot":"15.47|0.92%|1525930.960|48|220|36","cIndex":1674.15,"oIndex":1689.62},{"id":1101,"boardId":"","marketId":"","sequence":3817,"channel":"","sourceMsgType":"M1","hashValue":"11","transId":"STO:M1:3817","tradingSession":"","mc":"11","vol":33879107,"value":882312.452,"time":"09:45:25","status":"O","accVol":0,"ot":"18.08|1.01%|882312.452|0|28|2","cIndex":1770.43,"oIndex":1788.51},{"id":1101,"boardId":"","marketId":"","sequence":273,"channel":"","sourceMsgType":"M1","hashValue":"02","transId":"STX:M1:273","tradingSession":"","mc":"02","vol":8690946,"value":112834.773,"time":"09:45:20","status":"O","accVol":0,"ot":"4.57|1.91%|112834.773|20|64|23","cIndex":234.37,"oIndex":238.94},{"id":1101,"boardId":"","marketId":"","sequence":273,"channel":"","sourceMsgType":"M1","hashValue":"03","transId":"UPX:M1:273","tradingSession":"","mc":"03","vol":5731522,"value":47755.582,"time":"09:45:20","status":"O","accVol":0,"ot":"0.54|0.45%|47755.582|52|68|70","cIndex":119.82,"oIndex":120.36}]
 
 === vps_idx_02
 URL https://bgapidatafeed.vps.com.vn/getlistindexdetail/02
-status=200 size=302
+status=200 size=304
 access-control-allow-origin: *
-[{"id":1101,"boardId":"","marketId":"","sequence":239,"channel":"","sourceMsgType":"M1","hashValue":"02","transId":"STX:M1:239","tradingSession":"","mc":"02","vol":7250158,"value":92490.541,"time":"09:39:40","status":"O","accVol":0,"ot":"4.89|2.05%|92490.541|19|62|24","cIndex":234.05,"oIndex":238.94}]
+[{"id":1101,"boardId":"","marketId":"","sequence":273,"channel":"","sourceMsgType":"M1","hashValue":"02","transId":"STX:M1:273","tradingSession":"","mc":"02","vol":8690946,"value":112834.773,"time":"09:45:20","status":"O","accVol":0,"ot":"4.57|1.91%|112834.773|20|64|23","cIndex":234.37,"oIndex":238.94}]
 
 === dnse_VNINDEX
-URL https://services.entrade.com.vn/chart-api/v2/ohlcs/index?from=1794451184&to=1795142384&symbol=VNINDEX&resolution=1D
+URL https://services.entrade.com.vn/chart-api/v2/ohlcs/index?from=1794451524&to=1795142724&symbol=VNINDEX&resolution=1D
 status=200 size=313
 {"t":[1794535200,1794794400,1794880800,1794967200,1795053600],"o":[1727.31,1733.71,1733.58,1723.04,1700],"h":[1737.36,1753.01,1735.04,1723.04,1702.16],"l":[1724.03,1733.71,1717.16,1701.04,1683.43],"c":[1734.93,1736.89,1726.72,1703.01,1689.62],"v":[642645888,518846528,623864448,755203008,642165184],"nextTime":0}
 
 
 === dnse_VN30
-URL https://services.entrade.com.vn/chart-api/v2/ohlcs/index?from=1794451184&to=1795142384&symbol=VN30&resolution=1D
+URL https://services.entrade.com.vn/chart-api/v2/ohlcs/index?from=1794451524&to=1795142724&symbol=VN30&resolution=1D
 status=200 size=316
 {"t":[1794535200,1794794400,1794880800,1794967200,1795053600],"o":[1833.32,1844.25,1840.07,1833.27,1804.49],"h":[1847.54,1860.22,1843.75,1833.27,1808.95],"l":[1831.36,1844.25,1827.67,1803.09,1784.89],"c":[1844.91,1844.25,1837.13,1806.54,1788.51],"v":[268313344,214902912,257513136,308382464,304027840],"nextTime":0}
 
 
 === dnse_HNXINDEX
-URL https://services.entrade.com.vn/chart-api/v2/ohlcs/index?from=1794451184&to=1795142384&symbol=HNXINDEX&resolution=1D
+URL https://services.entrade.com.vn/chart-api/v2/ohlcs/index?from=1794451524&to=1795142724&symbol=HNXINDEX&resolution=1D
 status=400 size=63
 {"status":400,"code":"BAD_REQUEST","message":"invalid symbol"}
 
 
 === dnse_HNX
-URL https://services.entrade.com.vn/chart-api/v2/ohlcs/index?from=1794451184&to=1795142384&symbol=HNX&resolution=1D
+URL https://services.entrade.com.vn/chart-api/v2/ohlcs/index?from=1794451524&to=1795142724&symbol=HNX&resolution=1D
 status=200 size=288
 {"t":[1794535200,1794794400,1794880800,1794967200,1795053600],"o":[256.32,254.71,254.37,248.41,241.96],"h":[256.74,259.35,254.75,248.6,246.11],"l":[254.17,253.38,248.46,242.55,237.8],"c":[254.98,254.91,248.6,242.73,238.94],"v":[79089328,38803256,42587776,54038756,52730256],"nextTime":0}
 
 
 === dnse_UPCOMINDEX
-URL https://services.entrade.com.vn/chart-api/v2/ohlcs/index?from=1794451184&to=1795142384&symbol=UPCOMINDEX&resolution=1D
+URL https://services.entrade.com.vn/chart-api/v2/ohlcs/index?from=1794451524&to=1795142724&symbol=UPCOMINDEX&resolution=1D
 status=400 size=63
 {"status":400,"code":"BAD_REQUEST","message":"invalid symbol"}
 
 
 === dnse_UPCOM
-URL https://services.entrade.com.vn/chart-api/v2/ohlcs/index?from=1794451184&to=1795142384&symbol=UPCOM&resolution=1D
+URL https://services.entrade.com.vn/chart-api/v2/ohlcs/index?from=1794451524&to=1795142724&symbol=UPCOM&resolution=1D
 status=200 size=289
 {"t":[1794535200,1794794400,1794880800,1794967200,1795053600],"o":[121.21,121.38,122.16,122.38,120.93],"h":[121.81,122.48,123.05,122.67,121.13],"l":[120.62,120.88,121.53,120.11,120.2],"c":[121.39,122.13,122.5,121.12,120.36],"v":[24703192,14006826,28312078,26863016,21423132],"nextTime":0}
 
 
 === dnse_HNX30
-URL https://services.entrade.com.vn/chart-api/v2/ohlcs/index?from=1794451184&to=1795142384&symbol=HNX30&resolution=1D
+URL https://services.entrade.com.vn/chart-api/v2/ohlcs/index?from=1794451524&to=1795142724&symbol=HNX30&resolution=1D
 status=200 size=286
 {"t":[1794535200,1794794400,1794880800,1794967200,1795053600],"o":[436.34,432.72,428.44,426.38,420.92],"h":[437.34,434.6,429.48,426.67,422.73],"l":[433.85,428.48,424.5,419.82,416.5],"c":[433.93,430.15,427.8,422.46,421.8],"v":[69433952,28006764,32552880,41169152,39319204],"nextTime":0}
 
